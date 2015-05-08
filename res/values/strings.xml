@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">LAP Tracking Apps</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+
+    <color name="blue">#00adef</color>
+    <color name="navyblue">#0090da</color>
+    <color name="brightgreen">#ccf573</color>
+    <color name="black">#2e2e2e</color>
+
+    <string name="title_activity_profil_anak">MainActivity</string>
+    <string name="title_activity_formulir_kunjungan_anak">MainActivity</string>
+    <string name="title_activity_list_anak">MainActivity</string>
+    <string name="title_activity_formulir_kunjungan_rumah">MainActivity</string>
+    <string name="title_activity_kunjungan">MainActivity</string>
+
+</resources>
