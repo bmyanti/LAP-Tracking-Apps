@@ -32,7 +32,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 public class ProfilAnakActivity extends Activity implements OnItemSelectedListener {
 	
@@ -41,8 +40,6 @@ public class ProfilAnakActivity extends Activity implements OnItemSelectedListen
 	LinearLayout simpan_profil;
 	EditText edit_nama_anak;
 	Button susu, vitamin, popok;
-	TextView textview_susu;
-	String get_susu1, get_susu2, get_susu3;
 	
 	//untuk kamera
 	private static final int Image_take = 1;
@@ -74,13 +71,6 @@ public class ProfilAnakActivity extends Activity implements OnItemSelectedListen
 		susu = (Button) findViewById(R.id.button_susu);
 		vitamin = (Button) findViewById(R.id.button_vitamin);
 		popok = (Button) findViewById(R.id.button_popok);
-		textview_susu = (TextView) findViewById(R.id.textview_susu);
-		
-		Bundle b1 = getIntent().getExtras();
-		get_susu1 = b1.getString("parse_susu1");
-		get_susu2 = b1.getString("parse_susu2");
-		get_susu3 = b1.getString("parse_susu3");
-		textview_susu.setText(""+get_susu1+"\n"+get_susu2+"\n"+get_susu3);
 		
 		
 		Spinner spinner1 = (Spinner) findViewById(R.id.spinner_golongandarah);
@@ -260,19 +250,12 @@ public class ProfilAnakActivity extends Activity implements OnItemSelectedListen
 			alertDialogBuilder.setView(promptView);
 			
 			final LinearLayout btn_simpan = (LinearLayout) promptView.findViewById(R.id.btn_simpan);
-			//final CheckBox cb1 = (CheckBox) promptView.findViewById(R.id.checkBox1);
-			/*if(cb1.isSelected()){
-				String susu1 = cb1.getText().toString();
-				}*/
 			btn_simpan.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					Intent simpan  = new Intent(getApplication(),ProfilAnakActivity.class);
-					/*Bundle b = new Bundle();
-					b.putString("parse_susu", cb1.getText().toString());
-					simpan.putExtras(b);*/
 					startActivity(simpan);
 					
 				}

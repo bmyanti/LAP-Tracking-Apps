@@ -41,62 +41,23 @@
                     android:id="@+id/checkBox1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bebelac 4-Madu-800 gr" />
+                    android:text="checkbox1" />
 
                 <CheckBox
                     android:id="@+id/checkBox2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Chilschool-4-soya-300 gr" />
+                    android:text="checkbox2" />
 
                 <CheckBox
                     android:id="@+id/checkBox3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Dancow 1+-Vanilla-800 gr" />
+                    android:text="checkbox3" />
             </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
-
-    <LinearLayout
-        android:id="@+id/btn_simpan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button"
-        android:onClick="onClick" >
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2" />
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="15dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/centang" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingBottom="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp"
-            android:text="SIMPAN"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-            android:textColor="#FFFFFF" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2" />
-    </LinearLayout>
 
 </LinearLayout>
 
