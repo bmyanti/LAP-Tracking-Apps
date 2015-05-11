@@ -19,6 +19,9 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class FormulirKunjunganRumahActivity extends Activity {
@@ -28,6 +31,10 @@ public class FormulirKunjunganRumahActivity extends Activity {
 	
 	ImageView btn_back, foto_rumah1, foto_rumah2, foto_rumah3;
 	LinearLayout btn_simpan;
+	RadioGroup rg_ringkas, rg_rapi, rg_resik, rg_rawat, rg_rajin;
+	RadioButton r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r13,r14,r15,r16,r17,r18,r19,r20,r21,r22,r23,r24,r25;
+	TextView textview_total, text_total;
+	int sum1, sum2, sum3, sum4, sum5, sum;
 	
 	final Context context = this;
 	
@@ -42,6 +49,161 @@ public class FormulirKunjunganRumahActivity extends Activity {
 		
 		btn_back = (ImageView)  findViewById(R.id.btn_back);
 		btn_simpan = (LinearLayout) findViewById(R.id.button_simpan);
+		
+		//bagian penilaian kondisi rumah (radiobutton)
+		r1 = (RadioButton) findViewById(R.id.radioButton1);
+		r2 = (RadioButton) findViewById(R.id.radioButton1);
+		r3 = (RadioButton) findViewById(R.id.radioButton1);
+		r4 = (RadioButton) findViewById(R.id.radioButton1);
+		r5 = (RadioButton) findViewById(R.id.radioButton1);
+		r6 = (RadioButton) findViewById(R.id.radioButton1);
+		r7 = (RadioButton) findViewById(R.id.radioButton1);
+		r8 = (RadioButton) findViewById(R.id.radioButton1);
+		r9 = (RadioButton) findViewById(R.id.radioButton1);
+		r10 = (RadioButton) findViewById(R.id.radioButton1);
+		r11 = (RadioButton) findViewById(R.id.radioButton1);
+		r12 = (RadioButton) findViewById(R.id.radioButton1);
+		r13 = (RadioButton) findViewById(R.id.radioButton1);
+		r14 = (RadioButton) findViewById(R.id.radioButton1);
+		r15 = (RadioButton) findViewById(R.id.radioButton1);
+		r16 = (RadioButton) findViewById(R.id.radioButton1);
+		r17 = (RadioButton) findViewById(R.id.radioButton1);
+		r18 = (RadioButton) findViewById(R.id.radioButton1);
+		r19 = (RadioButton) findViewById(R.id.radioButton1);
+		r20 = (RadioButton) findViewById(R.id.radioButton1);
+		r21 = (RadioButton) findViewById(R.id.radioButton1);
+		r22 = (RadioButton) findViewById(R.id.radioButton1);
+		r23 = (RadioButton) findViewById(R.id.radioButton1);
+		r24 = (RadioButton) findViewById(R.id.radioButton1);
+		r25 = (RadioButton) findViewById(R.id.radioButton1);
+		
+		rg_ringkas = (RadioGroup) findViewById(R.id.radioGroupRingkas);
+		rg_rapi = (RadioGroup) findViewById(R.id.radioGroupRapi);
+		rg_resik = (RadioGroup) findViewById(R.id.radioGroupResik);
+		rg_rawat = (RadioGroup) findViewById(R.id.radioGroupRawat);
+		rg_rajin = (RadioGroup) findViewById(R.id.radioGroupRajin);
+		
+		textview_total = (TextView) findViewById(R.id.textview_total);
+		text_total = (TextView) findViewById(R.id.text_total);
+		
+		 rg_ringkas.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+             @Override
+             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                 // TODO Auto-generated method stub
+
+                 int childCount=group.getChildCount();
+                 for (int i=0;i<childCount;i++){
+
+                         RadioButton r_btn = (RadioButton) group.getChildAt(i);
+                         if (r_btn.getId() == checkedId) {
+                            // do your stuf here
+                              sum1=i+1; // since position is from 0.
+                         }
+
+                 }
+
+             }
+         });
+
+		 rg_rapi.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+             @Override
+             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                 // TODO Auto-generated method stub
+
+                 int childCount=group.getChildCount();
+                 for (int i=0;i<childCount;i++){
+
+                         RadioButton r_btn = (RadioButton) group.getChildAt(i);
+                         if (r_btn.getId() == checkedId) {
+                            // do your stuf here
+                              sum2=i+1; // since position is from 0.
+                         }
+
+                 }
+
+             }
+         });
+		 
+		 rg_resik.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+             @Override
+             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                 // TODO Auto-generated method stub
+
+                 int childCount=group.getChildCount();
+                 for (int i=0;i<childCount;i++){
+
+                         RadioButton r_btn = (RadioButton) group.getChildAt(i);
+                         if (r_btn.getId() == checkedId) {
+                            // do your stuf here
+                              sum3=i+1; // since position is from 0.
+                         }
+
+                 }
+
+             }
+         });
+		 
+		 rg_rawat.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+             @Override
+             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                 // TODO Auto-generated method stub
+
+                 int childCount=group.getChildCount();
+                 for (int i=0;i<childCount;i++){
+
+                         RadioButton r_btn = (RadioButton) group.getChildAt(i);
+                         if (r_btn.getId() == checkedId) {
+                            // do your stuf here
+                              sum4=i+1; // since position is from 0.
+                         }
+
+                 }
+
+             }
+         });
+		 
+		 rg_rajin.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+             @Override
+             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                 // TODO Auto-generated method stub
+
+                 int childCount=group.getChildCount();
+                 for (int i=0;i<childCount;i++){
+
+                         RadioButton r_btn = (RadioButton) group.getChildAt(i);
+                         if (r_btn.getId() == checkedId) {
+                            // do your stuf here
+                              sum5=i+1; // since position is from 0.
+                         }
+
+                 }
+
+             }
+         });
+	
+		
+		 
+		 
+		text_total.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				//sum = rg1.getCheckedRadioButtonId()+ rg2.getCheckedRadioButtonId();
+				//String total1 = ("Total : "+sum);
+				//total.setText(""+sum);
+				//total.setText(r1.getText());
+				//total.setText(r2.getText());
+				sum = sum1 + sum2 + sum3 + sum4 + sum5;
+				textview_total.setText(""+sum);
+			}
+		});
+		
 		
 		//bagian foto rumah
 		foto_rumah1 = (ImageView) findViewById(R.id.foto_rumah1);
