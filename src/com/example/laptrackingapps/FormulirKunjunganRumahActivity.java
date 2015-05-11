@@ -38,7 +38,7 @@ public class FormulirKunjunganRumahActivity extends Activity {
 	
 	final Context context = this;
 	
-	//GPS Tracker class
+	//Kelas GPS Tracker
 	GPSTracker gps;
 
 	@Override
