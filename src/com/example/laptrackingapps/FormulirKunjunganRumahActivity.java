@@ -185,9 +185,6 @@ public class FormulirKunjunganRumahActivity extends Activity {
 
              }
          });
-	
-		
-		 
 		 
 		text_total.setOnClickListener(new OnClickListener() {
 			
