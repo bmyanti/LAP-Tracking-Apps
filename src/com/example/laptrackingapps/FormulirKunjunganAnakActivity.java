@@ -55,8 +55,10 @@ public class FormulirKunjunganAnakActivity extends Activity {
 				//((LinearLayout)findViewById(R.id.linearlayout_tambahkeluhan)).addView(layout_tambahkeluhan);
 				LinearLayout layout_tambahkeluhan = (LinearLayout) findViewById(R.id.linearlayout_tambahkeluhan);
 				LinearLayout tambah_keluhan = new LinearLayout(v.getContext());
-				tambah_keluhan.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+				//tambah_keluhan.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
 				layout_tambahkeluhan.addView(tambah_keluhan);
+			    //getLayoutInflater().inflate(R.id.tambah_keluhan, layout_tambahkeluhan);
+				//layout_tambahkeluhan.setVisibility(View.VISIBLE);
 			}
 		});
 		

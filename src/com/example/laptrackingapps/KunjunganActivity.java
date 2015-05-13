@@ -6,13 +6,17 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class KunjunganActivity extends Activity {
 	
 	ImageView back, edit_infoanak, edit_kunjungan;
 	LinearLayout tambah_kunjungan;
+	TextView lihat_selengkapnya;
+	LinearLayout lihatselengkapnya;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +28,21 @@ public class KunjunganActivity extends Activity {
 		tambah_kunjungan = (LinearLayout) findViewById(R.id.button_tambahkunjungan);
 		edit_infoanak = (ImageView) findViewById(R.id.edit_infoanak);
 		edit_kunjungan = (ImageView) findViewById(R.id.edit_kunjungan);
+		
+		lihatselengkapnya = (LinearLayout) findViewById(R.id.layout_lihatselengkapnya);
+		lihat_selengkapnya = (TextView) findViewById(R.id.textview_lihat_selengkapnya);
+		lihat_selengkapnya.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (lihat_selengkapnya.getVisibility() == View.VISIBLE) {
+					lihatselengkapnya.setVisibility(View.VISIBLE);
+				} else {
+					lihatselengkapnya.setVisibility(View.INVISIBLE);
+				}
+			}
+		});
 	}
 
 	@Override
