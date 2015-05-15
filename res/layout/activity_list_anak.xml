@@ -215,8 +215,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="12dp"
-            android:scaleType="fitXY"
+            android:padding="10dp"
             android:src="@drawable/tambah" />
 
         <TextView
@@ -256,8 +255,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="12dp"
-            android:scaleType="fitXY"
+            android:padding="5dp"
             android:src="@drawable/upload" />
 
         <TextView
@@ -266,6 +264,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:paddingBottom="18dp"
+            android:paddingLeft="5dp"
             android:paddingTop="18dp"
             android:text="UPLOAD KUNJUNGAN"
             android:textColor="#FFFFFF"

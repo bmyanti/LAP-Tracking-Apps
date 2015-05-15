@@ -320,7 +320,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="3"
-                                android:text="JENIS OBAT"
+                                android:text="JENIS OBAT ARV"
                                 android:textColor="@color/blue" />
 
                             <TextView
@@ -770,11 +770,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:paddingBottom="12dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="12dp"
-            android:scaleType="fitXY"
+            android:padding="5dp"
             android:src="@drawable/tambah" />
 
         <TextView
@@ -783,6 +779,7 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:paddingBottom="18dp"
+            android:paddingLeft="5dp"
             android:paddingTop="18dp"
             android:text="TAMBAH KUNJUNGAN"
             android:textColor="#FFFFFF"
