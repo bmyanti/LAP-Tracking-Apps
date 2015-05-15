@@ -48,6 +48,7 @@ public class ListAnakActivity extends Activity {
 	ImageView btn_back, reminder_lab, reminder_obat;
 	LinearLayout tambah_profil, daftar_anak1;
 	
+	
 	final Context context = this;
 	
 	private JSONObject jObject;
@@ -85,6 +86,7 @@ public class ListAnakActivity extends Activity {
 		reminder_lab = (ImageView) findViewById(R.id.reminder_lab);
 		reminder_obat = (ImageView) findViewById(R.id.reminder_obat);
 		daftar_anak1 = (LinearLayout) findViewById(R.id.daftar_anak1);
+		
 	}
 	
 	public void RefreshList() {

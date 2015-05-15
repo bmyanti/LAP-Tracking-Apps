@@ -2,9 +2,6 @@ package com.example.laptrackingapps;
 
 import java.io.File;
 
-
-
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -51,12 +49,16 @@ public class FormulirKunjunganAnakActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				//layout_tambahkeluhan = (LinearLayout) findViewById(R.id.linearlayout_tambahkeluhan);
-				//layout_keluhan = new LinearLayout(getApplicationContext());
-				//layout_tambahkeluhan.addView(layout_keluhan);
-				TextView tv1 = new TextView(v.getContext());
-	            tv1.setText("TAMBAH KELUHAN");
-	            layout_tambahkeluhan.addView(tv1);
+				//TextView tv1 = new TextView(v.getContext());
+	            //tv1.setText("TAMBAH KELUHAN");
+	            //layout_tambahkeluhan.addView(tv1);
+				//((LinearLayout)findViewById(R.id.linearlayout_tambahkeluhan)).addView(layout_tambahkeluhan);
+				LinearLayout layout_tambahkeluhan = (LinearLayout) findViewById(R.id.linearlayout_tambahkeluhan);
+				LinearLayout tambah_keluhan = new LinearLayout(v.getContext());
+				//tambah_keluhan.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
+				layout_tambahkeluhan.addView(tambah_keluhan);
+			    //getLayoutInflater().inflate(R.id.tambah_keluhan, layout_tambahkeluhan);
+				//layout_tambahkeluhan.setVisibility(View.VISIBLE);
 			}
 		});
 		
