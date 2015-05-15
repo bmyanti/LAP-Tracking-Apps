@@ -1,7 +1,21 @@
 package com.example.laptrackingapps;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,13 +46,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class ProfilAnakActivity extends Activity implements OnItemSelectedListener {
 	
 	final Context context = this;
 	ImageView back, tambah_foto;
 	LinearLayout simpan_profil;
-	EditText edit_nama_anak;
+	EditText txtName;
 	Button susu, vitamin, popok;
 	
 	//untuk kamera
@@ -63,6 +78,7 @@ public class ProfilAnakActivity extends Activity implements OnItemSelectedListen
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_profil_anak);
 		
+		txtName = (EditText) findViewById(R.id.edit_nama_anak);
 		txtDate = (EditText) findViewById(R.id.editTextTtl);
 		back = (ImageView) findViewById(R.id.btn_back);
 		simpan_profil = (LinearLayout) findViewById(R.id.button_simpanprofil);
@@ -80,8 +96,40 @@ public class ProfilAnakActivity extends Activity implements OnItemSelectedListen
 		adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner1.setAdapter(adapter1);
 		
-		tambah_foto.setOnClickListener(new View.OnClickListener() {
+		//btn simpan profil anak
+		simpan_profil.setOnClickListener(new OnClickListener() {
 			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				int TIMEOUT_MILLISEC = 10000; 
+				HttpParams httpParams = new BasicHttpParams();
+				HttpConnectionParams.setConnectionTimeout(httpParams, TIMEOUT_MILLISEC);
+				HttpConnectionParams.setSoTimeout(httpParams, TIMEOUT_MILLISEC);
+				HttpClient client = new DefaultHttpClient(httpParams);
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3); 
+				nameValuePairs.add(new BasicNameValuePair("nama", txtName.getText().toString()));
+				nameValuePairs.add(new BasicNameValuePair("date", txtDate.getText().toString()));
+				nameValuePairs.add(new BasicNameValuePair("goldar", golongan_darah.toString()));
+				
+				try {
+			    	HttpPost request = new HttpPost("http://192.168.1.170/jsonn/addkota.php");
+			    	request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+					
+					HttpResponse response = client.execute(request);
+				}
+				catch(Exception e){
+					Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+					e.printStackTrace();
+				}
+				Toast.makeText(getApplicationContext(), "Berhasil", Toast.LENGTH_LONG).show();
+				ListAnakActivity.la.RefreshList();
+				finish();
+			}
+		});
+		
+		tambah_foto.setOnClickListener(new View.OnClickListener() {
+			//button tambah foto
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -230,6 +278,8 @@ public class ProfilAnakActivity extends Activity implements OnItemSelectedListen
 		return true;
 	}
 	
+	
+	
 	public void onClick (View view){
 		switch (view.getId()) {
 		case R.id.btn_back:
@@ -237,10 +287,10 @@ public class ProfilAnakActivity extends Activity implements OnItemSelectedListen
 			startActivity(intent);
 			break;
 			
-		case R.id.button_simpanprofil:
+		/*case R.id.button_simpanprofil:
 			Intent intent4 = new Intent(ProfilAnakActivity.this, ListAnakActivity.class);
 			startActivity(intent4);
-			break;
+			break;*/
 			
 		case R.id.button_susu :
 			LayoutInflater layoutinflater = LayoutInflater.from(context);
