@@ -1,24 +1,29 @@
 package com.example.laptrackingapps;
 
 import java.io.File;
+import java.util.Calendar;
 
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class FormulirKunjunganAnakActivity extends Activity {
@@ -33,6 +38,14 @@ public class FormulirKunjunganAnakActivity extends Activity {
 	
 	// GPSTracker class
 		GPSTracker gps;
+		
+	//untuk tanggal ambil arv
+		int hour, minute, mYear, mMonth, mDay;
+		static final int TIME_DIALOG_ID = 0;
+		static final int DATE_DIALOG_ID = 1;
+		private EditText txtDate;
+		private String[] arrMonth = { "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+				"Juli", "Agustus", "September", "Oktober", "November", "Desember" };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +53,7 @@ public class FormulirKunjunganAnakActivity extends Activity {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_formulir_kunjungan_anak);
 		
+		txtDate = (EditText) findViewById(R.id.edittext_ttl);
 		button_lanjut  =(LinearLayout) findViewById(R.id.button_lanjut);
 		back = (ImageView) findViewById(R.id.btn_back);
 		layout_tambahkeluhan = (LinearLayout) findViewById(R.id.linearlayout_tambahkeluhan);
@@ -194,6 +208,44 @@ public class FormulirKunjunganAnakActivity extends Activity {
 				
 			}
 		});
+		
+		// mendapatkan tanggal sekarang
+		final Calendar c = Calendar.getInstance();
+		mYear = c.get(Calendar.YEAR);
+		mMonth = c.get(Calendar.MONTH);
+		mDay = c.get(Calendar.DAY_OF_MONTH);
+
+		txtDate.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				showDialog(DATE_DIALOG_ID);
+				return true;
+			}
+		});
+		
+		Calendar now = Calendar.getInstance();
+		Calendar tanggallahir = Calendar.getInstance();
+
+		tanggallahir.set(mYear, mMonth, mDay);
+
+		int years = now.get(Calendar.YEAR)
+				- tanggallahir.get(Calendar.YEAR);
+		int months = now.get(Calendar.MONTH)
+				- tanggallahir.get(Calendar.MONTH);
+		int days = now.get(Calendar.DAY_OF_MONTH)
+				- tanggallahir.get(Calendar.DAY_OF_MONTH);
+		if (days < 0) {
+			months--;
+			days += now.getActualMaximum(Calendar.DAY_OF_MONTH);
+		}
+		if (months < 0) {
+			years--;
+			months += 12;
+		}
+		String umur = years + " tahun " + months + " bulan " + days
+				+ " hari";
 	}
 	
 	//foto anak
@@ -431,6 +483,43 @@ public class FormulirKunjunganAnakActivity extends Activity {
 		default:
 			break;
 		}
+	}
+	
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case DATE_DIALOG_ID:
+			return new DatePickerDialog(this, mDateSetListener, mYear, mMonth,
+					mDay);
+		}
+		return null;
+	}
+	
+	//untuk tanggal ambil arv
+	private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+
+		@Override
+		public void onDateSet(DatePicker view, int year, int monthOfYear,
+				int dayOfMonth) {
+			mYear = year;
+			mMonth = monthOfYear;
+			mDay = dayOfMonth;
+			//String sdate = arrMonth[mMonth] + " " + LPad(mDay + "", "0", 2) + ", " + mYear;
+			//String sdate =  ""+year+"/"+(monthOfYear + 1 )+"/"+ LPad(mDay + "", "0",2) ;
+			String sdate = LPad(mDay + "", "0", 2) + " " +  arrMonth[mMonth] + " " + mYear;
+			txtDate.setText(sdate);
+			// TODO Auto-generated method stub
+
+		}
+	};
+	
+	
+	//untuk tanggal ambil arv
+	private static String LPad(String schar, String spad, int len) {
+		String sret = schar;
+		for (int i = sret.length(); i < len; i++) {
+			sret = spad + sret;
+		}
+		return new String(sret);
 	}
 
 }

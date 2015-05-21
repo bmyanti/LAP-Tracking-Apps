@@ -113,7 +113,7 @@ public class ProfilAnakActivity extends Activity implements OnItemSelectedListen
 				nameValuePairs.add(new BasicNameValuePair("goldar", golongan_darah.toString()));
 				
 				try {
-			    	HttpPost request = new HttpPost("http://192.168.1.170/jsonn/addkota.php");
+			    	HttpPost request = new HttpPost("http://192.168.1.171/jsonn/addkota.php");
 			    	request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 					
 					HttpResponse response = client.execute(request);

@@ -12,7 +12,7 @@
         android:background="#00adef"
         android:gravity="center"
         android:padding="10dp"
-        android:text="REMINDER AMBIL OBAT"
+        android:text="REMINDER AMBIL ARV"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#FFFFFF"
         android:typeface="sans" />

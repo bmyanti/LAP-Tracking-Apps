@@ -54,8 +54,8 @@ public class ListAnakActivity extends Activity {
 	private JSONObject jObject;
 	private JSONArray jArray;
 	private String jsonResult ="";
-	private String url = "http://192.168.1.173/jsonn/daftarkota.php";
-	private String url2 = "http://192.168.1.173/jsonn/delkota.php";
+	private String url = "http://192.168.1.171/jsonn/daftarkota.php";
+	private String url2 = "http://192.168.1.171/jsonn/delkota.php";
 	private String[] daftarid;
 	private String[] daftarnama;
 	private String[] daftardate;
