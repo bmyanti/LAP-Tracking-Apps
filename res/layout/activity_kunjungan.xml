@@ -122,7 +122,7 @@
                             android:textColor="@color/blue" />
 
                         <TextView
-                            android:id="@+id/textView13"
+                            android:id="@+id/viewNamaAnak"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="3"
@@ -151,7 +151,7 @@
                             android:textColor="@color/blue" />
 
                         <TextView
-                            android:id="@+id/textView8"
+                            android:id="@+id/viewBODAnak"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="3"
@@ -180,7 +180,7 @@
                             android:textColor="@color/blue" />
 
                         <TextView
-                            android:id="@+id/textView14"
+                            android:id="@+id/viewUMURAnak"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="3"
@@ -209,7 +209,7 @@
                             android:textColor="@color/blue" />
 
                         <TextView
-                            android:id="@+id/textView17"
+                            android:id="@+id/viewJKAnak"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="3"
@@ -238,7 +238,7 @@
                             android:textColor="@color/blue" />
 
                         <TextView
-                            android:id="@+id/textView20"
+                            android:id="@+id/viewGOLDAAnak"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="3"
@@ -267,7 +267,7 @@
                             android:textColor="@color/blue" />
 
                         <TextView
-                            android:id="@+id/textView23"
+                            android:id="@+id/viewALAMATAnak"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="3"
@@ -303,7 +303,7 @@
                                 android:textColor="@color/blue" />
 
                             <TextView
-                                android:id="@+id/textView26"
+                                android:id="@+id/viewStatusARV"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
@@ -332,7 +332,7 @@
                                 android:textColor="@color/blue" />
 
                             <TextView
-                                android:id="@+id/textView29"
+                                android:id="@+id/viewJenisARV"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
@@ -361,7 +361,7 @@
                                 android:textColor="@color/blue" />
 
                             <TextView
-                                android:id="@+id/textView32"
+                                android:id="@+id/viewDosisARV"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
@@ -390,7 +390,7 @@
                                 android:textColor="@color/blue" />
 
                             <TextView
-                                android:id="@+id/textView35"
+                                android:id="@+id/viewNamaAyah"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
@@ -419,7 +419,7 @@
                                 android:textColor="@color/blue" />
 
                             <TextView
-                                android:id="@+id/textView38"
+                                android:id="@+id/viewStatusAyah"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
@@ -448,7 +448,7 @@
                                 android:textColor="@color/blue" />
 
                             <TextView
-                                android:id="@+id/textView41"
+                                android:id="@+id/viewNamaIbu"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
@@ -477,7 +477,7 @@
                                 android:textColor="@color/blue" />
 
                             <TextView
-                                android:id="@+id/textView44"
+                                android:id="@+id/viewStatusIbu"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
@@ -506,7 +506,7 @@
                                 android:textColor="@color/blue" />
 
                             <TextView
-                                android:id="@+id/textView47"
+                                android:id="@+id/viewNamaPengasuh"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
@@ -535,7 +535,7 @@
                                 android:textColor="@color/blue" />
 
                             <TextView
-                                android:id="@+id/textView50"
+                                android:id="@+id/viewPengasuh"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
@@ -565,7 +565,7 @@
                                 android:textColor="@color/blue" />
 
                             <TextView
-                                android:id="@+id/textView53"
+                                android:id="@+id/viewNomorTelepon"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
@@ -595,7 +595,7 @@
                                 android:textColor="@color/blue" />
 
                             <TextView
-                                android:id="@+id/textView56"
+                                android:id="@+id/viewSekolah"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
@@ -625,7 +625,7 @@
                                 android:textColor="@color/blue" />
 
                             <TextView
-                                android:id="@+id/textView59"
+                                android:id="@+id/viewKelas"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
@@ -655,10 +655,11 @@
                                 android:textColor="@color/blue" />
 
                             <TextView
-                                android:id="@+id/textView62"
+                                android:id="@+id/viewFasilitas"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="3"
+                                android:textSize="12dp"
                                 android:text="TextView"
                                 android:textColor="@color/black" />
 

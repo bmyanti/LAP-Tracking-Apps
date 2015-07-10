@@ -161,6 +161,11 @@
                 android:text="LOGIN"
                 android:textColor="#FFFFFF" />
 
+            <TextView
+                android:id="@+id/textview_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
         </LinearLayout>
     </LinearLayout>
 

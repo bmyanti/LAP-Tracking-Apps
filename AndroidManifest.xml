@@ -11,8 +11,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.laptrackingapps.LoginActivity"
+            android:name=".LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -30,25 +30,41 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.laptrackingapps.ProfilAnakActivity"
+            android:name=".ProfilAnakActivity"
             android:label="@string/title_activity_profil_anak"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.example.laptrackingapps.FormulirKunjunganAnakActivity"
+            android:name=".FormulirKunjunganAnakActivity"
             android:label="@string/title_activity_formulir_kunjungan_anak" >
         </activity>
         <activity
-            android:name="com.example.laptrackingapps.ListAnakActivity"
+            android:name=".ListAnakActivity"
             android:label="@string/title_activity_list_anak" >
         </activity>
         <activity
-            android:name="com.example.laptrackingapps.FormulirKunjunganRumahActivity"
+            android:name=".FormulirKunjunganRumahActivity"
             android:label="@string/title_activity_formulir_kunjungan_rumah" >
         </activity>
         <activity
-            android:name="com.example.laptrackingapps.KunjunganActivity"
+            android:name=".KunjunganActivity"
             android:label="@string/title_activity_kunjungan" >
+        </activity>
+        <activity
+            android:name=".Test"
+            android:label="@string/title_activity_test" >
+        </activity>
+        <activity
+            android:name=".ViewListAnak"
+            android:label="@string/title_activity_view_list_anak" >
+        </activity>
+        <activity
+            android:name=".ViewName"
+            android:label="@string/title_activity_view_name" >
+        </activity>
+        <activity
+            android:name=".Checkbox"
+            android:label="@string/title_activity_checkbox" >
         </activity>
     </application>
 

@@ -15,5 +15,9 @@
     <string name="title_activity_list_anak">MainActivity</string>
     <string name="title_activity_formulir_kunjungan_rumah">MainActivity</string>
     <string name="title_activity_kunjungan">MainActivity</string>
+    <string name="title_activity_test">Test</string>
+    <string name="title_activity_view_list_anak">ViewListAnak</string>
+    <string name="title_activity_view_name">ViewName</string>
+    <string name="title_activity_checkbox">Checkbox</string>
 
 </resources>

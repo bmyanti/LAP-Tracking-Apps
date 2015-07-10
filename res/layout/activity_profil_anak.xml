@@ -171,7 +171,7 @@
                         android:orientation="horizontal" >
 
                         <RadioButton
-                            android:id="@+id/radioButton1"
+                            android:id="@+id/radioButtonLakilaki"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2"
@@ -180,7 +180,7 @@
                             android:textSize="12sp" />
 
                         <RadioButton
-                            android:id="@+id/radioButton2"
+                            android:id="@+id/radioButtonPerempuan"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="2"
@@ -351,7 +351,7 @@
                             android:orientation="horizontal" >
 
                             <RadioButton
-                                android:id="@+id/radioButton3"
+                                android:id="@+id/radioButtonHidup"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="2"
@@ -361,7 +361,7 @@
                                 android:textSize="12sp" />
 
                             <RadioButton
-                                android:id="@+id/radioButton4"
+                                android:id="@+id/radioButtonMeninggal"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="2"
@@ -379,7 +379,7 @@
                             android:orientation="horizontal" >
 
                             <RadioButton
-                                android:id="@+id/radioButton5"
+                                android:id="@+id/radioButtonAyahPositif"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="2"
@@ -388,7 +388,7 @@
                                 android:textSize="12sp" />
 
                             <RadioButton
-                                android:id="@+id/radioButton6"
+                                android:id="@+id/radioButtonAyahNegatif"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="2"
@@ -465,7 +465,7 @@
                             android:orientation="horizontal" >
 
                             <RadioButton
-                                android:id="@+id/radioButton7"
+                                android:id="@+id/radioButtonIbuHidup"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="2"
@@ -475,7 +475,7 @@
                                 android:textSize="12sp" />
 
                             <RadioButton
-                                android:id="@+id/radioButton8"
+                                android:id="@+id/radioButtonIbuMeninggal"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="2"
@@ -493,7 +493,7 @@
                             android:orientation="horizontal" >
 
                             <RadioButton
-                                android:id="@+id/radioButton9"
+                                android:id="@+id/radioButtonIbuPositif"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="2"
@@ -502,7 +502,7 @@
                                 android:textSize="12sp" />
 
                             <RadioButton
-                                android:id="@+id/radioButton10"
+                                android:id="@+id/radioButtonIbuNegatif"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="2"
@@ -834,18 +834,17 @@
                                         android:layout_weight="3.5"
                                         android:text="SUSU"
                                         android:textColor="@color/blue"
-                                        android:textSize="12sp" />
+                                        android:textSize="14sp" />
 
                                     <Button
                                         android:id="@+id/button_susu"
-                                        style="?android:attr/buttonStyleSmall"
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="0.5"
-                                        android:background="@drawable/button1"
                                         android:onClick="onClick"
+                                        android:background="@android:color/transparent"
                                         android:text="+"
-                                        android:textColor="#FFFFFF" />
+                                        android:textColor="@color/blue" />
 
                                 </LinearLayout>
 
@@ -860,7 +859,7 @@
 
                                         <TextView
                                             android:id="@+id/textview_susu"
-                                            android:layout_width="0dp"
+                                            android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_weight="4"
                                             android:text="TextView"
@@ -897,18 +896,17 @@
                                         android:layout_weight="3.5"
                                         android:text="VITAMIN"
                                         android:textColor="@color/blue"
-                                        android:textSize="12sp" />
+                                        android:textSize="14sp" />
 
                                     <Button
                                         android:id="@+id/button_vitamin"
-                                        style="?android:attr/buttonStyleSmall"
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="0.5"
-                                        android:background="@drawable/button1"
                                         android:onClick="onClick"
                                         android:text="+"
-                                        android:textColor="#FFFFFF" />
+                                        android:background="@android:color/transparent"
+                                        android:textColor="@color/blue" />
 
                                 </LinearLayout>
 
@@ -922,7 +920,7 @@
                                         android:layout_height="match_parent" >
 
                                         <TextView
-                                            android:id="@+id/textView42"
+                                            android:id="@+id/textViewVitamin"
                                             android:layout_width="0dp"
                                             android:layout_height="wrap_content"
                                             android:layout_weight="4"
@@ -960,18 +958,17 @@
                                         android:layout_weight="3.5"
                                         android:text="POPOK"
                                         android:textColor="@color/blue"
-                                        android:textSize="12sp" />
+                                        android:textSize="14sp" />
 
                                     <Button
                                         android:id="@+id/button_popok"
-                                        style="?android:attr/buttonStyleSmall"
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="0.5"
-                                        android:background="@drawable/button1"
                                         android:onClick="onClick"
                                         android:text="+"
-                                        android:textColor="#FFFFFF" />
+                                        android:background="@android:color/transparent"
+                                        android:textColor="@color/blue" />
 
                                 </LinearLayout>
 
@@ -985,7 +982,7 @@
                                         android:layout_height="match_parent" >
 
                                         <TextView
-                                            android:id="@+id/textView43"
+                                            android:id="@+id/textViewPopok"
                                             android:layout_width="0dp"
                                             android:layout_height="wrap_content"
                                             android:layout_weight="4"
