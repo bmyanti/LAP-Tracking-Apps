@@ -62,7 +62,8 @@ public class TM_Subdistrict {
 			try {
 				
 				ContentValues values = new ContentValues();
-				String district_id[] = { "1", "2", "3", "4", "5" };
+				String district_id[] = { "1", "2", "3", "4", "5","6" };
+				
 				String subdistrict_jakpus[] = { "Gambir", "Tanah Abang",
 						"Menteng", "Senen", "Cempaka Putih", "Johar Baru",
 						"Kemayoran", "Sawah Besar" };
@@ -80,19 +81,13 @@ public class TM_Subdistrict {
 						"Grogol Petamburan", "Kalideres", "Kebon Jeruk",
 						"Kembangan", "Palmerah", "Taman Sari", "Tambora" };
 
-				values.put(ROW_DISTRICT_ID, "0");
-				values.put(ROW_SUBDISTRICT_DESCRIPTION, "-");
-				values.put(ROW_CREATED_BY, "-");
-				values.put(ROW_CREATED_TIME, "-");
-				values.put(ROW_UPDATE_BY, "-");
-				values.put(ROW_UPDATE_TIME, "-");
-				db.insert(NAMA_TABEL, null, values);
+				
 				
 				for (String district : district_id) {
-					if (district.equals("1")) {
+					if (district.equals("2")) {
 						for (String sub_jakpus : subdistrict_jakpus) {
 
-							values.put(ROW_DISTRICT_ID, "1");
+							values.put(ROW_DISTRICT_ID, "2");
 							values.put(ROW_SUBDISTRICT_DESCRIPTION, sub_jakpus);
 							values.put(ROW_CREATED_BY, "-");
 							values.put(ROW_CREATED_TIME, "-");
@@ -100,10 +95,10 @@ public class TM_Subdistrict {
 							values.put(ROW_UPDATE_TIME, "-");
 							db.insert(NAMA_TABEL, null, values);
 						}
-					} else if (district.equals("2")) {
+					} else if (district.equals("3")) {
 						for (String sub_jakbar : subdistrict_jakbar) {
 
-							values.put(ROW_DISTRICT_ID, "2");
+							values.put(ROW_DISTRICT_ID, "3");
 							values.put(ROW_SUBDISTRICT_DESCRIPTION, sub_jakbar);
 							values.put(ROW_CREATED_BY, "-");
 							values.put(ROW_CREATED_TIME, "-");
@@ -111,10 +106,10 @@ public class TM_Subdistrict {
 							values.put(ROW_UPDATE_TIME, "-");
 							db.insert(NAMA_TABEL, null, values);
 						}
-					} else if (district.equals("3")) {
+					} else if (district.equals("4")) {
 						for (String sub_jaksel : subdistrict_jaksel) {
 
-							values.put(ROW_DISTRICT_ID, "3");
+							values.put(ROW_DISTRICT_ID, "4");
 							values.put(ROW_SUBDISTRICT_DESCRIPTION, sub_jaksel);
 							values.put(ROW_CREATED_BY, "-");
 							values.put(ROW_CREATED_TIME, "-");
@@ -122,10 +117,10 @@ public class TM_Subdistrict {
 							values.put(ROW_UPDATE_TIME, "-");
 							db.insert(NAMA_TABEL, null, values);
 						}
-					} else if (district.equals("4")) {
+					} else if (district.equals("5")) {
 						for (String sub_jaktim : subdistrict_jaktim) {
 
-							values.put(ROW_DISTRICT_ID, "4");
+							values.put(ROW_DISTRICT_ID, "5");
 							values.put(ROW_SUBDISTRICT_DESCRIPTION, sub_jaktim);
 							values.put(ROW_CREATED_BY, "-");
 							values.put(ROW_CREATED_TIME, "-");
@@ -133,10 +128,10 @@ public class TM_Subdistrict {
 							values.put(ROW_UPDATE_TIME, "-");
 							db.insert(NAMA_TABEL, null, values);
 						}
-					} else if (district.equals("5")) {
+					} else if (district.equals("6")) {
 						for (String sub_jakut : subdistrict_jakut) {
 
-							values.put(ROW_DISTRICT_ID, "5");
+							values.put(ROW_DISTRICT_ID, "6");
 							values.put(ROW_SUBDISTRICT_DESCRIPTION, sub_jakut);
 							values.put(ROW_CREATED_BY, "-");
 							values.put(ROW_CREATED_TIME, "-");
@@ -145,6 +140,15 @@ public class TM_Subdistrict {
 							db.insert(NAMA_TABEL, null, values);
 						}
 					} else {
+						values.put(ROW_DISTRICT_ID, "1");
+						values.put(ROW_SUBDISTRICT_DESCRIPTION, "-");
+						values.put(ROW_CREATED_BY, "-");
+						values.put(ROW_CREATED_TIME, "-");
+						values.put(ROW_UPDATE_BY, "-");
+						values.put(ROW_UPDATE_TIME, "-");
+						db.insert(NAMA_TABEL, null, values);
+						
+						
 					}
 				}
 				
@@ -275,6 +279,23 @@ public class TM_Subdistrict {
 		mCursor.close();
 		return name;
 	}
+	
+	//get id of district
+	public String getIDDistrict(String id_subdistrict) {
+		String name = "";
+		Cursor mCursor = db.rawQuery(
+				"SELECT  district_id  FROM  TM_SUBDISTRICT WHERE subdistrict_id= '"
+						+ id_subdistrict + "'", null);
+		if (mCursor != null) {
+			mCursor.moveToFirst();
+			name = mCursor.getString(mCursor
+					.getColumnIndex(ROW_DISTRICT_ID));
+		}
+		mCursor.close();
+		return name;
+	}
+
+	
 
 	public ArrayList<String> getAllNameDistrict(String id) {
 		ArrayList<String> district =  new ArrayList<String>();
@@ -299,6 +320,29 @@ public class TM_Subdistrict {
 		
 		return district;
 	}
+	
+	public ArrayList<String> getAllDistrict() {
+		ArrayList<String> district =  new ArrayList<String>();
+		try {
+			Cursor mCursor = db.rawQuery(
+					"SELECT  subdistrict_description  FROM  TM_SUBDISTRICT ", null);
+			
+			mCursor.moveToFirst();
+			while (!mCursor.isAfterLast()) {
+				district.add(mCursor.getString(mCursor.getColumnIndex(ROW_SUBDISTRICT_DESCRIPTION)));
+				mCursor.moveToNext();
+			}
+			mCursor.close();
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.e("Failed to find all name district", e.toString());
+		}
+		
+		return district;
+	}
+	
 	
 	public void SaveDataFromServer(String[] data) {
 		try {

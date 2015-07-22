@@ -285,7 +285,222 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5" />
+                    <TextView
+                            android:id="@+id/tvtambah_jenis_arv"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2.5"
+                            android:onClick="onClick"
+                            android:text="Tambah Jenis ARV"
+                            android:textColor="@color/blue"
+                            android:textStyle="italic" />
                 </LinearLayout>
+                
+                <!--         pilihan obat pertama -->
+        <LinearLayout
+            
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:orientation="horizontal" 
+            android:id="@+id/linArv1"
+            >
+
+            <TextView
+                android:id="@+id/arv1"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Jenis ARV1"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/dos_pagi1"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="Dosis Pagi1"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/dos_malam1"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Dosis Malam1"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+        </LinearLayout>
+        
+        <!--         pilihan obat kedua -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:orientation="horizontal"
+             android:id="@+id/linArv2"
+            >
+
+            <TextView
+                android:id="@+id/arv2"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Jenis ARV2"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/dos_pagi2"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="Dosis Pagi2"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/dos_malam2"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Dosis Malam2"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+        </LinearLayout>
+        
+        
+        <!--         pilihan obat ketiga -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:orientation="horizontal" 
+             android:id="@+id/linArv3"
+             android:visibility="invisible"
+            >
+
+            <TextView
+                android:id="@+id/arv3"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Jenis ARV"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/dos_pagi3"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="Dosis Pagi"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/dos_malam3"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Dosis Malam"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+        </LinearLayout>
+        
+        <!--         pilihan obat keempat -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:orientation="horizontal"
+             android:id="@+id/linArv4"
+             android:visibility="invisible"
+             >
+
+            <TextView
+                android:id="@+id/arv4"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Jenis ARV"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/dos_pagi4"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="Dosis Pagi"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/dos_malam4"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Dosis Malam"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+        </LinearLayout>
+        
+        <!--         pilihan obat kelima -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:orientation="horizontal" 
+             android:id="@+id/linArv5"
+             android:visibility="invisible"
+             
+            >
+
+            <TextView
+                android:id="@+id/arv5"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Jenis ARV"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/dos_pagi5"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="Dosis Pagi"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/dos_malam5"
+                android:layout_width="85dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="Dosis Malam"
+                android:textColor="#000000"
+                android:textSize="13sp" />
+        </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -678,6 +893,40 @@
                         android:ems="10"
                         android:inputType="phone"
                         android:textColor="@color/black" />
+                    <EditText
+                        android:id="@+id/edit_telepon1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:ems="10"
+                        android:inputType="phone"
+                        android:visibility="invisible"
+                        android:textColor="@color/black" 
+                        android:layout_below="@+id/edit_telepon"
+                        android:gravity="bottom"
+                        android:layout_alignParentBottom="true"/>
+                    <EditText
+                        android:id="@+id/edit_telepon2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:ems="10"
+                        android:inputType="phone"
+                        android:visibility="invisible"
+                        android:textColor="@color/black" 
+                        android:layout_below="@+id/edit_telepon"
+                        android:gravity="bottom"
+                        android:layout_alignParentBottom="true"/>
+                    
+                    <Button
+                        android:id="@+id/button_tambah"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:background="@android:color/transparent"
+                        android:onClick="onClick"
+                        android:text="+"
+                        android:textColor="@color/blue" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -828,7 +1077,7 @@
                                     android:paddingBottom="2dp" >
 
                                     <CheckBox
-                                        android:id="@+id/checkBox1"
+                                        android:id="@+id/checkBoxSusu"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_weight="3.5"
@@ -844,6 +1093,7 @@
                                         android:onClick="onClick"
                                         android:background="@android:color/transparent"
                                         android:text="+"
+                                        android:visibility="invisible"
                                         android:textColor="@color/blue" />
 
                                 </LinearLayout>
@@ -890,7 +1140,7 @@
                                     android:paddingBottom="2dp" >
 
                                     <CheckBox
-                                        android:id="@+id/checkBox2"
+                                        android:id="@+id/checkBoxVitamin"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_weight="3.5"
@@ -906,6 +1156,7 @@
                                         android:onClick="onClick"
                                         android:text="+"
                                         android:background="@android:color/transparent"
+                                         android:visibility="invisible"
                                         android:textColor="@color/blue" />
 
                                 </LinearLayout>
@@ -952,7 +1203,7 @@
                                     android:paddingBottom="2dp" >
 
                                     <CheckBox
-                                        android:id="@+id/checkBox3"
+                                        android:id="@+id/checkBoxPopok"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
                                         android:layout_weight="3.5"
@@ -967,6 +1218,7 @@
                                         android:layout_weight="0.5"
                                         android:onClick="onClick"
                                         android:text="+"
+                                        android:visibility="invisible"
                                         android:background="@android:color/transparent"
                                         android:textColor="@color/blue" />
 

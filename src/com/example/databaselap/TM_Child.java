@@ -48,7 +48,7 @@ public class TM_Child {
 	private static final String ROW_UPDATE_TIME = "update_time";
 
 	// mendeklarasikan NAMA_DB DAN TABLE DAN DATABASE VERSION
-	private static final String NAMA_DB = "INIDB";
+	private static final String NAMA_DB = "INIDB_";
 	private static final String NAMA_TABEL = "TM_Child";
 	private static final int DB_VERSION = 1;
 	// mendeklarasikan CREATE_TABLE = MEMBUAT TABLE"
@@ -80,14 +80,16 @@ public class TM_Child {
 	private DatabaseOpenHelper dbhelper;
 	// membuat mendeklarasikan SQLiteDatabase itu adalah db
 	private SQLiteDatabase db;
+	
+	private Cursor cursor;
 
 	public TM_Child(Context ctx) {
 		// mendeklarasikan ctx adalah context ( context context di ganti ctx )
 		this.context = ctx;
 		// membuat DatabaseOpenHelper
-		dbhelper = new DatabaseOpenHelper(context);
+		dbhelper = new DatabaseOpenHelper(this.context);
 		// menuliskan DatabaseOpenHelper = SQLiteDatabase
-		db = dbhelper.getWritableDatabase();
+		this.db = dbhelper.getWritableDatabase();
 	}
 
 	private static class DatabaseOpenHelper extends SQLiteOpenHelper {
@@ -112,10 +114,15 @@ public class TM_Child {
 			onCreate(db);
 
 		}
+		
 	}
 
 	// menutup DatabaseOpenHelper
 	public void close() {
+//	    if (!cursor.isClosed()) {  
+//	        cursor.close();  
+//	    }  
+	   
 		dbhelper.close();
 	}
 
@@ -184,6 +191,7 @@ public class TM_Child {
 			// menambahkan nama tabel bila tidak akan error
 			// db.delete(NAMA_TABEL, null, null);
 			db.insert(NAMA_TABEL, null, values);
+			
 			Log.i("berhasil ", "haloo " + child_name + " " + child_gender + " "
 					+ child_bod + " " + blood_type + " " + father_name + " "
 					+ mother_name + " " + caregiver_name + " " + child_address
@@ -193,72 +201,20 @@ public class TM_Child {
 			e.printStackTrace();
 		}
 	}
-
-	// membuat array pada table layout
-	public ArrayList<ArrayList<Object>> ambilSemuaBaris() {
-		ArrayList<ArrayList<Object>> dataArray = new ArrayList<ArrayList<Object>>();
-		Cursor cur;
-		try {
-			cur = db.query(NAMA_TABEL, new String[] { ROW_CHILD_NAME,
-					ROW_CHILD_BOD, ROW_CHILD_GENDER, ROW_CHILD_ADDRESS,
-					ROW_CAREGIVER_NAME, ROW_CAREGIVER_PHONE, ROW_FATHER_NAME,
-					ROW_MOTHER_NAME, ROW_BLOOD_TYPE, ROW_SCHOOL_NAME,
-
-			// ROW_DRUG_TAKEN,
-
-					// ROW_IMAGE_NAME,
-					// ROW_IMAGE_PATH,
-					// ROW_IMAGE_SERVER_PATH,
-
-					// ROW_CREATED_BY,
-					// ROW_CREATED_TIME,
-					// ROW_UPDATE_BY,
-					// ROW_UPDATE_TIME,
-
-					}, null, null, null, null, null);
-			cur.moveToFirst();
-			if (!cur.isAfterLast()) {
-				do {
-					ArrayList<Object> dataList = new ArrayList<Object>();
-					dataList.add(cur.getString(0));
-					dataList.add(cur.getString(1));
-					dataList.add(cur.getString(2));
-					dataList.add(cur.getString(3));
-					dataList.add(cur.getString(4));
-					dataList.add(cur.getString(5));
-					dataList.add(cur.getString(6));
-					dataList.add(cur.getString(7));
-					dataList.add(cur.getString(8));
-					dataList.add(cur.getString(9));
-					dataArray.add(dataList);
-
-				} while (cur.moveToNext());
-
-			}
-			cur.close();
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			Log.e("DEBE ERROR", e.toString());
-		}
-		return dataArray;
-
-	}
-
+	
 	public TM_Child_Model SearchChild(String nama) {
 		TM_Child_Model model_child = new TM_Child_Model();
 		TM_Child_Model tm = new TM_Child_Model();
 
-		Cursor mCursor = db
+		 cursor = db
 				.rawQuery(
 						" Select child_id,child_name,child_bod,child_gender,blood_type,father_name,mother_name,caregiver_name,child_address,caregiver_phone,school_name,image_path,drug_dose_id,drug_status_id,drug_type_id,class_id,caregiver_id,facility_id,dad_status_id,mom_status_id,subdistrict_id,school_subdistrict_id FROM  TM_Child WHERE child_name = '"
 								+ nama + "'", null);
-		if (mCursor != null) {
-			mCursor.moveToFirst();
-			tm = parseData(mCursor);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			tm = parseData(cursor);
 		}
-		mCursor.close();
+		cursor.close();
 		return tm;
 
 	}
@@ -267,7 +223,7 @@ public class TM_Child {
 	public ArrayList<TM_Child_Model> getAllData() {
 
 		ArrayList<TM_Child_Model> allData = new ArrayList<TM_Child_Model>();
-		Cursor cursor = null;
+		 cursor = null;
 
 		cursor = db.query(NAMA_TABEL, new String[] {
 				ROW_CHILD_ID,
@@ -337,54 +293,35 @@ public class TM_Child {
 		curData.setMom_status_id(cursor.getString(19));
 		curData.setSubdistrict_id(cursor.getString(20));
 		curData.setSchool_subdistrict_id(cursor.getString(21));
-
-		// curData.setChild_id(cursor.getString(cursor.getColumnIndex("child_id")));
-		// curData.setChild_name(cursor.getString(cursor.getColumnIndex("child_name")));
-		// curData.setChild_bod(cursor.getString(cursor.getColumnIndex("child_bod")));
-		// curData.setChild_gender(cursor.getString(cursor.getColumnIndex("child_gender")));
-		// curData.setChild_address(cursor.getString(cursor.getColumnIndex("child_address")));
-		//
-		// curData.setCaregiver_name(cursor.getString(cursor.getColumnIndex("caregiver_name")));
-		// curData.setCaregiver_phone(cursor.getString(cursor.getColumnIndex("caregiver_phone")));
-		// curData.setFather_name(cursor.getString(cursor.getColumnIndex("father_name")));
-		// curData.setMother_name(cursor.getString(cursor.getColumnIndex("mother_name")));
-		//
-		// curData.setBlood_type(cursor.getString(cursor.getColumnIndex("blood_type")));
-		// curData.setSchool_name(cursor.getString(cursor.getColumnIndex("school_name")));
-		//
-		// curData.setImage_path(cursor.getString(cursor.getColumnIndex("image_path")));
-		//
-		// curData.setDrug_dose_id(cursor.getString(cursor.getColumnIndex("drug_dose_id")));
-		// curData.setDrug_status_id(cursor.getString(cursor.getColumnIndex("drug_status_id")));
-		// curData.setDrug_type_id(cursor.getString(cursor.getColumnIndex("drug_type_id")));
-		// curData.setClass_id(cursor.getString(cursor.getColumnIndex("class_id")));
-		// curData.setCaregiver_id(cursor.getString(cursor.getColumnIndex("caregiver_id")));
-
 		return curData;
 	}
 
 	public TM_Child_Model getChildIdentityById(String id) {
 		TM_Child_Model model_child = new TM_Child_Model();
-		Cursor mCursor = db
+		cursor = db
 				.rawQuery(
 						"SELECT  child_id,child_name,child_bod,child_gender,blood_type,father_name,mother_name,caregiver_name,child_address,caregiver_phone,school_name,image_path,drug_dose_id,drug_status_id,drug_type_id,class_id,caregiver_id,facility_id,dad_status_id,mom_status_id,subdistrict_id,school_subdistrict_id FROM  TM_Child WHERE child_id= '"
 								+ id + "'", null);
-		if (mCursor != null) {
-			mCursor.moveToFirst();
-			model_child = parseData(mCursor);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			model_child = parseData(cursor);
 		}
-		mCursor.close();
+		cursor.close();
 		return model_child;
 	}
 
 	public void updateChildIdentityById(String child_id, String child_name,
 			String child_bod, String child_gender, String blood_type,
 			String father_name, String mother_name, String caregiver_name,
-			String child_address, String caregiver_phone, String school_name
-	// String drug_taken
-	// ,String image_name , String image_path , String image_server_path,
-	// String created_by , String created_time ,String update_by , String
-	// update_time
+			String child_address, String caregiver_phone, String school_name,
+			
+			String id_status_ayah, String id_status_ibu, String id_caregiver,
+			String id_subdistrict, String id_school_subdistrict, String id_class,
+			String path_picture
+			// String drug_taken
+			// ,String image_name , String image_path , String image_server_path,
+			// String created_by , String created_time ,String update_by , String
+			// update_time
 	) {
 		ContentValues values = new ContentValues();
 		values.put(ROW_CHILD_NAME, child_name);
@@ -398,14 +335,24 @@ public class TM_Child {
 		values.put(ROW_CAREGIVER_PHONE, caregiver_phone);
 		values.put(ROW_SCHOOL_NAME, school_name);
 
+		
+		values.put(ROW_DAD_STATUS_ID, id_status_ayah);
+		values.put(ROW_MOM_STATUS_ID, id_status_ibu);
+		values.put(ROW_CAREGIVER_ID, id_caregiver);
+		values.put(ROW_SUBDISTRICT_ID, id_subdistrict);
+		values.put(ROW_SCHOOL_SUBDISTRICT_ID, id_school_subdistrict);
+		values.put(ROW_CLASS_ID, id_class);
+		values.put(ROW_IMAGE_PATH, path_picture);
+		
 		db.update(NAMA_TABEL, values, "child_id=" + child_id, null);
+		
 	}
 
 	//get child name
 	 public ArrayList<String> getAllChildName() {
 
 	  ArrayList<String> allData = new ArrayList<String>();
-	  Cursor cursor = null;
+	   cursor = null;
 
 	  cursor = db.query(NAMA_TABEL, new String[] { 
 	    ROW_CHILD_ID,
@@ -437,6 +384,18 @@ public class TM_Child {
 
 	  cursor.close();
 	  return allData;
+	 }
+	 
+	 public String getLastInsertedChild()
+	 {
+		 String id = "";
+		 cursor = db.rawQuery("SELECT  child_id FROM  TM_Child", null); 
+		 if(cursor != null && cursor.moveToLast())
+		 {
+			 id = cursor.getString(cursor.getColumnIndex(ROW_CHILD_ID));
+		 }
+		 cursor.close();
+		 return id;
 	 }
 
 }

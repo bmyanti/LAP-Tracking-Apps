@@ -70,21 +70,42 @@ public class TM_Drug_Type {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 				
-				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Pil");
+				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Sirup1");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
 				values.put(ROW_UPDATE_BY, "-");
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
-				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Kapsul");
+				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Sirup2");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
 				values.put(ROW_UPDATE_BY, "-");
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
-				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Sirup");
+				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Sirup3");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
+				
+				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Sirup4");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
+				
+				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Sirup5");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
+				
+				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Sirup6");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
 				values.put(ROW_UPDATE_BY, "-");

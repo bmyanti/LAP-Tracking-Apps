@@ -61,20 +61,7 @@ public class TM_Facility {
 			try {
 				// hapus dari tabel kemudian update yang baru
 				// masih data static
-				final String[] fasilitas = { "Bebelac 4-Madu-800 gr",
-						"Chilschool-4-soya-300 gr", "Dancow 1+-Vanilla-800 gr",
-						"Dancow 5+-Vanilla-800 gr", "Dancow-1+-Madu-800 gr",
-						"Dancow-1+-Vanilla-800 gr", "Dancow-3+-Madu-800 gr",
-						"Dancow-5+-Madu-800 gr", "Dancow-5+-Madu-800 gr",
-						"Dancow-Datita3/5-1000 gr", "Dancow-Fullcream-Choc-800 gr",
-						"Dancow-Fullcream-Vanilla-800  gr",
-						"Ensure-FOS-Chocolate-1000 gr","Frisian-Flag-123-800 gr","Frisian-Flag-123-Madu-800 gr","Frisian-Flag-123-Vanilla-800 gr","Frisian-Flag-456-800 gr","Nutrilon-Soya-4-400 gr","Pediasure-900 gr",
-						"SGM-2-Vanilla-1000 gr","SGM-3-Madu-1000 gr","SGM-3-Vanilla-1000 gr","SGM-4-Madu-1000 gr",
-						"SGM-4-Vanilla-1000 gr","SGM-LLM-400 gr","UHT-Choc 125ml","UHT-Straw 125ml ",
-						"Vidorant",
-						"Sangobion", "Diaper-Goon-pants-XXL38",
-						"Diaper-Pampers-pants-L36", "Diaper-Pampers-pants-M42",
-						"Diaper-Pampers-pants-XL32" };
+				final String[] fasilitas = { "Susu","Vitamin","Popok"};
 
 				ContentValues values = new ContentValues();
 				for (String a : fasilitas) {
@@ -162,38 +149,6 @@ public class TM_Facility {
 
 	public void deleteAll() {
 		db.delete(NAMA_TABEL, null, null);
-	}
-
-	public void InsertData() {
-		try {
-			// hapus dari tabel kemudian update yang baru
-			deleteAll();
-			// masih data static
-			final String[] fasilitas = { "Bebelac 4-Madu-800 gr",
-					"Chilschool-4-soya-300 gr", "Dancow 1+-Vanilla-800 gr",
-					"Dancow 5+-Vanilla-800 gr", "Dancow-1+-Madu-800 gr",
-					"Dancow-1+-Vanilla-800 gr", "Dancow-3+-Madu-800 gr",
-					"Dancow-5+-Madu-800 gr", "Dancow-5+-Madu-800 gr",
-					"Dancow-Datita3/5-1000 gr", "Dancow-Fullcream-Choc-800 gr",
-					"Dancow-Fullcream-Vanilla-800  gr", "Vidorant",
-					"Sangobion", "Diaper-Goon-pants-XXL38",
-					"Diaper-Pampers-pants-L36", "Diaper-Pampers-pants-M42",
-					"Diaper-Pampers-pants-XL32" };
-
-			ContentValues values = new ContentValues();
-			for (String a : fasilitas) {
-				values.put(ROW_FACILITY_DESCRIPTION, a);
-				values.put(ROW_CREATED_BY, "-");
-				values.put(ROW_CREATED_TIME, "-");
-				values.put(ROW_UPDATE_BY, "-");
-				values.put(ROW_UPDATE_TIME, "-");
-				db.insert(NAMA_TABEL, null, values);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			Log.e("Gagal Insert Data", e.toString());
-		}
 	}
 
 	// get id type arv

@@ -197,11 +197,11 @@ public class TM_Drug_Dose {
 		return allData;
 	}
 
-	public static void deleteAll() {
+	public  void deleteAll() {
 		db.delete(NAMA_TABEL, null, null);
 	}
 
-	public static void InsertData() {
+	public  void InsertData() {
 		try {
 			// hapus dari tabel kemudian update yang baru
 			deleteAll();

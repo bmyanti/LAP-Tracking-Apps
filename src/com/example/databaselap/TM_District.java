@@ -98,6 +98,8 @@ public class TM_District {
 				values.put(ROW_UPDATE_BY, "-");
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
+				
+				
 
 			} catch (Exception e) {
 				e.printStackTrace();

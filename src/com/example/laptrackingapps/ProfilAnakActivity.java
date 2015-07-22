@@ -23,7 +23,9 @@ import org.apache.http.params.HttpParams;
 
 import com.example.databaselap.TM_Caregiver;
 import com.example.databaselap.TM_Child;
+import com.example.databaselap.TM_Child_Facility;
 import com.example.databaselap.TM_Class;
+import com.example.databaselap.TM_Cost_Facility;
 import com.example.databaselap.TM_District;
 import com.example.databaselap.TM_Drug_Dose;
 import com.example.databaselap.TM_Drug_Status;
@@ -31,12 +33,14 @@ import com.example.databaselap.TM_Drug_Type;
 import com.example.databaselap.TM_Facility;
 import com.example.databaselap.TM_Parent_Status;
 import com.example.databaselap.TM_Subdistrict;
+import com.example.modellap.TM_Child_Facility_Model;
 import com.example.modellap.TM_Child_Model;
 
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -66,6 +70,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -80,8 +85,14 @@ public class ProfilAnakActivity extends Activity implements
 	LinearLayout simpan_profil;
 	EditText txtName, txtFatherName, txtMotherName, txtCareGiverName,
 			txtAddress, txtTeleponNumberCG, txtSchool;
+	TextView tvtambah_jenis_arv;
 	Button susu, vitamin, popok;
-	TextView tvSusu, tvVitamin, tvPopok;
+	TextView tvSusu, tvVitamin, tvPopok, tvarv1, tvarv2, tvarv3, tvarv4,
+			tvarv5;
+
+	// spinner
+	Spinner spin;
+	int position;
 
 	// untuk kamera
 	private static final int Image_take = 1;
@@ -97,7 +108,7 @@ public class ProfilAnakActivity extends Activity implements
 			"November", "Desember" };
 
 	// spinner
-	String item_golongandarah[] = { "-","A", "B", "O", "AB" };
+	String item_golongandarah[] = { "-", "A", "B", "O", "AB" };
 	// this still static
 	String item_jenis_obat[];
 	String item_dosis[];
@@ -112,21 +123,28 @@ public class ProfilAnakActivity extends Activity implements
 	Spinner spinner_kotamadya, spinner_kecamatan, spinner_kotamadyasekolah,
 			spinner_kecamatansekolah;
 
+	View popupView;
+
 	// fetch data kelas
 	String[] datakelas;
 
 	// radio button
 	RadioGroup radio_gender_group, radio_status_ayah_group, radio_status_ayah,
 			radio_status_ibu_group, radio_status_ibu;
-	
+
 	String gender = "", status_ayah = "", status_ibu = "", status_temp = "";
 	Boolean status_parent_temp, status_parent_temp1;
 
 	// String
 	String picturePath, Path, PathNull;
 
+	// phone number caregiver
+	EditText txtPhone1, txtPhone2;
+
 	// arraylist kotamadya dan kecamatan
 	ArrayList<String> arr_kecamatan = new ArrayList<String>();
+	ArrayList<String> arr_kotamadya = new ArrayList<String>();
+	ArrayList<String> data_tipeARV = new ArrayList<String>();
 	ArrayList<String> data_kotamadya;
 
 	// table arv dose,arv status, arv type, arv facility, caregiver,
@@ -142,12 +160,35 @@ public class ProfilAnakActivity extends Activity implements
 	TM_District tabel_kotamadya;
 	TM_District tabel_district;
 	TM_Subdistrict tabel_subdistrict;
+	TM_Child_Facility tabel_child_facility;
+	TM_Cost_Facility tabel_cost_facility;
 	// simpan fasilitas
 
 	ArrayList<Integer> selList = new ArrayList();
 	String msg = "";
 	// this is concated facilities id
 	String facility_id = " ";
+	Boolean status_susu = false, status_vitamin = false, status_popok = false;
+	String fasilitas_susu_id = " ", fasilitas_vitamin_id = " ",
+			fasilitas_popok_id = " ";
+	ArrayList<String> fasilitas_susu = new ArrayList<String>();
+	ArrayList<String> fasilitas_vitamin = new ArrayList<String>();
+	ArrayList<String> fasilitas_popok = new ArrayList<String>();
+	// checkbox
+	CheckBox Checkbox_Susu;
+	CheckBox Checkbox_Vitamin;
+	CheckBox Checkbox_Popok;
+	// Button fasilitas
+	Button btn_susu;
+	Button btn_vitamin;
+	Button btn_popok;
+	ArrayAdapter<String> kecAdapter;
+	ArrayAdapter<String> adapter_caregiver;
+	int spinner_position;
+	ArrayAdapter<String> adapter_golda;
+
+	Spinner spinner_cg;
+	Spinner spinner_golda;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -156,9 +197,25 @@ public class ProfilAnakActivity extends Activity implements
 		setContentView(R.layout.activity_profil_anak);
 
 		// textview
+		// arv from spinner
+		TextView arv1 = (TextView) findViewById(R.id.arv1);
+		TextView arv2 = (TextView) findViewById(R.id.arv2);
+		TextView arv3 = (TextView) findViewById(R.id.arv3);
+		TextView arv4 = (TextView) findViewById(R.id.arv4);
+		TextView arv5 = (TextView) findViewById(R.id.arv5);
+
+		// linear layout from spinner
+		LinearLayout linArv1 = (LinearLayout) findViewById(R.id.linArv1);
+		LinearLayout linArv2 = (LinearLayout) findViewById(R.id.linArv2);
+		LinearLayout linArv3 = (LinearLayout) findViewById(R.id.linArv3);
+		LinearLayout linArv4 = (LinearLayout) findViewById(R.id.linArv4);
+		LinearLayout linArv5 = (LinearLayout) findViewById(R.id.linArv5);
+
+		// textview
 		tvSusu = (TextView) findViewById(R.id.textview_susu);
 		tvVitamin = (TextView) findViewById(R.id.textViewVitamin);
 		tvPopok = (TextView) findViewById(R.id.textViewPopok);
+		tvtambah_jenis_arv = (TextView) findViewById(R.id.tvtambah_jenis_arv);
 
 		// editText
 		txtName = (EditText) findViewById(R.id.edit_nama_anak);
@@ -169,6 +226,10 @@ public class ProfilAnakActivity extends Activity implements
 		txtAddress = (EditText) findViewById(R.id.edit_alamat);
 		txtTeleponNumberCG = (EditText) findViewById(R.id.edit_telepon);
 		txtSchool = (EditText) findViewById(R.id.edit_sekolah);
+
+		//
+		txtPhone1 = (EditText) findViewById(R.id.edit_telepon1);
+		txtPhone2 = (EditText) findViewById(R.id.edit_telepon2);
 
 		back = (ImageView) findViewById(R.id.btn_back);
 		simpan_profil = (LinearLayout) findViewById(R.id.button_simpanprofil);
@@ -184,17 +245,28 @@ public class ProfilAnakActivity extends Activity implements
 		vitamin = (Button) findViewById(R.id.button_vitamin);
 		popok = (Button) findViewById(R.id.button_popok);
 
+		// checkbox
+		Checkbox_Susu = (CheckBox) findViewById(R.id.checkBoxSusu);
+		Checkbox_Vitamin = (CheckBox) findViewById(R.id.checkBoxVitamin);
+		Checkbox_Popok = (CheckBox) findViewById(R.id.checkBoxPopok);
+
+		// Button
+		btn_susu = (Button) findViewById(R.id.button_susu);
+		btn_vitamin = (Button) findViewById(R.id.button_vitamin);
+		btn_popok = (Button) findViewById(R.id.button_popok);
+
 		// insertt to local database
 		InsertDataToLocalDatabase();
-
+		SelectFasilitas();
 		// spinner
 		// fetch golongan darah
-		Spinner spinner_golda = (Spinner) findViewById(R.id.spinner_golongandarah);
+		spinner_golda = (Spinner) findViewById(R.id.spinner_golongandarah);
 		spinner_golda.setOnItemSelectedListener(this);
-		ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this,
+		adapter_golda = new ArrayAdapter<String>(this,
 				android.R.layout.simple_dropdown_item_1line, item_golongandarah);
-		adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner_golda.setAdapter(adapter1);
+		adapter_golda
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner_golda.setAdapter(adapter_golda);
 
 		// jenis obat
 		ArrayList<String> data_tipeARV = tabel_type_arv.getAllData();
@@ -220,10 +292,12 @@ public class ProfilAnakActivity extends Activity implements
 
 		// status obat
 		ArrayList<String> data_statusARV = tabel_status_arv.getAllData();
-		item_status_obat = data_statusARV.toArray(new String[data_statusARV.size()]);
+		item_status_obat = data_statusARV.toArray(new String[data_statusARV
+				.size()]);
 		Spinner spinner_status_obat = (Spinner) findViewById(R.id.spinner_statusobat);
 		spinner_status_obat.setOnItemSelectedListener(this);
-		ArrayAdapter<String> adapter4 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, item_status_obat);
+		ArrayAdapter<String> adapter4 = new ArrayAdapter<String>(this,
+				android.R.layout.simple_dropdown_item_1line, item_status_obat);
 		adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner_status_obat.setAdapter(adapter4);
 
@@ -241,12 +315,13 @@ public class ProfilAnakActivity extends Activity implements
 		ArrayList<String> data_caregiver = tabel_caregiver.getAllData();
 		item_caregiver = data_caregiver.toArray(new String[data_caregiver
 				.size()]);
-		Spinner spinner_cg = (Spinner) findViewById(R.id.spinner_caregiver);
+		spinner_cg = (Spinner) findViewById(R.id.spinner_caregiver);
 		spinner_cg.setOnItemSelectedListener(this);
-		ArrayAdapter<String> adapter6 = new ArrayAdapter<String>(this,
+		adapter_caregiver = new ArrayAdapter<String>(this,
 				android.R.layout.simple_dropdown_item_1line, item_caregiver);
-		adapter6.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner_cg.setAdapter(adapter6);
+		adapter_caregiver
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner_cg.setAdapter(adapter_caregiver);
 
 		// wilayah kotamadya dan kecamatan
 		data_kotamadya = tabel_kotamadya.getAllData();
@@ -306,28 +381,46 @@ public class ProfilAnakActivity extends Activity implements
 				radio_status_ayah);
 		status_ibu = findStatusParent(radio_status_ibu_group, radio_status_ibu);
 
+		// pop up tambah obat
+		tvtambah_jenis_arv.setOnClickListener(new View.OnClickListener() {
+			// button tambah foto
+
+			@Override
+			public void onClick(View v) {
+
+				ArrayList<String> data_tipeARV = tabel_type_arv.getAllData();
+				item_jenis_obat = data_tipeARV.toArray(new String[data_tipeARV
+						.size()]);
+
+				Toast.makeText(getApplicationContext(), "yuhu",
+						Toast.LENGTH_LONG).show();
+				pilihArv(item_jenis_obat, "Pilih ARV");
+			}
+		});
+
 		// menyimpan data anak
 		simpan_profil.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				GetCaregiverPhone();
 				tabel_anak = new TM_Child(getApplicationContext());
 				// check whether it is create or update -> krn me-refer ke
 				// activity yang sama
 				String path_gambar = "";
 				Intent i = getIntent();
 				PathNull = "kosong";
+				if (picturePath != null) {
+					path_gambar = picturePath;
+				}
+
+				else if (Path != null) {
+					path_gambar = Path;
+				} else if (PathNull != null) {
+
+					path_gambar = PathNull;
+				}
 				if (i.getStringExtra("id_anak") == null) {
 
-					if (picturePath != null) {
-						path_gambar = picturePath;
-					}
-
-					else if (Path != null) {
-						path_gambar = Path;
-					} else if (PathNull != null) {
-
-						path_gambar = PathNull;
-					}
 					tabel_anak.addRow(
 							txtName.getText().toString(),
 							txtDate.getText().toString(),
@@ -337,7 +430,7 @@ public class ProfilAnakActivity extends Activity implements
 							txtMotherName.getText().toString(),
 							txtCareGiverName.getText().toString(),
 							txtAddress.getText().toString(),
-							txtTeleponNumberCG.getText().toString(),
+							GetCaregiverPhone(),
 							txtSchool.getText().toString(),
 							path_gambar,
 							tabel_status_arv.getIdStatusARV(status_obat
@@ -350,7 +443,7 @@ public class ProfilAnakActivity extends Activity implements
 									.toString()),
 							tabel_caregiver.getIdCaregiver(care_giver
 									.getSelectedItem().toString()),
-							facility_id,
+							"-",
 							findStatusParent(radio_status_ayah_group,
 									radio_status_ayah),
 							findStatusParent(radio_status_ibu_group,
@@ -360,20 +453,44 @@ public class ProfilAnakActivity extends Activity implements
 							tabel_subdistrict
 									.getIdSubDistrict(spinner_kecamatansekolah
 											.getSelectedItem().toString()));
-					Log.e("gender ",
-							""
-									+gender);
+
+					// insert semua fasilitas anak
+					InsertFasilitasAnak(tabel_anak.getLastInsertedChild());
+
+					// insert arv
+
+					Log.e("gender ", "" + gender);
 				} else {
-					tabel_anak = new TM_Child(getApplicationContext());
-					tabel_anak.updateChildIdentityById(i
-							.getStringExtra("id_anak"), txtName.getText()
-							.toString(), txtDate.getText().toString(), gender,
+					tabel_anak.updateChildIdentityById(
+							i.getStringExtra("id_anak"),
+							txtName.getText().toString(),
+							txtDate.getText().toString(),
+							gender,
 							golongan_darah.getSelectedItem().toString(),
-							txtFatherName.getText().toString(), txtMotherName
-									.getText().toString(), txtCareGiverName
-									.getText().toString(), txtAddress.getText()
-									.toString(), txtTeleponNumberCG.getText()
-									.toString(), txtSchool.getText().toString());
+							txtFatherName.getText().toString(),
+							txtMotherName.getText().toString(),
+							txtCareGiverName.getText().toString(),
+							txtAddress.getText().toString(),
+							GetCaregiverPhone(),
+							txtSchool.getText().toString(),
+							findStatusParent(radio_status_ayah_group,
+									radio_status_ayah),
+							findStatusParent(radio_status_ibu_group,
+									radio_status_ibu), tabel_caregiver
+									.getIdCaregiver(care_giver
+											.getSelectedItem().toString()),
+							tabel_subdistrict
+									.getIdSubDistrict(spinner_kecamatan
+											.getSelectedItem().toString()),
+							tabel_subdistrict
+									.getIdSubDistrict(spinner_kecamatansekolah
+											.getSelectedItem().toString()),
+							tabel_kelas.getIdKelas(kelas.getSelectedItem()
+									.toString()), path_gambar);
+					
+					//update tabel fasilitas anak
+					DeleteFasilitasAnak(i.getStringExtra("id_anak"));
+					InsertFasilitasAnak(i.getStringExtra("id_anak"));
 
 				}
 				//
@@ -395,34 +512,6 @@ public class ProfilAnakActivity extends Activity implements
 			}
 		});
 
-		/*
-		 * //btn simpan profil anak simpan_profil.setOnClickListener(new
-		 * OnClickListener() {
-		 * 
-		 * @Override public void onClick(View arg0) { // TODO Auto-generated
-		 * method stub int TIMEOUT_MILLISEC = 10000; HttpParams httpParams = new
-		 * BasicHttpParams();
-		 * HttpConnectionParams.setConnectionTimeout(httpParams,
-		 * TIMEOUT_MILLISEC); HttpConnectionParams.setSoTimeout(httpParams,
-		 * TIMEOUT_MILLISEC); HttpClient client = new
-		 * DefaultHttpClient(httpParams); List<NameValuePair> nameValuePairs =
-		 * new ArrayList<NameValuePair>(3); nameValuePairs.add(new
-		 * BasicNameValuePair("nama", txtName.getText().toString()));
-		 * nameValuePairs.add(new BasicNameValuePair("date",
-		 * txtDate.getText().toString())); nameValuePairs.add(new
-		 * BasicNameValuePair("goldar", golongan_darah.toString()));
-		 * 
-		 * try { HttpPost request = new
-		 * HttpPost("http://192.168.1.171/jsonn/addkota.php");
-		 * request.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-		 * 
-		 * HttpResponse response = client.execute(request); } catch(Exception
-		 * e){ Toast.makeText(getApplicationContext(), "Error",
-		 * Toast.LENGTH_LONG).show(); e.printStackTrace(); }
-		 * Toast.makeText(getApplicationContext(), "Berhasil",
-		 * Toast.LENGTH_LONG).show(); ListAnakActivity.la.RefreshList();
-		 * finish(); } });
-		 */
 		tambah_foto.setOnClickListener(new View.OnClickListener() {
 			// button tambah foto
 			@Override
@@ -543,50 +632,288 @@ public class ProfilAnakActivity extends Activity implements
 			txtAddress.setText(model_anak.getChild_address());
 			txtTeleponNumberCG.setText(model_anak.getCaregiver_phone());
 			txtSchool.setText(model_anak.getSchool_name());
-			
-			//checked any gender
-			if(model_anak.getChild_gender().equals("PEREMPUAN"))
-			{
+
+			// checked any gender
+			if (model_anak.getChild_gender().equals("PEREMPUAN")) {
 				RadioButton pr = (RadioButton) findViewById(R.id.radioButtonPerempuan);
 				pr.setChecked(true);
-			
-			}
-			else if(model_anak.getChild_gender().equals("LAKI - LAKI"))
-			{
+
+			} else if (model_anak.getChild_gender().equals("LAKI - LAKI")) {
 				RadioButton lk = (RadioButton) findViewById(R.id.radioButtonLakilaki);
 				lk.setChecked(true);
+			} else {
 			}
-			else{}
-			
-			//checked any parent status
+
+			// checked any parent status
 			RadioButton life_fat = (RadioButton) findViewById(R.id.radioButtonHidup);
 			RadioButton life_fat1 = (RadioButton) findViewById(R.id.radioButtonMeninggal);
 			RadioButton hiv_fat = (RadioButton) findViewById(R.id.radioButtonAyahPositif);
 			RadioButton hiv_fat1 = (RadioButton) findViewById(R.id.radioButtonAyahNegatif);
-			
+
 			RadioButton life_mot = (RadioButton) findViewById(R.id.radioButtonIbuHidup);
 			RadioButton life_mot1 = (RadioButton) findViewById(R.id.radioButtonIbuMeninggal);
 			RadioButton hiv_mot = (RadioButton) findViewById(R.id.radioButtonIbuPositif);
 			RadioButton hiv_mot1 = (RadioButton) findViewById(R.id.radioButtonIbuNegatif);
+
+			if (model_anak.getDad_status_id().equals("1")) {
+				life_fat.setChecked(true);
+				hiv_fat.setChecked(true);
+			} else if (model_anak.getDad_status_id().equals("2")) {
+				life_fat.setChecked(true);
+				hiv_fat1.setChecked(true);
+			} else if (model_anak.getDad_status_id().equals("3")) {
+				life_fat1.setChecked(true);
+				hiv_fat.setChecked(true);
+			} else if (model_anak.getDad_status_id().equals("4")) {
+				life_fat1.setChecked(true);
+				hiv_fat1.setChecked(true);
+			} else {
+			}
+
+			if (model_anak.getMom_status_id().equals("1")) {
+				life_mot.setChecked(true);
+				hiv_mot.setChecked(true);
+			} else if (model_anak.getMom_status_id().equals("2")) {
+				life_mot.setChecked(true);
+				hiv_mot1.setChecked(true);
+			} else if (model_anak.getMom_status_id().equals("3")) {
+				life_mot1.setChecked(true);
+				hiv_mot.setChecked(true);
+			} else if (model_anak.getMom_status_id().equals("4")) {
+				life_mot1.setChecked(true);
+				hiv_mot1.setChecked(true);
+			} else {
+			}
+
+			SetCaregiverPhone(model_anak.getCaregiver_phone());
+
+			// set display name of spinner golda
+			spinner_position = adapter_golda.getPosition(model_anak
+					.getBlood_type());
+			spinner_golda.setSelection(spinner_position);
+
+			// caregiver spinner
+			spinner_position = adapter_caregiver.getPosition(tabel_caregiver
+					.getNameCaregiver(model_anak.getCaregiver_id()));
+			spinner_cg.setSelection(spinner_position);
+
+			// spinner kotamadya dan kecamatan
+
+			arr_kecamatan = tabel_subdistrict.getAllDistrict();
+			kecAdapter = new ArrayAdapter<String>(getApplicationContext(),
+					R.layout.spin, arr_kecamatan);
+			spinner_position = kecAdapter.getPosition(tabel_subdistrict
+					.getNameSubDistrict(model_anak.getSubdistrict_id()));
+			spinner_kecamatan.setAdapter(kecAdapter);
+			spinner_kecamatan.setSelection(spinner_position);
+
+			Toast.makeText(
+					getApplicationContext(),
+					""
+							+ tabel_subdistrict.getNameSubDistrict(model_anak
+									.getSubdistrict_id()), Toast.LENGTH_SHORT)
+					.show();
+			// spinner_kecamatan.setSelection(spinner_position);
+
+			// fetch the id of district id and then populated in names
+			// spinner_position =
+			// kotamadyaAdapter.getPosition(tabel_district.getNameDistrict(tabel_subdistrict.getIDDistrict(model_anak.getSubdistrict_id())));
+			// spinner_kotamadya.setSelection(spinner_position);
+			//
+			// spinner_position =
+			// kotamadyaAdapter.getPosition(tabel_district.getNameDistrict(tabel_subdistrict.getIDDistrict(model_anak.getSchool_subdistrict_id())));
+			// spinner_kotamadyasekolah.setSelection(spinner_position);
 			
-			if(model_anak.getDad_status_id().equals("1")) {life_fat.setChecked(true); hiv_fat.setChecked(true);}
-			else if(model_anak.getDad_status_id().equals("2")) {life_fat.setChecked(true); hiv_fat1.setChecked(true);}
-			else if(model_anak.getDad_status_id().equals("3")){life_fat1.setChecked(true); hiv_fat.setChecked(true);}
-			else if(model_anak.getDad_status_id().equals("4")) {life_fat1.setChecked(true); hiv_fat1.setChecked(true);}
-			else{}
-			
-			if(model_anak.getMom_status_id().equals("1")) {life_mot.setChecked(true); hiv_mot.setChecked(true);}
-			else if(model_anak.getMom_status_id().equals("2")) {life_mot.setChecked(true); hiv_mot1.setChecked(true);}
-			else if(model_anak.getMom_status_id().equals("3")) {life_mot1.setChecked(true); hiv_mot.setChecked(true);}
-			else if(model_anak.getMom_status_id().equals("4")) {life_mot1.setChecked(true); hiv_mot1.setChecked(true);}
-			else{}
+			//displaying fasilitas anak
+			RetrieveFasilitasAnak(model_anak.getChild_id());
 		} else {
 			Log.d("***DEBUG****", "Intent was null");
 
 		}
 
 	}
+
+	public String GetCaregiverPhone() {
+		String result = "";
+		if (!txtTeleponNumberCG.getText().toString().isEmpty()) {
+			result += txtTeleponNumberCG.getText().toString() + ";";
+		}
+		if (!txtPhone1.getText().toString().isEmpty()) {
+			result += txtPhone1.getText().toString() + ";";
+		}
+		if (!txtPhone2.getText().toString().isEmpty()) {
+			result += txtPhone2.getText().toString() + ";";
+		}
+		Log.e("Phone number caregiver ", "" + result);
+		return result;
+	}
+
+	// displaying caregiver Phone
+	public void SetCaregiverPhone(String concatedPhoneNumber) {
+		if (!concatedPhoneNumber.isEmpty() && !concatedPhoneNumber.equals("")) {
+			String[] phones = concatedPhoneNumber.split(";");
+
+			if (phones.length == 1) {
+				txtTeleponNumberCG.setText(phones[0]);
+			} else if (phones.length == 2) {
+				txtTeleponNumberCG.setText(phones[0]);
+				txtPhone1.setVisibility(View.VISIBLE);
+				txtPhone1.setText(phones[1]);
+			} else if (phones.length == 3) {
+				txtTeleponNumberCG.setText(phones[0]);
+				txtPhone1.setVisibility(View.VISIBLE);
+				txtPhone1.setText(phones[1]);
+				txtPhone2.setVisibility(View.VISIBLE);
+				txtPhone2.setText(phones[2]);
+			}
+		}
+	}
 	
+	public void DeleteFasilitasAnak(String id_anak)
+	{
+		tabel_child_facility.DeleteFasilitasAnak(id_anak);
+		Log.e("Delete obsolete fasiltas anak", id_anak);
+	}
+	
+	public void InsertFasilitasAnak(String id_anak) {
+		// cek apakah mk memilih susu
+		Log.e("insert fasilitas anak", "" + true);
+		if (!fasilitas_susu.isEmpty()) {
+			for (String a : fasilitas_susu) {
+				tabel_child_facility.InsertFasilitasAnak(id_anak, "1",tabel_cost_facility.getIdCostFacility(a));
+				Log.e("insert ke tabel cost facility -> susu", a);
+			}
+		}
+		if (!fasilitas_vitamin.isEmpty()) {
+			for (String b : fasilitas_vitamin) {
+				tabel_child_facility.InsertFasilitasAnak(id_anak, "2",
+						tabel_cost_facility.getIdCostFacility(b));
+				Log.e("insert ke tabel cost facility -> vitamin", b);
+			}
+		}
+
+		if (!fasilitas_popok.isEmpty()) {
+			for (String b : fasilitas_popok) {
+				tabel_child_facility.InsertFasilitasAnak(id_anak, "3",
+						tabel_cost_facility.getIdCostFacility(b));
+				Log.e("insert ke tabel cost facility -> popok", b);
+			}
+		}
+
+	}
+
+	public void RetrieveFasilitasAnak(String id_anak) {
+		// retrieve fasilitas id
+		// jika tidak null
+		// count fasilitas id
+		// looping per fasilitas
+		// checked the fasilitas id
+		// retrieve ke semua fasilitas cost id yang punya fasilitas child yang
+		// fasilitas id sekian dengan anak sekian
+		// jika tidak null
+		// set text
+		
+		ArrayList<String> fasilitas_susu = new ArrayList<String>();
+		ArrayList<String> fasilitas_vitamin = new ArrayList<String>();
+		ArrayList<String> fasilitas_popok = new ArrayList<String>();
+		ArrayList<TM_Child_Facility_Model> all_facility_id = tabel_child_facility.getSemuaFasilitasAnak(id_anak);
+		if (all_facility_id != null) {
+			for (TM_Child_Facility_Model model : all_facility_id) {
+				if (model.getFacility_id().equals("1")) {
+					Checkbox_Susu.setChecked(true);SelectFasilitas();
+					fasilitas_susu.add(tabel_cost_facility.getNameCostFacility(model.getFacility_cost_id()));
+					continue;
+				}
+				if (model.getFacility_id().equals("2")) {
+					Checkbox_Vitamin.setChecked(true);SelectFasilitas();
+					fasilitas_vitamin.add(tabel_cost_facility.getNameCostFacility(model.getFacility_cost_id()));
+					continue;
+				}
+				if (model.getFacility_id().equals("3")) {
+					Checkbox_Popok.setChecked(true);SelectFasilitas();
+					fasilitas_popok.add(tabel_cost_facility.getNameCostFacility(model.getFacility_cost_id()));
+					continue;
+				}
+			}
+		}
+		
+		//displaying it
+		if(!fasilitas_susu.isEmpty())
+		{
+			msg="";
+			for(String a : fasilitas_susu)
+			{
+				msg +=a +"\n";
+			}
+			tvSusu.setText(msg);
+		}
+		if(!fasilitas_vitamin.isEmpty())
+		{
+			msg="";
+			for(String a : fasilitas_vitamin)
+			{
+				msg +=a +"\n";
+			}
+			tvVitamin.setText(msg);
+		}
+		if(!fasilitas_popok.isEmpty())
+		{
+			msg="";
+			for(String a : fasilitas_popok)
+			{
+				msg +=a +"\n";
+			}
+			tvPopok.setText(msg);
+		}
+		Log.e("retrieve fasilitas anak", "true");
+
+	}
+
+	// this method is to get facility the caregiver selected into a child
+	public void SelectFasilitas() {
+		Checkbox_Susu.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				if (Checkbox_Susu.isChecked()) {
+					btn_susu.setVisibility(View.VISIBLE);
+				} else {
+					btn_susu.setVisibility(View.INVISIBLE);
+					fasilitas_susu.clear();
+					tvSusu.setText("");
+				}
+			}
+		});
+
+		Checkbox_Vitamin.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				if (Checkbox_Vitamin.isChecked()) {
+					btn_vitamin.setVisibility(View.VISIBLE);
+				} else {
+					btn_vitamin.setVisibility(View.INVISIBLE);
+					fasilitas_vitamin.clear();
+					tvVitamin.setText("");
+				}
+			}
+		});
+
+		Checkbox_Popok.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				if (Checkbox_Popok.isChecked()) {
+					btn_popok.setVisibility(View.VISIBLE);
+				} else {
+					btn_popok.setVisibility(View.INVISIBLE);
+					fasilitas_popok.clear();
+					tvPopok.setText("");
+				}
+			}
+		});
+	}
+
 	// getting id status parent child
 	public String findStatusParent(RadioGroup status_life, RadioGroup status_hiv) {
 		status_life.clearCheck();
@@ -666,13 +993,10 @@ public class ProfilAnakActivity extends Activity implements
 					int position, long id) {
 				String sKotaMadya = tabel_kotamadya
 						.getIdDistrict(item_kotamadya[position]);
-				if(position == 0)
-				{
-					
-				}
-				else
-				{
-					
+				if (position == 0) {
+
+				} else {
+
 				}
 				// // check for the spinner of childs address or school adress
 				if (flag == 1) {
@@ -685,7 +1009,7 @@ public class ProfilAnakActivity extends Activity implements
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				
+
 			}
 		});
 	}
@@ -696,8 +1020,8 @@ public class ProfilAnakActivity extends Activity implements
 		// 1 = child address
 		arr_kecamatan = tabel_subdistrict.getAllNameDistrict(id_kotamadya);
 
-		ArrayAdapter<String> kecAdapter = new ArrayAdapter<String>(
-				getApplicationContext(), R.layout.spin, arr_kecamatan);
+		kecAdapter = new ArrayAdapter<String>(getApplicationContext(),
+				R.layout.spin, arr_kecamatan);
 
 		if (flag == 1) {
 
@@ -725,9 +1049,7 @@ public class ProfilAnakActivity extends Activity implements
 		if (resultCode == RESULT_OK) {
 
 			if (requestCode == 1) {
-
-				File f = new File(Environment.getExternalStorageDirectory()
-						.toString());
+				File f = new File(Environment.getExternalStorageDirectory().toString());
 
 				for (File temp : f.listFiles()) {
 
@@ -845,22 +1167,426 @@ public class ProfilAnakActivity extends Activity implements
 
 	}
 
-	// public void onRadioButtonClicked(View view) {
-	// // Is the button now checked?
-	// boolean checked = ((RadioButton) view).isChecked();
-	//
-	// // Check which radio button was clicked
-	// switch(view.getId()) {
-	// case R.id.radio_pirates:
-	// if (checked)
-	// // Pirates are the best
-	// break;
-	// case R.id.radio_ninjas:
-	// if (checked)
-	// // Ninjas rule
-	// break;
-	// }
-	// }
+	int banyak;
+	ArrayList<String> selectedItems = new ArrayList<String>();
+
+	private void pilihArv(final String[] arv, String Title) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setTitle(Title);
+		builder.setMultiChoiceItems(arv, null,
+				new DialogInterface.OnMultiChoiceClickListener() {
+
+					@Override
+					public void onClick(DialogInterface arg0, int arg1,
+							boolean arg2) {
+						// TODO Auto-generated method stub
+
+						if (arg2) {
+							selList.add(arg1);
+
+							banyak = selList.size();
+							// Toast.makeText(getApplicationContext(),
+							// "" + banyak + arg1,
+							// Toast.LENGTH_SHORT).show();
+							selectedItems.add(arv[arg1]);
+
+						} else if (selList.contains(arg1)) {
+							// if the item is already selected then remove it
+							selList.remove(Integer.valueOf(arg1));
+						}
+
+						if (banyak >= 6) {
+							Toast.makeText(
+									context,
+									"Anda Tidak Dapat Memilih Obat Lebih Dari 5 ",
+									Toast.LENGTH_LONG).show();
+							((AlertDialog) arg0).getListView().setItemChecked(
+									arg1, false);
+							banyak--;
+							// ((AlertDialog)arg0).getButton(DialogInterface.BUTTON_POSITIVE).setVisibility(View.INVISIBLE);
+						}
+					}
+				});
+
+		builder.setNegativeButton("CANCEL",
+				new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+
+		builder.setPositiveButton("SIMPAN",
+				new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+						msg = "";
+
+						for (int i = 0; i < selList.size(); i++) {
+							msg = msg + arv[selList.get(i)] + "\n";
+
+						}
+						String msg_list[] = msg.split("\n");
+						int lngth = msg_list.length;
+
+						for (int j = 0; j < lngth; j++) {
+							// System.out.println("Split Output: "+
+							// msg_list[j]);
+						}
+
+						ArrayList<String> data_dosis_pagi = tabel_dosis
+								.getAllData();
+						item_dosis = data_dosis_pagi
+								.toArray(new String[data_dosis_pagi.size()]);
+
+						LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
+								.getSystemService(LAYOUT_INFLATER_SERVICE);
+						popupView = layoutInflater
+								.inflate(R.layout.popup, null);
+						final PopupWindow popupWindow = new PopupWindow(
+								popupView, LayoutParams.WRAP_CONTENT,
+								LayoutParams.WRAP_CONTENT);
+
+						Button btnDismiss = (Button) popupView
+								.findViewById(R.id.dismiss);
+						TextView tv0 = (TextView) popupView
+								.findViewById(R.id.tv1);
+						TextView tv1 = (TextView) popupView
+								.findViewById(R.id.tv2);
+						TextView tv2 = (TextView) popupView
+								.findViewById(R.id.tv3);
+						TextView tv3 = (TextView) popupView
+								.findViewById(R.id.tv4);
+						TextView tv4 = (TextView) popupView
+								.findViewById(R.id.tv5);
+
+						LinearLayout linARV1 = (LinearLayout) popupView
+								.findViewById(R.id.linARV1);
+						LinearLayout linARV2 = (LinearLayout) popupView
+								.findViewById(R.id.linARV2);
+						LinearLayout linARV3 = (LinearLayout) popupView
+								.findViewById(R.id.linARV3);
+						LinearLayout linARV4 = (LinearLayout) popupView
+								.findViewById(R.id.linARV4);
+						LinearLayout linARV5 = (LinearLayout) popupView
+								.findViewById(R.id.linARV5);
+
+						if (banyak == 1) {
+							linARV1.setVisibility(View.VISIBLE);
+							tv0.setText(msg_list[0]);
+						} else if (banyak == 2) {
+							linARV1.setVisibility(View.VISIBLE);
+							linARV2.setVisibility(View.VISIBLE);
+							tv0.setText(msg_list[0]);
+							tv1.setText(msg_list[1]);
+
+						} else if (banyak == 3) {
+							linARV1.setVisibility(View.VISIBLE);
+							linARV2.setVisibility(View.VISIBLE);
+							linARV3.setVisibility(View.VISIBLE);
+							tv0.setText(msg_list[0]);
+							tv1.setText(msg_list[1]);
+							tv2.setText(msg_list[2]);
+
+						} else if (banyak == 4) {
+							linARV1.setVisibility(View.VISIBLE);
+							linARV2.setVisibility(View.VISIBLE);
+							linARV3.setVisibility(View.VISIBLE);
+							linARV4.setVisibility(View.VISIBLE);
+							tv0.setText(msg_list[0]);
+							tv1.setText(msg_list[1]);
+							tv2.setText(msg_list[2]);
+							tv3.setText(msg_list[3]);
+
+						} else if (banyak == 5) {
+							linARV1.setVisibility(View.VISIBLE);
+							linARV2.setVisibility(View.VISIBLE);
+							linARV3.setVisibility(View.VISIBLE);
+							linARV4.setVisibility(View.VISIBLE);
+							linARV5.setVisibility(View.VISIBLE);
+							tv0.setText(msg_list[0]);
+							tv1.setText(msg_list[1]);
+							tv2.setText(msg_list[2]);
+							tv3.setText(msg_list[3]);
+							tv4.setText(msg_list[4]);
+						}
+
+						// dosis pagi1
+
+						final Spinner popupSpinnerDosisPagi1 = (Spinner) popupView
+								.findViewById(R.id.spinDosisPagi1);
+						setSpin(item_dosis, popupSpinnerDosisPagi1);
+						// popupSpinnerDosisPagi1.setOnItemSelectedListener(this);
+
+						// dosis malam1
+						final Spinner popupSpinnerDosisMalam1 = (Spinner) popupView
+								.findViewById(R.id.spinDosisMalam1);
+						setSpin(item_dosis, popupSpinnerDosisMalam1);
+
+						// dosis pagi2
+
+						final Spinner popupSpinnerDosisPagi2 = (Spinner) popupView
+								.findViewById(R.id.spinDosisPagi2);
+						setSpin(item_dosis, popupSpinnerDosisPagi2);
+
+						// dosis malam2
+						final Spinner popupSpinnerDosisMalam2 = (Spinner) popupView
+								.findViewById(R.id.spinDosisMalam2);
+						setSpin(item_dosis, popupSpinnerDosisMalam2);
+
+						// dosis pagi3
+
+						final Spinner popupSpinnerDosisPagi3 = (Spinner) popupView
+								.findViewById(R.id.spinDosisPagi3);
+						setSpin(item_dosis, popupSpinnerDosisPagi3);
+
+						// dosis malam3
+						final Spinner popupSpinnerDosisMalam3 = (Spinner) popupView
+								.findViewById(R.id.spinDosisMalam3);
+						setSpin(item_dosis, popupSpinnerDosisMalam3);
+
+						// dosis pagi4
+
+						final Spinner popupSpinnerDosisPagi4 = (Spinner) popupView
+								.findViewById(R.id.spinDosisPagi4);
+						setSpin(item_dosis, popupSpinnerDosisPagi4);
+
+						// dosis malam4
+						final Spinner popupSpinnerDosisMalam4 = (Spinner) popupView
+								.findViewById(R.id.spinDosisMalam4);
+						setSpin(item_dosis, popupSpinnerDosisMalam4);
+
+						// dosis pagi5
+
+						final Spinner popupSpinnerDosisPagi5 = (Spinner) popupView
+								.findViewById(R.id.spinDosisPagi5);
+						setSpin(item_dosis, popupSpinnerDosisPagi5);
+
+						// dosis malam5
+						final Spinner popupSpinnerDosisMalam5 = (Spinner) popupView
+								.findViewById(R.id.spinDosisMalam5);
+						setSpin(item_dosis, popupSpinnerDosisMalam5);
+
+						btnDismiss
+								.setOnClickListener(new Button.OnClickListener() {
+
+									@Override
+									public void onClick(View v) {
+										popupWindow.dismiss();
+
+										String msg_list[] = msg.split("\n");
+
+										// linear layout from spinner
+										LinearLayout linArv1 = (LinearLayout) findViewById(R.id.linArv1);
+										LinearLayout linArv2 = (LinearLayout) findViewById(R.id.linArv2);
+										LinearLayout linArv3 = (LinearLayout) findViewById(R.id.linArv3);
+										LinearLayout linArv4 = (LinearLayout) findViewById(R.id.linArv4);
+										LinearLayout linArv5 = (LinearLayout) findViewById(R.id.linArv5);
+
+										// arv
+										TextView arv1 = (TextView) findViewById(R.id.arv1);
+										TextView arv2 = (TextView) findViewById(R.id.arv2);
+										TextView arv3 = (TextView) findViewById(R.id.arv3);
+										TextView arv4 = (TextView) findViewById(R.id.arv4);
+										TextView arv5 = (TextView) findViewById(R.id.arv5);
+
+										// dosis_pagi from spinner
+										final TextView dos_pagi1 = (TextView) findViewById(R.id.dos_pagi1);
+										TextView dos_pagi2 = (TextView) findViewById(R.id.dos_pagi2);
+										TextView dos_pagi3 = (TextView) findViewById(R.id.dos_pagi3);
+										TextView dos_pagi4 = (TextView) findViewById(R.id.dos_pagi4);
+										TextView dos_pagi5 = (TextView) findViewById(R.id.dos_pagi5);
+
+										// dosis_pagi from spinner
+										TextView dos_malam1 = (TextView) findViewById(R.id.dos_malam1);
+										TextView dos_malam2 = (TextView) findViewById(R.id.dos_malam2);
+										TextView dos_malam3 = (TextView) findViewById(R.id.dos_malam3);
+										TextView dos_malam4 = (TextView) findViewById(R.id.dos_malam4);
+										TextView dos_malam5 = (TextView) findViewById(R.id.dos_malam5);
+
+										if (banyak == 1) {
+											linArv1.setVisibility(View.VISIBLE);
+											arv1.setText(msg_list[0]);
+											// setSpinner(popupSpinnerDosisPagi1,dos_pagi1);
+											dos_pagi1
+													.setText(popupSpinnerDosisPagi1
+															.getSelectedItem()
+															.toString());
+											dos_malam1
+													.setText(popupSpinnerDosisMalam1
+															.getSelectedItem()
+															.toString());
+
+										} else if (banyak == 2) {
+											linArv1.setVisibility(View.VISIBLE);
+											linArv2.setVisibility(View.VISIBLE);
+											arv1.setText(msg_list[0]);
+											arv2.setText(msg_list[1]);
+											dos_pagi1
+													.setText(popupSpinnerDosisPagi1
+															.getSelectedItem()
+															.toString());
+											dos_malam1
+													.setText(popupSpinnerDosisMalam1
+															.getSelectedItem()
+															.toString());
+											dos_pagi2
+													.setText(popupSpinnerDosisPagi2
+															.getSelectedItem()
+															.toString());
+											dos_malam2
+													.setText(popupSpinnerDosisMalam2
+															.getSelectedItem()
+															.toString());
+
+										} else if (banyak == 3) {
+											linArv1.setVisibility(View.VISIBLE);
+											linArv2.setVisibility(View.VISIBLE);
+											linArv3.setVisibility(View.VISIBLE);
+											arv1.setText(msg_list[0]);
+											arv2.setText(msg_list[1]);
+											arv3.setText(msg_list[2]);
+											dos_pagi1
+													.setText(popupSpinnerDosisPagi1
+															.getSelectedItem()
+															.toString());
+											dos_malam1
+													.setText(popupSpinnerDosisMalam1
+															.getSelectedItem()
+															.toString());
+											dos_pagi2
+													.setText(popupSpinnerDosisPagi2
+															.getSelectedItem()
+															.toString());
+											dos_malam2
+													.setText(popupSpinnerDosisMalam2
+															.getSelectedItem()
+															.toString());
+											dos_pagi3
+													.setText(popupSpinnerDosisPagi3
+															.getSelectedItem()
+															.toString());
+											dos_malam3
+													.setText(popupSpinnerDosisMalam3
+															.getSelectedItem()
+															.toString());
+
+										} else if (banyak == 4) {
+											linArv1.setVisibility(View.VISIBLE);
+											linArv2.setVisibility(View.VISIBLE);
+											linArv3.setVisibility(View.VISIBLE);
+											linArv4.setVisibility(View.VISIBLE);
+											arv1.setText(msg_list[0]);
+											arv2.setText(msg_list[1]);
+											arv3.setText(msg_list[2]);
+											arv4.setText(msg_list[3]);
+
+											dos_pagi1
+													.setText(popupSpinnerDosisPagi1
+															.getSelectedItem()
+															.toString());
+											dos_malam1
+													.setText(popupSpinnerDosisMalam1
+															.getSelectedItem()
+															.toString());
+											dos_pagi2
+													.setText(popupSpinnerDosisPagi2
+															.getSelectedItem()
+															.toString());
+											dos_malam2
+													.setText(popupSpinnerDosisMalam2
+															.getSelectedItem()
+															.toString());
+											dos_pagi3
+													.setText(popupSpinnerDosisPagi3
+															.getSelectedItem()
+															.toString());
+											dos_malam3
+													.setText(popupSpinnerDosisMalam3
+															.getSelectedItem()
+															.toString());
+											dos_pagi4
+													.setText(popupSpinnerDosisPagi4
+															.getSelectedItem()
+															.toString());
+											dos_malam4
+													.setText(popupSpinnerDosisMalam4
+															.getSelectedItem()
+															.toString());
+
+										} else if (banyak == 5) {
+											linArv1.setVisibility(View.VISIBLE);
+											linArv2.setVisibility(View.VISIBLE);
+											linArv3.setVisibility(View.VISIBLE);
+											linArv4.setVisibility(View.VISIBLE);
+											linArv5.setVisibility(View.VISIBLE);
+											arv1.setText(msg_list[0]);
+											arv2.setText(msg_list[1]);
+											arv3.setText(msg_list[2]);
+											arv4.setText(msg_list[3]);
+											arv5.setText(msg_list[4]);
+											dos_pagi1
+													.setText(popupSpinnerDosisPagi1
+															.getSelectedItem()
+															.toString());
+											dos_malam1
+													.setText(popupSpinnerDosisMalam1
+															.getSelectedItem()
+															.toString());
+											dos_pagi2
+													.setText(popupSpinnerDosisPagi2
+															.getSelectedItem()
+															.toString());
+											dos_malam2
+													.setText(popupSpinnerDosisMalam2
+															.getSelectedItem()
+															.toString());
+											dos_pagi3
+													.setText(popupSpinnerDosisPagi3
+															.getSelectedItem()
+															.toString());
+											dos_malam3
+													.setText(popupSpinnerDosisMalam3
+															.getSelectedItem()
+															.toString());
+											dos_pagi4
+													.setText(popupSpinnerDosisPagi4
+															.getSelectedItem()
+															.toString());
+											dos_malam4
+													.setText(popupSpinnerDosisMalam4
+															.getSelectedItem()
+															.toString());
+											dos_pagi5
+													.setText(popupSpinnerDosisPagi5
+															.getSelectedItem()
+															.toString());
+											dos_malam5
+													.setText(popupSpinnerDosisMalam5
+															.getSelectedItem()
+															.toString());
+										}
+									}
+								});
+
+						popupWindow.showAsDropDown(tvtambah_jenis_arv, 50, -30);
+
+					}
+				});
+
+		AlertDialog alert = builder.create();
+		alert.show();
+
+		Button bq_pos = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+		Button bq_neg = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
+		bq_pos.setBackgroundDrawable(getResources().getDrawable(
+				R.drawable.button));
+		bq_pos.setTextColor(Color.WHITE);
+		bq_neg.setBackgroundDrawable(getResources().getDrawable(
+				R.drawable.button));
+		bq_neg.setTextColor(Color.WHITE);
+
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -879,6 +1605,22 @@ public class ProfilAnakActivity extends Activity implements
 		tabel_type_arv = new TM_Drug_Type(getApplicationContext());
 		tabel_kotamadya = new TM_District(getApplicationContext());
 		tabel_subdistrict = new TM_Subdistrict(getApplicationContext());
+		tabel_child_facility = new TM_Child_Facility(getApplicationContext());
+		tabel_cost_facility = new TM_Cost_Facility(getApplicationContext());
+	}
+
+	// spinner
+	// dosis pagi
+	public void setSpin(String[] item, Spinner spin) {
+		// Spinner popupSpinnerDosisPagi = (Spinner) popupView
+		// .findViewById(R.id.spinDosisPagi);
+
+		ArrayAdapter<String> adapter_dosis = new ArrayAdapter<String>(
+				getApplicationContext(), R.layout.spin, item);
+		adapter_dosis
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spin.setAdapter(adapter_dosis);
+
 	}
 
 	public void textViewSetText(String value) {
@@ -886,8 +1628,10 @@ public class ProfilAnakActivity extends Activity implements
 		tvSusu.setText(value);
 	}
 
-	private void SimpanFasilitasArray(final CharSequence[] fasilitas,
-			final TextView tv) {
+	int countSelectedItem;
+
+	private void SimpanFasilitasArray(final String flag,
+			final CharSequence[] fasilitas, final TextView tv) {
 		// instance od table to get id facility
 		tabel_facility = new TM_Facility(getApplicationContext());
 
@@ -904,40 +1648,67 @@ public class ProfilAnakActivity extends Activity implements
 
 						if (arg2) {
 							selList.add(arg1);
+							countSelectedItem = selList.size();
 						} else if (selList.contains(arg1)) {
 							// if the item is already selected then remove it
 							selList.remove(Integer.valueOf(arg1));
 						}
+						if (countSelectedItem >= 3) {
+							Toast.makeText(context,
+									"Anda Tidak Dapat Fasilitas Lebih Dari 2 ",
+									Toast.LENGTH_LONG).show();
+							((AlertDialog) arg0).getListView().setItemChecked(
+									arg1, false);
+							selList.remove(Integer.valueOf(arg1));
+							countSelectedItem--;
+							// ((AlertDialog)arg0).getButton(DialogInterface.BUTTON_POSITIVE).setVisibility(View.INVISIBLE);
+						}
+					}
+				});
+
+		builder.setNegativeButton("CANCEL",
+				new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
 					}
 				});
 
 		builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-
 			public void onClick(DialogInterface dialog, int which) {
 				msg = "";
-				if(selList.isEmpty())
-				{
-					facility_id = null;
+				ArrayList<String> hasil_fasilitas_sementara = new ArrayList<String>();
+				if (selList.isEmpty()) {
 					Log.e("Array list", "kosong");
-				}
-				else
-				{
+				} else {
 					for (int i = 0; i < selList.size(); i++) {
-						facility_id += tabel_facility
-								.getIdFacility(fasilitas[selList.get(i)].toString());
-						facility_id += ",";
-						msg = msg + fasilitas[selList.get(i)] + "\n";
-
+						hasil_fasilitas_sementara.add(fasilitas[selList.get(i)].toString());
+						Log.e("Fasilitas", "tidak kosong");
+						msg += fasilitas[selList.get(i)] + "\n";
+					}
+					// cek
+					if (flag.equals("susu")) {
+						fasilitas_susu = hasil_fasilitas_sementara;
+					} else if (flag.equals("vitamin")) {
+						fasilitas_vitamin = hasil_fasilitas_sementara;
+					} else if (flag.equals("popok")) {
+						fasilitas_popok = hasil_fasilitas_sementara;
 					}
 				}
-				
 				tv.setText(msg);
-
 			}
 		});
 
 		AlertDialog alert = builder.create();
 		alert.show();
+
+		Button bq_pos = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+		Button bq_neg = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
+		bq_pos.setBackgroundDrawable(getResources().getDrawable(R.drawable.button));
+		bq_pos.setTextColor(Color.WHITE);
+		bq_neg.setBackgroundDrawable(getResources().getDrawable(
+				R.drawable.button));
+		bq_neg.setTextColor(Color.WHITE);
 
 	}
 
@@ -957,87 +1728,37 @@ public class ProfilAnakActivity extends Activity implements
 
 		case R.id.button_susu:
 			selList.clear();
-			final CharSequence[] susu = { "Bebelac 4-Madu-800 gr",
-					"Chilschool-4-soya-300 gr", "Dancow 1+-Vanilla-800 gr",
-					"Dancow 5+-Vanilla-800 gr", "Dancow-1+-Madu-800 gr",
-					"Dancow-1+-Vanilla-800 gr", "Dancow-3+-Madu-800 gr",
-					"Dancow-5+-Madu-800 gr", "Dancow-5+-Madu-800 gr",
-					"Dancow-Datita3/5-1000 gr", "Dancow-Fullcream-Choc-800 gr",
-					"Dancow-Fullcream-Vanilla-800  gr" };
-			SimpanFasilitasArray(susu, tvSusu);
+			final CharSequence[] susu = tabel_cost_facility
+					.getAllBrandName("1");
+			final String flag = "susu";
+			SimpanFasilitasArray(flag, susu, tvSusu);
 
 			break;
 
 		case R.id.button_vitamin:
-			// LayoutInflater layoutinflater1 = LayoutInflater.from(context);
-			// View promptView1 =
-			// layoutinflater1.inflate(R.layout.activity_fasilitas_vitamin,
-			// null);
-			//
-			// AlertDialog.Builder alertDialogBuilder1 = new
-			// AlertDialog.Builder(context);
-			// alertDialogBuilder1.setView(promptView1);
-			//
-			// final LinearLayout btn_simpan1 = (LinearLayout)
-			// promptView1.findViewById(R.id.btn_simpan1);
-			//
-			// btn_simpan1.setOnClickListener(new OnClickListener() {
-			//
-			// @Override
-			// public void onClick(View v) {
-			// // TODO Auto-generated method stub
-			// Intent simpan1 = new
-			// Intent(getApplication(),ProfilAnakActivity.class);
-			// startActivity(simpan1);
-			//
-			// }
-			// });
-			// AlertDialog alert = alertDialogBuilder1.create();
-			// alert.show();
-			// break;
-
 			selList.clear();
-			final CharSequence[] vitamin = { "Vidorant", "Sangobion" };
-			SimpanFasilitasArray(vitamin, tvVitamin);
+			final CharSequence[] vitamin = tabel_cost_facility
+					.getAllBrandName("2");
+			final String flag_vitamin = "vitamin";
+			SimpanFasilitasArray(flag_vitamin, vitamin, tvVitamin);
 
 			break;
 
 		case R.id.button_popok:
-			// LayoutInflater layoutinflater2 = LayoutInflater.from(context);
-			// View promptView2 =
-			// layoutinflater2.inflate(R.layout.activity_fasilitas_popok, null);
-			//
-			// AlertDialog.Builder alertDialogBuilder2 = new
-			// AlertDialog.Builder(context);
-			// alertDialogBuilder2.setView(promptView2);
-			//
-			// final LinearLayout btn_simpan2 = (LinearLayout)
-			// promptView2.findViewById(R.id.btn_simpan2);
-			//
-			// btn_simpan2.setOnClickListener(new OnClickListener() {
-			//
-			// @Override
-			// public void onClick(View v) {
-			// // TODO Auto-generated method stub
-			// Intent simpan2 = new
-			// Intent(getApplication(),ProfilAnakActivity.class);
-			// startActivity(simpan2);
-			//
-			// }
-			// });
-			// AlertDialog alert1 = alertDialogBuilder2.create();
-			// alert1.show();
-			// break;
-			//
-			// default:
-			// break;
-
 			selList.clear();
-			final CharSequence[] popok = { "Diaper-Goon-pants-XXL38",
-					"Diaper-Pampers-pants-L36", "Diaper-Pampers-pants-M42",
-					"Diaper-Pampers-pants-XL32" };
-			SimpanFasilitasArray(popok, tvPopok);
+			final CharSequence[] popok = tabel_cost_facility
+					.getAllBrandName("3");
+			final String flag_popok = "popok";
+			SimpanFasilitasArray(flag_popok, popok, tvPopok);
 
+			break;
+		case R.id.button_tambah:
+			// TODO Auto-generated method stub
+			if (txtPhone1.getVisibility() == View.VISIBLE) {
+				txtPhone2.setVisibility(View.VISIBLE);
+			} else {
+				txtPhone1.setVisibility(View.VISIBLE);
+			}
 			break;
 		}
 	}

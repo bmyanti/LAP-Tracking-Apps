@@ -54,6 +54,7 @@ public class KunjunganActivity extends Activity {
 	TM_Facility tabel_facility;
 	TM_Parent_Status tabel_parent_status;
 	TM_Child tabel_anak;
+	TM_Child_Model model_anak;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,9 @@ public class KunjunganActivity extends Activity {
 		tabel_facility = new TM_Facility(getApplicationContext());
 		tabel_parent_status = new TM_Parent_Status(getApplicationContext());
 		tabel_anak = new TM_Child(getApplicationContext());
+
+		// model anak
+		model_anak = new TM_Child_Model();
 
 		txt_Nama_Anak = (TextView) findViewById(R.id.viewNamaAnak);
 		txt_BOD_Anak = (TextView) findViewById(R.id.viewBODAnak);
@@ -94,27 +98,32 @@ public class KunjunganActivity extends Activity {
 		// get child id to retrieve from database and display
 		Intent intent = getIntent();
 		String id_child = intent.getStringExtra("id_child");
-		TM_Child_Model model_anak = new TM_Child_Model();
 		model_anak = tabel_anak.getChildIdentityById(id_child);
 
-		// splitting id_facility
-
-		if (model_anak.getFacility_id().equalsIgnoreCase(" ")|| model_anak.getFacility_id() == null) {
-			facility_name = "-";
-			Log.e("Array list", "kosong");
-		} else {
-			String[] items = model_anak.getFacility_id().trim().split(",");
-			for (String item : items) {
-				facility_name += tabel_facility.getNameFacility(item.trim());
-				facility_name += "\n";
-				Toast.makeText(getApplicationContext(), "" + item,
-						Toast.LENGTH_LONG).show();
-			}
-		}
+//		// splitting id_facility
+//
+//		if (model_anak.getFacility_id().equalsIgnoreCase(" ")
+//				|| model_anak.getFacility_id() == null) {
+//			facility_name = "-";
+//			Log.e("Array list", "kosong");
+//		} else {
+//			String[] items = model_anak.getFacility_id().trim().split(",");
+//			for (String item : items) {
+//				facility_name += tabel_facility.getNameFacility(item.trim());
+//				facility_name += "\n";
+//				Toast.makeText(getApplicationContext(), "" + item,
+//						Toast.LENGTH_LONG).show();
+//			}
+//		}
 
 		txt_Nama_Anak.setText(model_anak.getChild_name());
 		txt_BOD_Anak.setText(model_anak.getChild_bod());
-		txt_Umur_Anak.setText(getChildAge(model_anak.getChild_bod()));
+		if (model_anak.getChild_bod().equals("")) {
+			txt_Umur_Anak.setText("-");
+		} else {
+			txt_Umur_Anak.setText(getChildAge(model_anak.getChild_bod()));
+		}
+
 		txt_JK_Anak.setText(model_anak.getChild_gender());
 		txt_GOLDA_Anak.setText(model_anak.getBlood_type());
 		txt_ALAMAT_Anak.setText(model_anak.getChild_address());
@@ -148,6 +157,13 @@ public class KunjunganActivity extends Activity {
 		edit_infoanak = (ImageView) findViewById(R.id.edit_infoanak);
 		edit_kunjungan = (ImageView) findViewById(R.id.edit_kunjungan);
 
+		// String split[] = model_anak.getChild_bod().split(" ");
+		//
+		// Toast.makeText(
+		// getApplicationContext(),
+		// "tanggal " + split[0] + " bulan " + split[1] + " tahun "
+		// + split[2], Toast.LENGTH_LONG).show();
+
 		lihatselengkapnya = (LinearLayout) findViewById(R.id.layout_lihatselengkapnya);
 		lihat_selengkapnya = (TextView) findViewById(R.id.textview_lihat_selengkapnya);
 		lihat_selengkapnya.setOnClickListener(new OnClickListener() {
@@ -166,49 +182,31 @@ public class KunjunganActivity extends Activity {
 
 	// get child age
 	private String getChildAge(String bod) {
+		String split[] = bod.split(" ");
+		String[] Month = { "Januari", "Februari", "Maret", "April", "Mei",
+				"Juni", "Juli", "Agustus", "September", "Oktober", "November",
+				"Desember" };
+		// get int of month
+		// January -> 1
+		int bulan = -1;
+		for (int i = 0; i < Month.length; i++) {
+			if (Month[i].equals(split[1])) {
+				bulan = i;
+				break;
+			}
+		}
 
-		return "" + 0;
-		// try {
-		// Date date = (Date) new SimpleDateFormat("dd MMM yyyy",
-		// Locale.).parse("6 Aug 2012");
-		// } catch (ParseException e1) {
-		// // TODO Auto-generated catch block
-		// e1.printStackTrace();
-		// }
-		//
-		// SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		// java.util.Date date_bod;
-		// String umur ="";
-		// try {
-		// date_bod = formatter.parse(bod);
-		// Log.i("date bod", ""+date_bod);
-		// Calendar now = Calendar.getInstance();
-		// Calendar tanggallahir = Calendar.getInstance();
-		// tanggallahir.setTime(date_bod);
-		//
-		// int years = now.get(Calendar.YEAR) - tanggallahir.get(Calendar.YEAR);
-		// Log.i("tahun", ""+years);
-		//
-		// int months = now.get(Calendar.MONTH) -
-		// tanggallahir.get(Calendar.MONTH);
-		// int days = now.get(Calendar.DAY_OF_MONTH)
-		// - tanggallahir.get(Calendar.DAY_OF_MONTH);
-		// if (days < 0) {
-		// months--;
-		// days += now.getActualMaximum(Calendar.DAY_OF_MONTH);
-		// }
-		// if (months < 0) {
-		// years--;
-		// months += 12;
-		// }
-		// umur = years + " tahun " + months + " bulan " + days + " hari";
-		//
-		// } catch (ParseException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// umur = ""+0;
-		// }
-		// return umur;
+		Calendar dob = Calendar.getInstance();
+		Calendar today = Calendar.getInstance();
+		dob.set(Integer.parseInt(split[2]), bulan, Integer.parseInt(split[0]));
+		int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+		if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+			age--;
+		}
+		Integer ageInt = new Integer(age);
+		String ageS = ageInt.toString();
+
+		return ageS;
 	}
 
 	@Override
