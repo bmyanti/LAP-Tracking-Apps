@@ -33,8 +33,8 @@ import com.example.databaselap.TM_Drug_Type;
 import com.example.databaselap.TM_Facility;
 import com.example.databaselap.TM_Parent_Status;
 import com.example.databaselap.TM_Subdistrict;
-import com.example.modellap.TM_Child_Facility_Model;
-import com.example.modellap.TM_Child_Model;
+import com.example.modellap.ChildFacility_Model;
+import com.example.modellap.Child_Model;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -606,12 +606,12 @@ public class ProfilAnakActivity extends Activity implements
 		if (i != null && i.getStringExtra("id_anak") != null) {
 			Log.d("***DEBUG****", "For update data anak");
 			String id_child = i.getStringExtra("id_anak");
-			TM_Child_Model model_anak = new TM_Child_Model();
+			Child_Model model_anak = new Child_Model();
 			tabel_anak = new TM_Child(getApplicationContext());
 			model_anak = tabel_anak.getChildIdentityById(id_child);
 			// displaying foto
 			// cek jika poto belum dimasukkan -> maka display default
-			if (model_anak.getImage_path() == "kosong") {
+			if (!model_anak.getImage_path().equals("kosong")) {
 				File image = new File(model_anak.getImage_path());
 				BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 				Bitmap bitmap = BitmapFactory.decodeFile(
@@ -688,8 +688,7 @@ public class ProfilAnakActivity extends Activity implements
 			SetCaregiverPhone(model_anak.getCaregiver_phone());
 
 			// set display name of spinner golda
-			spinner_position = adapter_golda.getPosition(model_anak
-					.getBlood_type());
+			spinner_position = adapter_golda.getPosition(model_anak.getBlood_type());
 			spinner_golda.setSelection(spinner_position);
 
 			// caregiver spinner
@@ -709,9 +708,7 @@ public class ProfilAnakActivity extends Activity implements
 
 			Toast.makeText(
 					getApplicationContext(),
-					""
-							+ tabel_subdistrict.getNameSubDistrict(model_anak
-									.getSubdistrict_id()), Toast.LENGTH_SHORT)
+					""+ tabel_subdistrict.getNameSubDistrict(model_anak.getSubdistrict_id()), Toast.LENGTH_SHORT)
 					.show();
 			// spinner_kecamatan.setSelection(spinner_position);
 
@@ -816,21 +813,27 @@ public class ProfilAnakActivity extends Activity implements
 		ArrayList<String> fasilitas_susu = new ArrayList<String>();
 		ArrayList<String> fasilitas_vitamin = new ArrayList<String>();
 		ArrayList<String> fasilitas_popok = new ArrayList<String>();
-		ArrayList<TM_Child_Facility_Model> all_facility_id = tabel_child_facility.getSemuaFasilitasAnak(id_anak);
+		ArrayList<ChildFacility_Model> all_facility_id = tabel_child_facility.getSemuaFasilitasAnak(id_anak);
 		if (all_facility_id != null) {
-			for (TM_Child_Facility_Model model : all_facility_id) {
+			for (ChildFacility_Model model : all_facility_id) {
 				if (model.getFacility_id().equals("1")) {
-					Checkbox_Susu.setChecked(true);SelectFasilitas();
+					Checkbox_Susu.setChecked(true);
+					btn_susu.setVisibility(View.VISIBLE);
+					SelectFasilitas();
 					fasilitas_susu.add(tabel_cost_facility.getNameCostFacility(model.getFacility_cost_id()));
 					continue;
 				}
 				if (model.getFacility_id().equals("2")) {
-					Checkbox_Vitamin.setChecked(true);SelectFasilitas();
+					Checkbox_Vitamin.setChecked(true);
+					btn_vitamin.setVisibility(View.VISIBLE);
+					SelectFasilitas();
 					fasilitas_vitamin.add(tabel_cost_facility.getNameCostFacility(model.getFacility_cost_id()));
 					continue;
 				}
 				if (model.getFacility_id().equals("3")) {
-					Checkbox_Popok.setChecked(true);SelectFasilitas();
+					Checkbox_Popok.setChecked(true);
+					btn_popok.setVisibility(View.VISIBLE);
+					SelectFasilitas();
 					fasilitas_popok.add(tabel_cost_facility.getNameCostFacility(model.getFacility_cost_id()));
 					continue;
 				}
@@ -1728,8 +1731,7 @@ public class ProfilAnakActivity extends Activity implements
 
 		case R.id.button_susu:
 			selList.clear();
-			final CharSequence[] susu = tabel_cost_facility
-					.getAllBrandName("1");
+			final CharSequence[] susu = tabel_cost_facility.getAllBrandName("FA001");
 			final String flag = "susu";
 			SimpanFasilitasArray(flag, susu, tvSusu);
 
@@ -1737,8 +1739,7 @@ public class ProfilAnakActivity extends Activity implements
 
 		case R.id.button_vitamin:
 			selList.clear();
-			final CharSequence[] vitamin = tabel_cost_facility
-					.getAllBrandName("2");
+			final CharSequence[] vitamin = tabel_cost_facility.getAllBrandName("FA002");
 			final String flag_vitamin = "vitamin";
 			SimpanFasilitasArray(flag_vitamin, vitamin, tvVitamin);
 
@@ -1746,8 +1747,7 @@ public class ProfilAnakActivity extends Activity implements
 
 		case R.id.button_popok:
 			selList.clear();
-			final CharSequence[] popok = tabel_cost_facility
-					.getAllBrandName("3");
+			final CharSequence[] popok = tabel_cost_facility.getAllBrandName("FA003");
 			final String flag_popok = "popok";
 			SimpanFasilitasArray(flag_popok, popok, tvPopok);
 

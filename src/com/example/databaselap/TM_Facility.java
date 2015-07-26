@@ -25,9 +25,11 @@ public class TM_Facility {
 	private static final int DB_VERSION = 1;
 
 	// mendeklarasikan membuat CREATE_TABLE = MEMBUAT TABLE"
-	private static final String CREATE_TABLE = 
-			"create table "+NAMA_TABEL+" ( "+ROW_FACILITY_ID+" integer PRIMARY KEY autoincrement, "+ROW_FACILITY_DESCRIPTION+" text, "+ROW_CREATED_BY+" date, " +	
-					" "+ROW_CREATED_TIME+" varchar, "+ROW_UPDATE_BY+" text, "+ROW_UPDATE_TIME+" varchar  ) ";
+	private static final String CREATE_TABLE = "create table " + NAMA_TABEL
+			+ " ( " + ROW_FACILITY_ID + " varchar PRIMARY KEY, "
+			+ ROW_FACILITY_DESCRIPTION + " text, " + ROW_CREATED_BY + " date, "
+			+ " " + ROW_CREATED_TIME + " varchar, " + ROW_UPDATE_BY + " text, "
+			+ ROW_UPDATE_TIME + " varchar  ) ";
 
 	// membuat mendeklarasikan Context itu adalah context
 	private final Context context;
@@ -57,21 +59,36 @@ public class TM_Facility {
 		public void onCreate(SQLiteDatabase db) {
 			// TODO Auto-generated method stub
 			db.execSQL(CREATE_TABLE);
-			
+
 			try {
 				// hapus dari tabel kemudian update yang baru
 				// masih data static
-				final String[] fasilitas = { "Susu","Vitamin","Popok"};
+				final String[] fasilitas = { "Susu", "Vitamin", "Popok" };
 
 				ContentValues values = new ContentValues();
-				for (String a : fasilitas) {
-					values.put(ROW_FACILITY_DESCRIPTION, a);
-					values.put(ROW_CREATED_BY, "-");
-					values.put(ROW_CREATED_TIME, "-");
-					values.put(ROW_UPDATE_BY, "-");
-					values.put(ROW_UPDATE_TIME, "-");
-					db.insert(NAMA_TABEL, null, values);
-				}
+				values.put(ROW_FACILITY_ID, "FA001");
+				values.put(ROW_FACILITY_DESCRIPTION, "Susu");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
+				
+				values.put(ROW_FACILITY_ID, "FA002");
+				values.put(ROW_FACILITY_DESCRIPTION, "Popok");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
+				
+				values.put(ROW_FACILITY_ID, "FA003");
+				values.put(ROW_FACILITY_DESCRIPTION, "Vitamin");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -105,7 +122,7 @@ public class TM_Facility {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-				//if data is not in database
+				// if data is not in database
 				if (!cursorinfo.moveToFirst()) {
 					db.execSQL(sql_insert, new String[] { aa });
 					Log.i("save", aa);
@@ -121,6 +138,7 @@ public class TM_Facility {
 		}
 
 	}
+
 	// menutup DatabaseOpenHelper
 	public void close() {
 		dbhelper.close();
@@ -132,9 +150,8 @@ public class TM_Facility {
 		Cursor cursor = null;
 
 		cursor = db.query(NAMA_TABEL, new String[] { ROW_FACILITY_ID,
-				ROW_FACILITY_DESCRIPTION, ROW_CREATED_BY,
-				ROW_CREATED_TIME, ROW_UPDATE_BY, ROW_UPDATE_TIME }, null, null,
-				null, null, null);
+				ROW_FACILITY_DESCRIPTION, ROW_CREATED_BY, ROW_CREATED_TIME,
+				ROW_UPDATE_BY, ROW_UPDATE_TIME }, null, null, null, null, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
@@ -173,7 +190,8 @@ public class TM_Facility {
 						+ id + "'", null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
-			name = mCursor.getString(mCursor.getColumnIndex(ROW_FACILITY_DESCRIPTION));
+			name = mCursor.getString(mCursor
+					.getColumnIndex(ROW_FACILITY_DESCRIPTION));
 		}
 		mCursor.close();
 		return name;

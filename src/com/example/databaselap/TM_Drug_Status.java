@@ -26,7 +26,7 @@ public class TM_Drug_Status {
 
 	// mendeklarasikan membuat CREATE_TABLE = MEMBUAT TABLE"
 	private static final String CREATE_TABLE = 
-			"create table "+NAMA_TABEL+" ( "+ROW_DRUG_STATUS_ID+" integer PRIMARY KEY autoincrement, "+ROW_DRUG_STATUS_DESCRIPTION+" text, "+ROW_CREATED_BY+" date, " +	
+			"create table "+NAMA_TABEL+" ( "+ROW_DRUG_STATUS_ID+" varchar PRIMARY KEY, "+ROW_DRUG_STATUS_DESCRIPTION+" text, "+ROW_CREATED_BY+" date, " +	
 					" "+ROW_CREATED_TIME+" varchar, "+ROW_UPDATE_BY+" text, "+ROW_UPDATE_TIME+" varchar  ) ";
 	
 
@@ -63,6 +63,7 @@ public class TM_Drug_Status {
 				
 				// masih data static
 				ContentValues values = new ContentValues();
+				values.put(ROW_DRUG_STATUS_ID, "");
 				values.put(ROW_DRUG_STATUS_DESCRIPTION, "-");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");

@@ -16,7 +16,7 @@ import com.example.databaselap.TM_Drug_Status;
 import com.example.databaselap.TM_Drug_Type;
 import com.example.databaselap.TM_Facility;
 import com.example.databaselap.TM_Parent_Status;
-import com.example.modellap.TM_Child_Model;
+import com.example.modellap.Child_Model;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -44,6 +44,7 @@ public class KunjunganActivity extends Activity {
 			txt_StatusIbu, txt_NamaPengasuh, Pengasuh, txt_NomorTelepon,
 			txt_Sekolah, txt_Kelas, txt_Fasilitas;
 	String facility_name = "";
+	String id_child, id_child_l, id_child_k;
 
 	// instansisasi tabel
 	TM_Caregiver tabel_caregiver;
@@ -54,7 +55,7 @@ public class KunjunganActivity extends Activity {
 	TM_Facility tabel_facility;
 	TM_Parent_Status tabel_parent_status;
 	TM_Child tabel_anak;
-	TM_Child_Model model_anak;
+	Child_Model model_anak;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,7 @@ public class KunjunganActivity extends Activity {
 		tabel_anak = new TM_Child(getApplicationContext());
 
 		// model anak
-		model_anak = new TM_Child_Model();
+		model_anak = new Child_Model();
 
 		txt_Nama_Anak = (TextView) findViewById(R.id.viewNamaAnak);
 		txt_BOD_Anak = (TextView) findViewById(R.id.viewBODAnak);
@@ -96,25 +97,21 @@ public class KunjunganActivity extends Activity {
 		txt_Fasilitas = (TextView) findViewById(R.id.viewFasilitas);
 
 		// get child id to retrieve from database and display
+		//hear intent from list activity and form kunjungan activity
+		
 		Intent intent = getIntent();
-		String id_child = intent.getStringExtra("id_child");
-		model_anak = tabel_anak.getChildIdentityById(id_child);
+		id_child_l = intent.getStringExtra("id_child");
+		id_child_k = intent.getStringExtra("id_anak_k");
 
-//		// splitting id_facility
-//
-//		if (model_anak.getFacility_id().equalsIgnoreCase(" ")
-//				|| model_anak.getFacility_id() == null) {
-//			facility_name = "-";
-//			Log.e("Array list", "kosong");
-//		} else {
-//			String[] items = model_anak.getFacility_id().trim().split(",");
-//			for (String item : items) {
-//				facility_name += tabel_facility.getNameFacility(item.trim());
-//				facility_name += "\n";
-//				Toast.makeText(getApplicationContext(), "" + item,
-//						Toast.LENGTH_LONG).show();
-//			}
-//		}
+		if (id_child_l != null ) {
+			id_child = id_child_l;
+		}
+		else if(id_child_k != null)
+		{
+			id_child = id_child_k;
+		}
+		
+		model_anak = tabel_anak.getChildIdentityById(id_child);
 
 		txt_Nama_Anak.setText(model_anak.getChild_name());
 		txt_BOD_Anak.setText(model_anak.getChild_bod());
@@ -227,7 +224,9 @@ public class KunjunganActivity extends Activity {
 		case R.id.button_tambahkunjungan:
 			Intent intent2 = new Intent(KunjunganActivity.this,
 					FormulirKunjunganAnakActivity.class);
+			intent2.putExtra("id_anak_fk", id_child);
 			startActivity(intent2);
+			Log.i("id anak pda kunj", " " + id_child);
 			break;
 
 		case R.id.edit_infoanak:

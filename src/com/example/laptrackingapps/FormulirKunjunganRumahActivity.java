@@ -1,6 +1,10 @@
 package com.example.laptrackingapps;
 
 import java.io.File;
+import java.util.ArrayList;
+
+import com.example.modellap.Environment_Model;
+import com.example.modellap.Visit_Model;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -41,11 +46,26 @@ public class FormulirKunjunganRumahActivity extends Activity {
 	//Kelas GPS Tracker
 	GPSTracker gps;
 
+	//id anak
+	String id_child;
+	Visit_Model model_visit;
+	Environment_Model model_environment;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_formulir_kunjungan_rumah);
+		
+		//get intent
+		Intent i = getIntent();
+		if(i.getStringExtra("id_child_ke") != null)
+		{
+			id_child = i.getStringExtra("id_child_ke");
+			//model_visit = (Visit_Model) getIntent().getSerializableExtra("Object_VisitModel");
+			model_visit = (Visit_Model) i.getParcelableExtra("Object_VisitModel");
+			//Log.e("isi model visit", "lila"+model_visit.);
+		}
 		
 		btn_back = (ImageView)  findViewById(R.id.btn_back);
 		btn_simpan = (LinearLayout) findViewById(R.id.button_simpan);
@@ -201,6 +221,21 @@ public class FormulirKunjunganRumahActivity extends Activity {
 			}
 		});
 		
+		//assign nilai environment kedalam objek model_visit
+		ArrayList<Environment_Model> model_environments = new ArrayList<Environment_Model>();
+		model_environment =  new Environment_Model();
+		model_environment.SetEnvironment_ID("ENV001"); model_environment.SetEnvironment_Score(""+sum1);
+		model_environments.add(model_environment);
+		model_environment.SetEnvironment_ID("ENV002"); model_environment.SetEnvironment_Score(""+sum2);
+		model_environments.add(model_environment);
+		model_environment.SetEnvironment_ID("ENV003"); model_environment.SetEnvironment_Score(""+sum3);
+		model_environments.add(model_environment);
+		model_environment.SetEnvironment_ID("ENV004"); model_environment.SetEnvironment_Score(""+sum4);
+		model_environments.add(model_environment);
+		model_environment.SetEnvironment_ID("ENV005"); model_environment.SetEnvironment_Score(""+sum5);
+		model_environments.add(model_environment);
+		
+		//model_visit.setEnvironments(model_environments);
 		
 		//bagian foto rumah
 		foto_rumah1 = (ImageView) findViewById(R.id.foto_rumah1);
@@ -374,8 +409,13 @@ public class FormulirKunjunganRumahActivity extends Activity {
 	public void onClick (View view){
 		switch (view.getId()) {
 		case R.id.btn_back:
-			Intent intent = new Intent(FormulirKunjunganRumahActivity.this, FormulirKunjunganAnakActivity.class);
-			startActivity(intent);
+			Intent back_ka = new Intent(FormulirKunjunganRumahActivity.this, FormulirKunjunganAnakActivity.class);
+			back_ka.putExtra("id_child_ka", id_child);
+			Log.e("Sending intent back into fk_anak",""+id_child);
+			//back_ka.putExtra("Object_VisitModel1", model_visit);
+			//model_visit = new Visit_Model("1","2","3","4","5","6");
+			back_ka.putExtra("Object_VisitModel1", model_visit);
+			startActivity(back_ka);
 			break;
 			
 		case R.id.button_simpan:

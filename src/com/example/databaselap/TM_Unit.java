@@ -14,6 +14,7 @@ public class TM_Unit {
 	private static final String ROW_UNIT_DESC = "unit_desc";
 	private static final String ROW_UNIT_TYPE = "unit_type";
 	private static final String ROW_UNIT_UOM = "unit_uom";
+	
 	private static final String ROW_CREATED_BY = "created_by";
 	private static final String ROW_CREATED_TIME = "created_time";
 	private static final String ROW_UPDATE_BY = "update_by";

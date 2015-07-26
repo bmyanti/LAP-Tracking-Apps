@@ -2,7 +2,7 @@ package com.example.databaselap;
 
 import java.util.ArrayList;
 
-import com.example.modellap.TM_Child_Model;
+import com.example.modellap.Child_Model;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -202,9 +202,9 @@ public class TM_Child {
 		}
 	}
 	
-	public TM_Child_Model SearchChild(String nama) {
-		TM_Child_Model model_child = new TM_Child_Model();
-		TM_Child_Model tm = new TM_Child_Model();
+	public Child_Model SearchChild(String nama) {
+		Child_Model model_child = new Child_Model();
+		Child_Model tm = new Child_Model();
 
 		 cursor = db
 				.rawQuery(
@@ -220,9 +220,9 @@ public class TM_Child {
 	}
 
 	// ambil semua data dari table
-	public ArrayList<TM_Child_Model> getAllData() {
+	public ArrayList<Child_Model> getAllData() {
 
-		ArrayList<TM_Child_Model> allData = new ArrayList<TM_Child_Model>();
+		ArrayList<Child_Model> allData = new ArrayList<Child_Model>();
 		 cursor = null;
 
 		cursor = db.query(NAMA_TABEL, new String[] {
@@ -265,8 +265,8 @@ public class TM_Child {
 		return allData;
 	}
 
-	private TM_Child_Model parseData(Cursor cursor) {
-		TM_Child_Model curData = new TM_Child_Model();
+	private Child_Model parseData(Cursor cursor) {
+		Child_Model curData = new Child_Model();
 		curData.setChild_id(cursor.getString(0));
 		curData.setChild_name(cursor.getString(1));
 		curData.setChild_bod(cursor.getString(2));
@@ -296,8 +296,8 @@ public class TM_Child {
 		return curData;
 	}
 
-	public TM_Child_Model getChildIdentityById(String id) {
-		TM_Child_Model model_child = new TM_Child_Model();
+	public Child_Model getChildIdentityById(String id) {
+		Child_Model model_child = new Child_Model();
 		cursor = db
 				.rawQuery(
 						"SELECT  child_id,child_name,child_bod,child_gender,blood_type,father_name,mother_name,caregiver_name,child_address,caregiver_phone,school_name,image_path,drug_dose_id,drug_status_id,drug_type_id,class_id,caregiver_id,facility_id,dad_status_id,mom_status_id,subdistrict_id,school_subdistrict_id FROM  TM_Child WHERE child_id= '"

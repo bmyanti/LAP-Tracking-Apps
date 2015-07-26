@@ -24,7 +24,7 @@ public class TM_Caregiver {
 
 	// mendeklarasikan membuat CREATE_TABLE = MEMBUAT TABLE
 	private static final String CREATE_TABLE = 
-			"create table "+NAMA_TABEL+" ( "+ROW_CAREGIVER_ID+" integer PRIMARY KEY autoincrement, "+ROW_CAREGIVER_DESCRIPTION+" text, "+ROW_CREATED_BY+" date, " +	
+			"create table "+NAMA_TABEL+" ( "+ROW_CAREGIVER_ID+" varchar PRIMARY KEY , "+ROW_CAREGIVER_DESCRIPTION+" text, "+ROW_CREATED_BY+" date, " +	
 					" "+ROW_CREATED_TIME+" varchar, "+ROW_UPDATE_BY+" text, "+ROW_UPDATE_TIME+" varchar  ) ";
 	
 
@@ -62,6 +62,7 @@ public class TM_Caregiver {
 				// masih data static
 				ContentValues values = new ContentValues();
 				
+				values.put(ROW_CAREGIVER_ID, "CA000");
 				values.put(ROW_CAREGIVER_DESCRIPTION, "-");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -69,27 +70,7 @@ public class TM_Caregiver {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 				
-				values.put(ROW_CAREGIVER_DESCRIPTION, "Paman");
-				values.put(ROW_CREATED_BY, "-");
-				values.put(ROW_CREATED_TIME, "-");
-				values.put(ROW_UPDATE_BY, "-");
-				values.put(ROW_UPDATE_TIME, "-");
-				db.insert(NAMA_TABEL, null, values);
-
-				values.put(ROW_CAREGIVER_DESCRIPTION, "Bibi");
-				values.put(ROW_CREATED_BY, "-");
-				values.put(ROW_CREATED_TIME, "-");
-				values.put(ROW_UPDATE_BY, "-");
-				values.put(ROW_UPDATE_TIME, "-");
-				db.insert(NAMA_TABEL, null, values);
-
-				values.put(ROW_CAREGIVER_DESCRIPTION, "Nenek");
-				values.put(ROW_CREATED_BY, "-");
-				values.put(ROW_CREATED_TIME, "-");
-				values.put(ROW_UPDATE_BY, "-");
-				values.put(ROW_UPDATE_TIME, "-");
-				db.insert(NAMA_TABEL, null, values);
-
+				values.put(ROW_CAREGIVER_ID, "CA001");
 				values.put(ROW_CAREGIVER_DESCRIPTION, "Kakek");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -97,6 +78,39 @@ public class TM_Caregiver {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				values.put(ROW_CAREGIVER_ID, "CA002");
+				values.put(ROW_CAREGIVER_DESCRIPTION, "Nenek");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
+
+				values.put(ROW_CAREGIVER_ID, "CA003");
+				values.put(ROW_CAREGIVER_DESCRIPTION, "Orang Tua");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
+
+				values.put(ROW_CAREGIVER_ID, "CA004");
+				values.put(ROW_CAREGIVER_DESCRIPTION, "Paman");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
+
+				values.put(ROW_CAREGIVER_ID, "CA005");
+				values.put(ROW_CAREGIVER_DESCRIPTION, "Bibi");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
+				
+				values.put(ROW_CAREGIVER_ID, "CA006");
 				values.put(ROW_CAREGIVER_DESCRIPTION, "Tetangga");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");

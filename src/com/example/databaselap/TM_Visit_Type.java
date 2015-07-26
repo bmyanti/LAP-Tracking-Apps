@@ -12,8 +12,6 @@ import android.util.Log;
 public class TM_Visit_Type {
 	private static final String ROW_VISIT_TYPE_ID = "visit_type_id";
 	private static final String ROW_VISIT_TYPE_DESCRIPTION = "visit_type_description";
-	private static final String ROW_UNIT_ID = "unit_id";
-	private static final String ROW_UNIT_TYPE = "unit_type";
 
 	private static final String ROW_CREATED_BY = "created_by";
 	private static final String ROW_CREATED_TIME = "created_time";
@@ -21,14 +19,18 @@ public class TM_Visit_Type {
 	private static final String ROW_UPDATE_TIME = "update_time";
 	
 	//mendeklarasikan NAMA_DB DAN TABLE DAN DATABASE VERSION
-		private static final String NAMA_DB ="DB_LAP";
-		private static final String NAMA_TABEL="TR_Notification";
+		private static final String NAMA_DB ="DB_LAP_VT";
+		private static final String NAMA_TABEL="TR_Visit_Type";
 		private static final int DB_VERSION=1;
 		
 	//mendeklarasikan membuat CREATE_TABLE = MEMBUAT TABLE"
-		private static final String CREATE_TABLE ="create table "+NAMA_TABEL+" ("+ROW_VISIT_TYPE_ID+" varchar PRIMARY KEY autoincrement,"+ROW_VISIT_TYPE_DESCRIPTION+" text," +
-				""+ROW_UNIT_ID+"varchar PRIMARY KEY,"+ROW_UNIT_TYPE+"varchar," +
-						""+ROW_CREATED_BY+"varchar,"+ROW_CREATED_TIME+"time,"+ROW_UPDATE_BY+"varchar,"+ROW_UPDATE_TIME+"time,)";
+		private static final String CREATE_TABLE = "create table " + NAMA_TABEL
+				+ " ( " + ROW_VISIT_TYPE_ID + " varchar PRIMARY KEY, "
+				+ ROW_VISIT_TYPE_DESCRIPTION + " text, " + ROW_CREATED_BY + " date, "
+				+ " " + ROW_CREATED_TIME + " varchar, " + ROW_UPDATE_BY + " text, "
+				+ ROW_UPDATE_TIME + " varchar  ) ";
+		
+		
 	
 		//membuat mendeklarasikan Context itu adalah context
 		private final Context context;
@@ -60,7 +62,52 @@ public class TM_Visit_Type {
 					public void onCreate(SQLiteDatabase db) {
 						// TODO Auto-generated method stub
 						db.execSQL(CREATE_TABLE);
-				
+						
+						try {
+							// hapus dari tabel kemudian update yang baru
+
+							// masih data static
+							ContentValues values = new ContentValues();
+							
+							values.put(ROW_VISIT_TYPE_ID, "VT000");
+							values.put(ROW_VISIT_TYPE_DESCRIPTION, "-");
+							values.put(ROW_CREATED_BY, "-");
+							values.put(ROW_CREATED_TIME, "-");
+							values.put(ROW_UPDATE_BY, "-");
+							values.put(ROW_UPDATE_TIME, "-");
+							db.insert(NAMA_TABEL, null, values);
+							
+							values.put(ROW_VISIT_TYPE_ID, "VT001");
+							values.put(ROW_VISIT_TYPE_DESCRIPTION, "Home Visit");
+							values.put(ROW_CREATED_BY, "-");
+							values.put(ROW_CREATED_TIME, "-");
+							values.put(ROW_UPDATE_BY, "-");
+							values.put(ROW_UPDATE_TIME, "-");
+							db.insert(NAMA_TABEL, null, values);
+							
+							values.put(ROW_VISIT_TYPE_ID, "VT002");
+							values.put(ROW_VISIT_TYPE_DESCRIPTION, "Pos Visit");
+							values.put(ROW_CREATED_BY, "-");
+							values.put(ROW_CREATED_TIME, "-");
+							values.put(ROW_UPDATE_BY, "-");
+							values.put(ROW_UPDATE_TIME, "-");
+							db.insert(NAMA_TABEL, null, values);
+
+							values.put(ROW_VISIT_TYPE_ID, "VT003");
+							values.put(ROW_VISIT_TYPE_DESCRIPTION, "Lab Result");
+							values.put(ROW_CREATED_BY, "-");
+							values.put(ROW_CREATED_TIME, "-");
+							values.put(ROW_UPDATE_BY, "-");
+							values.put(ROW_UPDATE_TIME, "-");
+							db.insert(NAMA_TABEL, null, values);
+							
+							
+							
+
+						} catch (Exception e) {
+							e.printStackTrace();
+							Log.e("Gagal Visit", e.toString());
+						}
 			}
 
 			@Override
@@ -78,80 +125,52 @@ public class TM_Visit_Type {
 			dbhelper.close();
 		}
 		
-		public void addRow( String visit_type_id, String visit_type_description , 
-				String unit_id , String unit_type,
-				String created_by , String created_time ,
-				String update_by , String update_time 
-				)
-		{
-			ContentValues values = new ContentValues();
-			
-			values.put(ROW_VISIT_TYPE_ID, visit_type_id);
-			values.put(ROW_VISIT_TYPE_DESCRIPTION, visit_type_description);
-			values.put(ROW_UNIT_ID, unit_id);
-			values.put(ROW_UNIT_TYPE, unit_type);
+		public ArrayList<String> getDataVisitType() {
+			ArrayList<String> allData = new ArrayList<String>();
+			Cursor cursor = null;
 
-			values.put(ROW_CREATED_BY, created_by);
-			values.put(ROW_CREATED_TIME, created_time);
-			values.put(ROW_UPDATE_BY, update_by);
-			values.put(ROW_UPDATE_TIME, update_time);
-			
-			
-			try {
-				//menambahkan nama tabel bila tidak akan error
-				//	db.delete(NAMA_TABEL, null, null);
-					db.insert(NAMA_TABEL, null, values);
-				
-			} catch (Exception e) {
-				// TODO: handle exception
-				Log.e("DB ERROR", e.toString());
-				e.printStackTrace();
-				
+			cursor = db.query(NAMA_TABEL, new String[] { ROW_VISIT_TYPE_ID,
+					ROW_VISIT_TYPE_DESCRIPTION, ROW_CREATED_BY, ROW_CREATED_TIME,
+					ROW_UPDATE_BY, ROW_UPDATE_TIME }, null, null, null, null, null);
+
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				allData.add(cursor.getString(1));
+				cursor.moveToNext();
 			}
+
+			cursor.close();
+			return allData;
 		}
-		//membuat array pada table layout
-		public ArrayList<ArrayList<Object>> ambilSemuaBaris()
-		{
-			ArrayList<ArrayList<Object>> dataArray = new ArrayList<ArrayList<Object>>();
-			Cursor cur;
-			
-			try {
-				cur = db.query(NAMA_TABEL, 
-						new String[]{ ROW_VISIT_TYPE_ID, ROW_VISIT_TYPE_DESCRIPTION, ROW_UNIT_ID, 
-						ROW_UNIT_TYPE,
-						ROW_CREATED_BY,ROW_CREATED_TIME, ROW_UPDATE_BY, ROW_UPDATE_TIME,
-						}, null, null,
-						null, null, null);
-				cur.moveToFirst();
-				if(!cur.isAfterLast())
-				{
-					do
-					{
-						ArrayList<Object> dataList = new ArrayList<Object>();
-						dataList.add(cur.getLong(0));
-						dataList.add(cur.getString(1));
-						dataList.add(cur.getString(2));
-						dataList.add(cur.getString(3));
-						dataList.add(cur.getString(4));
-						dataList.add(cur.getString(5));
-						dataList.add(cur.getString(6));
-						dataList.add(cur.getString(7));
-						dataList.add(cur.getString(8));
-						dataList.add(cur.getString(9));
-						dataList.add(cur.getString(10));
-						dataList.add(cur.getString(11));
-						
-						
-						dataArray.add(dataList);
-					}while (cur.moveToNext());
-				}
-				
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
-				Log.e("DEBE ERROR", e.toString());
-			}
-			return dataArray;
-		}
+
 		
+		//membuat array pada table layout
+		// get id kelas
+		public String getIdVisitType(String visit_type) {
+			String id = "";
+			Cursor mCursor = db.rawQuery(
+					"SELECT  visit_type_id  FROM  TR_Visit_Type WHERE visit_type_description= '"
+							+ visit_type + "'", null);
+			if (mCursor != null) {
+				mCursor.moveToFirst();
+				id = mCursor.getString(0);
+			}
+			mCursor.close();
+			return id;
+		}
+
+		// get name kelas
+		public String getNameVisitType(String id) {
+			String name = "";
+			Cursor mCursor = db
+					.rawQuery(
+							"SELECT  visit_type_description  FROM  TR_Visit_Type WHERE visit_type_id= '"
+									+ id + "'", null);
+			if (mCursor != null) {
+				mCursor.moveToFirst();
+				name = mCursor.getString(mCursor.getColumnIndex(ROW_VISIT_TYPE_DESCRIPTION));
+			}
+			mCursor.close();
+			return name;
+		}
 }

@@ -23,7 +23,7 @@ import org.json.JSONObject;
 
 import com.example.asyntask.library.JSONParser;
 import com.example.databaselap.TM_Child;
-import com.example.modellap.TM_Child_Model;
+import com.example.modellap.Child_Model;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -61,7 +61,7 @@ public class ListAnakActivity extends Activity implements OnQueryTextListener {
 	//search
 	ListView lv;
     SearchView search_view;
-    private List<TM_Child_Model> nameChildlist = null;
+    private List<Child_Model> nameChildlist = null;
    // ArrayList<itemSearch> listArray = new ArrayList<itemSearch>();
     ArrayList<String> arrSt = new ArrayList<String>();
    ArrayList<String> arr6 = new ArrayList<String>();
@@ -111,7 +111,7 @@ public class ListAnakActivity extends Activity implements OnQueryTextListener {
         String[] locales = Locale.getISOCountries();      
         countries = new ArrayList<String>();
         TM_Child table_anak = new TM_Child(getApplicationContext());
-		ArrayList<TM_Child_Model> arr = new ArrayList<TM_Child_Model>();
+		ArrayList<Child_Model> arr = new ArrayList<Child_Model>();
 		arr = table_anak.getAllData();
 		
 		
@@ -154,7 +154,7 @@ public class ListAnakActivity extends Activity implements OnQueryTextListener {
                     long arg3) {
             	TM_Child tabel_anak;
             	String id_child;
-    			TM_Child_Model model_anak = new TM_Child_Model();
+    			Child_Model model_anak = new Child_Model();
     			tabel_anak = new TM_Child(getApplicationContext());
         		       		
             	 // TODO Auto-generated method stub
@@ -174,7 +174,7 @@ public class ListAnakActivity extends Activity implements OnQueryTextListener {
         
 		// set grid view item
 		
-		for (TM_Child_Model tc : arr) {
+		for (Child_Model tc : arr) {
 			String as = "kosong";
 			if (tc.getImage_path().equals(as)) {
 				Bitmap bitmap1 = BitmapFactory.decodeResource(

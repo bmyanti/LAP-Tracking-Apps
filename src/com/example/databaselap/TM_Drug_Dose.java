@@ -27,7 +27,7 @@ public class TM_Drug_Dose {
 
 	// mendeklarasikan membuat CREATE_TABLE = MEMBUAT TABLE"
 	private static final String CREATE_TABLE = "create table " + NAMA_TABEL
-			+ " ( " + ROW_DRUG_DOSE_ID + " integer PRIMARY KEY autoincrement, "
+			+ " ( " + ROW_DRUG_DOSE_ID + " varchar PRIMARY KEY , "
 			+ ROW_DRUG_DOSE_DESCRIPTION + " text, " + ROW_CREATED_BY
 			+ " date, " + " " + ROW_CREATED_TIME + " varchar, " + ROW_UPDATE_BY
 			+ " text, " + ROW_UPDATE_TIME + " varchar  ) ";
@@ -66,6 +66,7 @@ public class TM_Drug_Dose {
 
 				// masih data static
 				ContentValues values = new ContentValues();
+				values.put(ROW_DRUG_DOSE_ID, "DD000");
 				values.put(ROW_DRUG_DOSE_DESCRIPTION, "-");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -73,6 +74,7 @@ public class TM_Drug_Dose {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 				
+				values.put(ROW_DRUG_DOSE_ID, "DD001");
 				values.put(ROW_DRUG_DOSE_DESCRIPTION, "1/2");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -80,6 +82,7 @@ public class TM_Drug_Dose {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				values.put(ROW_DRUG_DOSE_ID, "DD002");
 				values.put(ROW_DRUG_DOSE_DESCRIPTION, "1");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -87,6 +90,7 @@ public class TM_Drug_Dose {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				values.put(ROW_DRUG_DOSE_ID, "DD003");
 				values.put(ROW_DRUG_DOSE_DESCRIPTION, "1 1/2");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -94,6 +98,7 @@ public class TM_Drug_Dose {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				values.put(ROW_DRUG_DOSE_ID, "DD004");
 				values.put(ROW_DRUG_DOSE_DESCRIPTION, "2");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -101,6 +106,7 @@ public class TM_Drug_Dose {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 				
+				values.put(ROW_DRUG_DOSE_ID, "DD005");
 				values.put(ROW_DRUG_DOSE_DESCRIPTION, "2 1/2");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -108,6 +114,7 @@ public class TM_Drug_Dose {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				values.put(ROW_DRUG_DOSE_ID, "DD006");
 				values.put(ROW_DRUG_DOSE_DESCRIPTION, "3");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -115,6 +122,7 @@ public class TM_Drug_Dose {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				values.put(ROW_DRUG_DOSE_ID, "DD007");
 				values.put(ROW_DRUG_DOSE_DESCRIPTION, "3 1/2");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");

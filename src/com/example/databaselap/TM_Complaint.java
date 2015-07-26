@@ -12,7 +12,6 @@ import android.util.Log;
 public class TM_Complaint {
 	private static final String ROW_COMPLAINT_ID = "complaint_id";
 	private static final String ROW_COMPLAINT_DESCRIPTION = "complaint_description";
-	private static final String ROW_COMPLAINT_STATUS_ID = "complaint_status_id";
 	private static final String ROW_CREATED_BY = "created_by";
 	private static final String ROW_CREATED_TIME = "created_time";
 	private static final String ROW_UPDATE_BY = "update_by";
@@ -20,14 +19,16 @@ public class TM_Complaint {
 	
 	
 	//mendeklarasikan NAMA_DB DAN TABLE DAN DATABASE VERSION
-		private static final String NAMA_DB ="DB_LAP";
+		private static final String NAMA_DB ="DB_LAP_COMPLAINT";
 		private static final String NAMA_TABEL="TM_COMPLAINT";
 		private static final int DB_VERSION=1;
 		
 	//mendeklarasikan membuat CREATE_TABLE = MEMBUAT TABLE"
-		private static final String CREATE_TABLE ="create table "+NAMA_TABEL+" ("+ROW_COMPLAINT_ID+" varchar PRIMARY KEY autoincrement," +
-				""+ROW_COMPLAINT_DESCRIPTION+"text,"+ROW_COMPLAINT_STATUS_ID+" varchar PRIMARY KEY ," +
-						""+ROW_CREATED_BY+"varchar,"+ROW_CREATED_TIME+"time,"+ROW_UPDATE_BY+"varchar,"+ROW_UPDATE_TIME+"time,)";
+		private static final String CREATE_TABLE = "create table " + NAMA_TABEL
+				+ " ( " + ROW_COMPLAINT_ID + " varchar PRIMARY KEY, "
+				+ ROW_COMPLAINT_DESCRIPTION + " text, " + ROW_CREATED_BY + " date, "
+				+ " " + ROW_CREATED_TIME + " varchar, " + ROW_UPDATE_BY + " text, "
+				+ ROW_UPDATE_TIME + " varchar  ) ";
 	
 		//membuat mendeklarasikan Context itu adalah context
 		private final Context context;
@@ -59,6 +60,68 @@ public class TM_Complaint {
 					public void onCreate(SQLiteDatabase db) {
 						// TODO Auto-generated method stub
 						db.execSQL(CREATE_TABLE);
+						try
+						{
+							
+							ContentValues values = new ContentValues();
+							values.put(ROW_COMPLAINT_ID, "CM000");
+							values.put(ROW_COMPLAINT_DESCRIPTION, "-");
+							values.put(ROW_CREATED_BY, "-");
+							values.put(ROW_CREATED_TIME, "-");
+							values.put(ROW_UPDATE_BY, "-");
+							values.put(ROW_UPDATE_TIME, "-");
+							db.insert(NAMA_TABEL, null, values);
+							
+							values.put(ROW_COMPLAINT_ID, "CM001");
+							values.put(ROW_COMPLAINT_DESCRIPTION, "ISPA");
+							values.put(ROW_CREATED_BY, "-");
+							values.put(ROW_CREATED_TIME, "-");
+							values.put(ROW_UPDATE_BY, "-");
+							values.put(ROW_UPDATE_TIME, "-");
+							db.insert(NAMA_TABEL, null, values);
+							
+							values.put(ROW_COMPLAINT_ID, "CM002");
+							values.put(ROW_COMPLAINT_DESCRIPTION, "Kulit");
+							values.put(ROW_CREATED_BY, "-");
+							values.put(ROW_CREATED_TIME, "-");
+							values.put(ROW_UPDATE_BY, "-");
+							values.put(ROW_UPDATE_TIME, "-");
+							db.insert(NAMA_TABEL, null, values);
+
+							values.put(ROW_COMPLAINT_ID, "CM003");
+							values.put(ROW_COMPLAINT_DESCRIPTION, "TB");
+							values.put(ROW_CREATED_BY, "-");
+							values.put(ROW_CREATED_TIME, "-");
+							values.put(ROW_UPDATE_BY, "-");
+							values.put(ROW_UPDATE_TIME, "-");
+							db.insert(NAMA_TABEL, null, values);
+
+							values.put(ROW_COMPLAINT_ID, "CM004");
+							values.put(ROW_COMPLAINT_DESCRIPTION, "MSI");
+							values.put(ROW_CREATED_BY, "-");
+							values.put(ROW_CREATED_TIME, "-");
+							values.put(ROW_UPDATE_BY, "-");
+							values.put(ROW_UPDATE_TIME, "-");
+							db.insert(NAMA_TABEL, null, values);
+
+							values.put(ROW_COMPLAINT_ID, "CM005");
+							values.put(ROW_COMPLAINT_DESCRIPTION, "Pencernaan");
+							values.put(ROW_CREATED_BY, "-");
+							values.put(ROW_CREATED_TIME, "-");
+							values.put(ROW_UPDATE_BY, "-");
+							values.put(ROW_UPDATE_TIME, "-");
+							db.insert(NAMA_TABEL, null, values);
+
+							
+
+						} catch (Exception e) {
+							// TODO: handle exception
+							Log.e("DB ERROR Complaint", e.toString());
+							e.printStackTrace();
+
+						}
+
+						
 				
 			}
 
@@ -76,65 +139,53 @@ public class TM_Complaint {
 		public void close() {
 			dbhelper.close();
 		}
-		
-		public void addRow( String complaint_id , String complaint_description
-				,String created_by , String created_time ,
-				String update_by , String update_time
-				)
-		{
-			ContentValues values = new ContentValues();
-			
-			values.put(ROW_COMPLAINT_ID, complaint_id);
-			values.put(ROW_COMPLAINT_DESCRIPTION, complaint_description);
-			values.put(ROW_CREATED_BY, created_by);
-			values.put(ROW_CREATED_TIME, created_time);
-			values.put(ROW_UPDATE_BY, update_by);
-			values.put(ROW_UPDATE_TIME, update_time);
-			
-			try {
-				//menambahkan nama tabel bila tidak akan error
-				//	db.delete(NAMA_TABEL, null, null);
-					db.insert(NAMA_TABEL, null, values);
-				
-			} catch (Exception e) {
-				// TODO: handle exception
-				Log.e("DB ERROR", e.toString());
-				e.printStackTrace();
-				
+		public ArrayList<String> getDataComplaint() {
+			ArrayList<String> allData = new ArrayList<String>();
+			Cursor cursor = null;
+
+			cursor = db.query(NAMA_TABEL, new String[] { ROW_COMPLAINT_ID,
+					ROW_COMPLAINT_DESCRIPTION, ROW_CREATED_BY, ROW_CREATED_TIME,
+					ROW_UPDATE_BY, ROW_UPDATE_TIME }, null, null, null, null, null);
+
+			cursor.moveToFirst();
+			while (!cursor.isAfterLast()) {
+				allData.add(cursor.getString(1));
+				cursor.moveToNext();
 			}
+
+			cursor.close();
+			return allData;
 		}
+
+		
 		//membuat array pada table layout
-		public ArrayList<ArrayList<Object>> ambilSemuaBaris()
-		{
-			ArrayList<ArrayList<Object>> dataArray = new ArrayList<ArrayList<Object>>();
-			Cursor cur;
-			
-			try {
-				cur = db.query(NAMA_TABEL, 
-						new String[]{ ROW_COMPLAINT_ID,
-						ROW_COMPLAINT_DESCRIPTION,ROW_CREATED_BY,ROW_CREATED_TIME, ROW_UPDATE_BY, ROW_UPDATE_TIME
-						}, null, null,
-						null, null, null);
-				cur.moveToFirst();
-				if(!cur.isAfterLast())
-				{
-					do
-					{
-						ArrayList<Object> dataList = new ArrayList<Object>();
-						dataList.add(cur.getLong(0));
-						dataList.add(cur.getString(1));
-						
-						
-						dataArray.add(dataList);
-					}while (cur.moveToNext());
-				}
-				
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
-				Log.e("DEBE ERROR", e.toString());
+		// get id kelas
+		public String getIdComplaint(String name) {
+			String id = "";
+			Cursor mCursor = db.rawQuery(
+					"SELECT  complaint_id  FROM  TM_COMPLAINT WHERE complaint_description= '"
+							+ name + "'", null);
+			if (mCursor != null) {
+				mCursor.moveToFirst();
+				id = mCursor.getString(0);
 			}
-			return dataArray;
+			mCursor.close();
+			return id;
+		}
+
+		// get name kelas
+		public String getNameComplaint(String id) {
+			String name = "";
+			Cursor mCursor = db
+					.rawQuery(
+							"SELECT  complaint_description  FROM  TM_COMPLAINT WHERE complaint_id= '"
+									+ id + "'", null);
+			if (mCursor != null) {
+				mCursor.moveToFirst();
+				name = mCursor.getString(mCursor.getColumnIndex(ROW_COMPLAINT_DESCRIPTION));
+			}
+			mCursor.close();
+			return name;
 		}
 		
 }

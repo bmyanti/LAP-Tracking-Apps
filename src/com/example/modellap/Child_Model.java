@@ -1,6 +1,6 @@
 package com.example.modellap;
 
-public class TM_Child_Model {
+public class Child_Model {
 	private  String Child_id;
 	private  String Child_name;
 	private  String Child_bod;

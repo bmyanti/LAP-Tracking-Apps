@@ -2,8 +2,7 @@ package com.example.databaselap;
 
 import java.util.ArrayList;
 
-import com.example.modellap.TM_Child_Model;
-import com.example.modellap.TM_Class_Model;
+import com.example.modellap.Child_Model;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -27,7 +26,7 @@ public class TM_Class {
 
 	// mendeklarasikan membuat CREATE_TABLE = MEMBUAT TABLE
 	private static final String CREATE_TABLE = "create table " + NAMA_TABEL
-			+ " ( " + ROW_CLASS_ID + " integer PRIMARY KEY autoincrement, "
+			+ " ( " + ROW_CLASS_ID + " varchar PRIMARY KEY, "
 			+ ROW_CLASS_DESCRIPTION + " text, " + ROW_CREATED_BY + " date, "
 			+ " " + ROW_CREATED_TIME + " varchar, " + ROW_UPDATE_BY + " text, "
 			+ ROW_UPDATE_TIME + " varchar  ) ";
@@ -64,6 +63,7 @@ public class TM_Class {
 			try {
 
 				ContentValues values = new ContentValues();
+				values.put(ROW_CLASS_ID, "CL000");
 				values.put(ROW_CLASS_DESCRIPTION, "-");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -71,6 +71,7 @@ public class TM_Class {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 				
+				values.put(ROW_CLASS_ID, "CL001");
 				values.put(ROW_CLASS_DESCRIPTION, "PAUD");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -78,13 +79,31 @@ public class TM_Class {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
-				values.put(ROW_CLASS_DESCRIPTION, "TK");
+				values.put(ROW_CLASS_ID, "CL002");
+				values.put(ROW_CLASS_DESCRIPTION, "TK1");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
+				
+				values.put(ROW_CLASS_ID, "CL003");
+				values.put(ROW_CLASS_DESCRIPTION, "TK2");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
+				
+				values.put(ROW_CLASS_ID, "CL004");
+				values.put(ROW_CLASS_DESCRIPTION, "TK3");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
 				values.put(ROW_UPDATE_BY, "-");
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				values.put(ROW_CLASS_ID, "CL005");
 				values.put(ROW_CLASS_DESCRIPTION, "1 SD");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -92,6 +111,7 @@ public class TM_Class {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				values.put(ROW_CLASS_ID, "CL006");
 				values.put(ROW_CLASS_DESCRIPTION, "2 SD");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -99,6 +119,7 @@ public class TM_Class {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				values.put(ROW_CLASS_ID, "CL007");
 				values.put(ROW_CLASS_DESCRIPTION, "3 SD");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -106,6 +127,7 @@ public class TM_Class {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				values.put(ROW_CLASS_ID, "CL008");
 				values.put(ROW_CLASS_DESCRIPTION, "4 SD");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -113,6 +135,7 @@ public class TM_Class {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				values.put(ROW_CLASS_ID, "CL009");
 				values.put(ROW_CLASS_DESCRIPTION, "5 SD");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -120,6 +143,7 @@ public class TM_Class {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				values.put(ROW_CLASS_ID, "CL010");
 				values.put(ROW_CLASS_DESCRIPTION, "6 SD");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -127,26 +151,26 @@ public class TM_Class {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
-				values.put(ROW_CLASS_DESCRIPTION, "1 SMP");
-				values.put(ROW_CREATED_BY, "-");
-				values.put(ROW_CREATED_TIME, "-");
-				values.put(ROW_UPDATE_BY, "-");
-				values.put(ROW_UPDATE_TIME, "-");
-				db.insert(NAMA_TABEL, null, values);
-				
-				values.put(ROW_CLASS_DESCRIPTION, "2 SMP");
-				values.put(ROW_CREATED_BY, "-");
-				values.put(ROW_CREATED_TIME, "-");
-				values.put(ROW_UPDATE_BY, "-");
-				values.put(ROW_UPDATE_TIME, "-");
-				db.insert(NAMA_TABEL, null, values);
-
-				values.put(ROW_CLASS_DESCRIPTION, "3 SMP");
-				values.put(ROW_CREATED_BY, "-");
-				values.put(ROW_CREATED_TIME, "-");
-				values.put(ROW_UPDATE_BY, "-");
-				values.put(ROW_UPDATE_TIME, "-");
-				db.insert(NAMA_TABEL, null, values);
+//				values.put(ROW_CLASS_DESCRIPTION, "1 SMP");
+//				values.put(ROW_CREATED_BY, "-");
+//				values.put(ROW_CREATED_TIME, "-");
+//				values.put(ROW_UPDATE_BY, "-");
+//				values.put(ROW_UPDATE_TIME, "-");
+//				db.insert(NAMA_TABEL, null, values);
+//				
+//				values.put(ROW_CLASS_DESCRIPTION, "2 SMP");
+//				values.put(ROW_CREATED_BY, "-");
+//				values.put(ROW_CREATED_TIME, "-");
+//				values.put(ROW_UPDATE_BY, "-");
+//				values.put(ROW_UPDATE_TIME, "-");
+//				db.insert(NAMA_TABEL, null, values);
+//
+//				values.put(ROW_CLASS_DESCRIPTION, "3 SMP");
+//				values.put(ROW_CREATED_BY, "-");
+//				values.put(ROW_CREATED_TIME, "-");
+//				values.put(ROW_UPDATE_BY, "-");
+//				values.put(ROW_UPDATE_TIME, "-");
+//				db.insert(NAMA_TABEL, null, values);
 
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -223,14 +247,7 @@ public class TM_Class {
 		return allData;
 	}
 
-	private TM_Class_Model parseData(Cursor cursor) {
-		TM_Class_Model curData = new TM_Class_Model();
-
-		curData.setClass_id(cursor.getString(0));
-		curData.setClass_description(cursor.getString(1));
-
-		return curData;
-	}
+	
 
 	// get id kelas
 	public String getIdKelas(String kelas_deskripsi) {

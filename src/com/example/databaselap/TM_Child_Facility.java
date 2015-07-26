@@ -2,8 +2,8 @@ package com.example.databaselap;
 
 import java.util.ArrayList;
 
-import com.example.modellap.TM_Child_Facility_Model;
-import com.example.modellap.TM_Child_Model;
+import com.example.modellap.ChildFacility_Model;
+import com.example.modellap.Child_Model;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -113,9 +113,9 @@ public class TM_Child_Facility {
 
 	}
 
-	public ArrayList<TM_Child_Facility_Model> getSemuaFasilitasAnak(
+	public ArrayList<ChildFacility_Model> getSemuaFasilitasAnak(
 			String child_id) {
-		ArrayList<TM_Child_Facility_Model> data = new ArrayList<TM_Child_Facility_Model>();
+		ArrayList<ChildFacility_Model> data = new ArrayList<ChildFacility_Model>();
 		Cursor mCursor = db
 				.rawQuery(
 						"SELECT  child_id,facility_id,facility_cost_id  FROM  TM_Child_Facility WHERE child_id= '"
@@ -158,8 +158,8 @@ public class TM_Child_Facility {
 	//
 	// }
 
-	private TM_Child_Facility_Model parseData(Cursor cursor) {
-		TM_Child_Facility_Model curData = new TM_Child_Facility_Model();
+	private ChildFacility_Model parseData(Cursor cursor) {
+		ChildFacility_Model curData = new ChildFacility_Model();
 		// curData.setChild_facility_id(cursor.getString(0));
 		curData.setChild_id(cursor.getString(cursor
 				.getColumnIndex(ROW_CHILD_ID)));

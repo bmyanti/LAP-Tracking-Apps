@@ -33,10 +33,9 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="14dp"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
                 android:text="FORMULIR KUNJUNGAN"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault"
                 android:textColor="#FFFFFF" />
-
         </LinearLayout>
 
         <ScrollView
@@ -61,7 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical" >
 
                     <TextView
                         android:id="@+id/textView2"
@@ -71,10 +70,10 @@
                         android:padding="10dp"
                         android:text="MEDIS ANAK"
                         android:textColor="#ffffff" />
-                    
                 </LinearLayout>
-
                 
+                
+               
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -101,7 +100,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4" />
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -135,7 +133,6 @@
 
                         <requestFocus />
                     </EditText>
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -166,8 +163,9 @@
                         android:ems="10"
                         android:inputType="number"
                         android:textColor="@color/black" />
-
                 </LinearLayout>
+                 
+                   
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -197,24 +195,23 @@
                         android:ems="10"
                         android:inputType="number"
                         android:textColor="@color/black" />
-
                 </LinearLayout>
-                
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
-
-                    <LinearLayout
+                    
+                      <LinearLayout
                         android:id="@+id/linearlayout_tambahkeluhan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical" >
 
                         <LinearLayout
+                            android:id="@+id/layout_keluhan"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                        	android:id="@+id/layout_keluhan" >
+                            android:layout_height="wrap_content" >
 
                             <TextView
                                 android:id="@+id/textView11"
@@ -240,9 +237,9 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/layout_status"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/layout_status" >
+                            android:layout_height="wrap_content" >
 
                             <TextView
                                 android:id="@+id/textView13"
@@ -268,9 +265,9 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/layout_tindakan"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/layout_tindakan" >
+                            android:layout_height="wrap_content" >
 
                             <TextView
                                 android:id="@+id/textView15"
@@ -289,35 +286,230 @@
                                 android:textColor="@color/blue" />
 
                             <EditText
-                                android:id="@+id/editText_tindakan"
+                                android:id="@+id/etTindakan"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="4"
                                 android:ems="10"
                                 android:textColor="@color/black" />
                         </LinearLayout>
-
                     </LinearLayout>
+                    
+                     <LinearLayout
+                        android:id="@+id/tambah_keluhan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <Button
+                            android:id="@+id/button_tambahkeluhan"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:background="@android:color/transparent"
+                            android:onClick="onClick"
+                            android:text="tambah keluhan"
+                            android:textColor="@color/blue"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                   
 
                     <LinearLayout
+                        android:id="@+id/tambahKeluhan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:id="@+id/tambah_keluhan" >
+                        android:visibility="invisible" >
+
+                        <LinearLayout
+                            android:id="@+id/layout_keluhan1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" >
+
+                            <TextView
+                                android:id="@+id/tvkeluhan1"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:text="KELUHAN"
+                                android:textColor="@color/blue" />
+
+                            <TextView
+                                android:id="@+id/tvkeluhan1a"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5"
+                                android:text=":"
+                                android:textColor="@color/blue" />
+
+                            <Spinner
+                                android:id="@+id/spinner_keluhan1"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_status1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" >
+
+                            <TextView
+                                android:id="@+id/tvStatus1"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:text="STATUS"
+                                android:textColor="@color/blue" />
+
+                            <TextView
+                                android:id="@+id/tvStatus1a"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5"
+                                android:text=":"
+                                android:textColor="@color/blue" />
+
+                            <Spinner
+                                android:id="@+id/spinner_status1"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_tindakan1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" >
+
+                            <TextView
+                                android:id="@+id/tvTindakan1"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:text="TINDAKAN"
+                                android:textColor="@color/blue" />
+
+                            <TextView
+                                android:id="@+id/tvTindakan1a"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5"
+                                android:text=":"
+                                android:textColor="@color/blue" />
+
+                            <EditText
+                                android:id="@+id/etTindakan1"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4"
+                                android:ems="10"
+                                android:textColor="@color/black" />
+                        </LinearLayout>
+                    </LinearLayout>
+                    
+                    
+
+                    <LinearLayout
+                        android:id="@+id/tambahKeluhan2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="invisible" >
+
+                        <LinearLayout
+                            android:id="@+id/layout_keluhan2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" >
+
+                            <TextView
+                                android:id="@+id/tvkeluhan2"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:text="KELUHAN"
+                                android:textColor="@color/blue" />
+
+                            <TextView
+                                android:id="@+id/tvkeluhan2a"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5"
+                                android:text=":"
+                                android:textColor="@color/blue" />
+
+                            <Spinner
+                                android:id="@+id/spinner_keluhan2"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_status2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" >
+
+                            <TextView
+                                android:id="@+id/tvStatus2"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:text="STATUS"
+                                android:textColor="@color/blue" />
+
+                            <TextView
+                                android:id="@+id/tvStatus2a"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5"
+                                android:text=":"
+                                android:textColor="@color/blue" />
+
+                            <Spinner
+                                android:id="@+id/spinner_status2"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_tindakan2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" >
+
+                            <TextView
+                                android:id="@+id/tvTindakan2"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:text="TINDAKAN"
+                                android:textColor="@color/blue" />
+
+                            <TextView
+                                android:id="@+id/tvTindakan2a"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.5"
+                                android:text=":"
+                                android:textColor="@color/blue" />
+
+                            <EditText
+                                android:id="@+id/etTindakan2"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4"
+                                android:ems="10"
+                                android:textColor="@color/black" />
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <Button
-                        android:id="@+id/button_tambahkeluhan"
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:background="@android:color/transparent"
-                        android:onClick="onClick"
-                        android:text="tambah keluhan"
-                        android:textColor="@color/blue"
-                        android:textStyle="italic" />
+                  
+                    
+                    
 
+                    
                 </LinearLayout>
 
                 <LinearLayout
@@ -347,7 +539,6 @@
                         android:layout_weight="4"
                         android:ems="10"
                         android:textColor="@color/black" />
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -377,87 +568,189 @@
                         android:layout_weight="4"
                         android:ems="10"
                         android:textColor="@color/black" />
-
                 </LinearLayout>
-
-                <LinearLayout
+               
+                
+                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:orientation="vertical" 
+                    android:gravity="center">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
-
+                   <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+		
+                        <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/layout_border"
+                        
+                        >
                         <ImageView
                             android:id="@+id/foto_anak1"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3.25"
+                            android:layout_width="132dp"
+                            android:layout_height="105dp"
+                            android:src="@drawable/new_button_camera" 
+                            android:paddingBottom="1dp"
+                            android:paddingTop="1dp"
+                            />
+                        
+                        <Button
+                            android:id="@+id/btn_foto1"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="132dp"
+                            android:layout_height="105dp"
+                            android:layout_gravity="center"
+                            android:background="@android:color/transparent"
                             android:onClick="onClick"
-                            android:src="@drawable/new_button_camera" />
+                             />
+                        </RelativeLayout>
 
+                        <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/layout_border"
+                        
+                        >
                         <ImageView
                             android:id="@+id/foto_anak2"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3.25"
+                            android:layout_width="132dp"
+                            android:layout_height="105dp"
+                            android:src="@drawable/new_button_camera" 
+                            android:paddingBottom="1dp"
+                            android:paddingTop="1dp"
+                           />
+                        
+                        <Button
+                            android:id="@+id/btn_foto2"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="132dp"
+                            android:layout_height="105dp"
+                            android:layout_gravity="center"
+                            android:background="@android:color/transparent"
                             android:onClick="onClick"
-                            android:src="@drawable/new_button_camera" />
-
+                             />
+                        </RelativeLayout>
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
-
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+		
+                        <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/layout_border"
+                        >
                         <ImageView
                             android:id="@+id/foto_anak3"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3.25"
+                            android:layout_width="132dp"
+                            android:layout_height="105dp"
+                            android:src="@drawable/new_button_camera" 
+                            android:paddingBottom="1dp"
+                            android:paddingTop="1dp"/>
+                        
+                        <Button
+                            android:id="@+id/btn_foto3"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="132dp"
+                            android:layout_height="105dp"
+                            android:layout_gravity="center"
+                            android:background="@android:color/transparent"
                             android:onClick="onClick"
-                            android:src="@drawable/new_button_camera" />
+                             />
+                        </RelativeLayout>
 
+                        <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/layout_border"
+                        
+                        >
                         <ImageView
                             android:id="@+id/foto_anak4"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3.25"
+                            android:layout_width="132dp"
+                            android:layout_height="105dp"
+                            android:src="@drawable/new_button_camera" 
+                            android:paddingBottom="1dp"
+                            android:paddingTop="1dp"/>
+                        
+                        <Button
+                            android:id="@+id/btn_foto4"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="132dp"
+                            android:layout_height="105dp"
+                            android:layout_gravity="center"
+                            android:background="@android:color/transparent"
                             android:onClick="onClick"
-                            android:src="@drawable/new_button_camera" />
-
+                             />
+                        </RelativeLayout>
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
-
+<LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+		
+                        <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/layout_border"
+                        
+                        >
                         <ImageView
                             android:id="@+id/foto_anak5"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3.25"
+                            android:layout_width="132dp"
+                            android:layout_height="105dp"
+                            android:src="@drawable/new_button_camera"
+                            android:paddingBottom="1dp"
+                            android:paddingTop="1dp" />
+                        
+                        <Button
+                            android:id="@+id/btn_foto5"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="132dp"
+                            android:layout_height="105dp"
+                            android:layout_gravity="center"
+                            android:background="@android:color/transparent"
                             android:onClick="onClick"
-                            android:src="@drawable/new_button_camera" />
+                             />
+                        </RelativeLayout>
 
+                        <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/layout_border"
+                        >
                         <ImageView
                             android:id="@+id/foto_anak6"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3.25"
+                            android:layout_width="132dp"
+                            android:layout_height="105dp"
+                            android:src="@drawable/new_button_camera" 
+                            android:paddingBottom="1dp"
+                            android:paddingTop="1dp"/>
+                        
+                        <Button
+                            android:id="@+id/btn_foto6"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="132dp"
+                            android:layout_height="105dp"
+                            android:layout_gravity="center"
+                            android:background="@android:color/transparent"
                             android:onClick="onClick"
-                            android:src="@drawable/new_button_camera" />
-
+                             />
+                        </RelativeLayout>
                     </LinearLayout>
-
+                 
                 </LinearLayout>
-
-                
 
             </LinearLayout>
         </ScrollView>
-
     </LinearLayout>
 
     <LinearLayout
@@ -502,4 +795,3 @@
     </LinearLayout>
 
 </RelativeLayout>
-
