@@ -1,26 +1,34 @@
 package com.example.laptrackingapps;
 
+import java.io.File;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import com.example.databaselap.TM_Caregiver;
 import com.example.databaselap.TM_Child;
+import com.example.databaselap.TM_Child_Facility;
 import com.example.databaselap.TM_Class;
+import com.example.databaselap.TM_Cost_Facility;
 import com.example.databaselap.TM_Drug_Dose;
 import com.example.databaselap.TM_Drug_Status;
 import com.example.databaselap.TM_Drug_Type;
 import com.example.databaselap.TM_Facility;
 import com.example.databaselap.TM_Parent_Status;
+import com.example.modellap.ChildFacility_Model;
 import com.example.modellap.Child_Model;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
@@ -29,6 +37,9 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +55,7 @@ public class KunjunganActivity extends Activity {
 			txt_StatusIbu, txt_NamaPengasuh, Pengasuh, txt_NomorTelepon,
 			txt_Sekolah, txt_Kelas, txt_Fasilitas;
 	String facility_name = "";
-	String id_child, id_child_l, id_child_k;
+	String id_child, id_child_l, id_child_k,child_id_fkra;
 
 	// instansisasi tabel
 	TM_Caregiver tabel_caregiver;
@@ -55,7 +66,22 @@ public class KunjunganActivity extends Activity {
 	TM_Facility tabel_facility;
 	TM_Parent_Status tabel_parent_status;
 	TM_Child tabel_anak;
+	TM_Child_Facility tabel_fasilitas_anak;
+	TM_Cost_Facility tabel_cost_fasilitas;
+	
 	Child_Model model_anak;
+
+	TextView ivTgl1, ivTgl2, ivTgl3, ivTgl4, ivTgl5, ivTgl6, ivTgl7, ivTgl8,
+			ivTgl1a, ivTgl2a, ivTgl3a, ivTgl4a, ivTgl5a, ivTgl6a, ivTgl7a,
+			ivTgl8a;
+
+	RelativeLayout RLtgl1, RLtgl2, RLtgl3, RLtgl4, RLtgl5, RLtgl6, RLtgl7,
+			RLtgl8;
+
+	final Context context = this;
+	ImageView image_anak;
+	SearchView searchView1;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +98,8 @@ public class KunjunganActivity extends Activity {
 		tabel_facility = new TM_Facility(getApplicationContext());
 		tabel_parent_status = new TM_Parent_Status(getApplicationContext());
 		tabel_anak = new TM_Child(getApplicationContext());
+		tabel_fasilitas_anak = new TM_Child_Facility(getApplicationContext());
+		tabel_cost_fasilitas = new TM_Cost_Facility(getApplicationContext());
 
 		// model anak
 		model_anak = new Child_Model();
@@ -96,19 +124,69 @@ public class KunjunganActivity extends Activity {
 		txt_Kelas = (TextView) findViewById(R.id.viewKelas);
 		txt_Fasilitas = (TextView) findViewById(R.id.viewFasilitas);
 
-		// get child id to retrieve from database and display
-		//hear intent from list activity and form kunjungan activity
+		// textview
+		ivTgl1 = (TextView) findViewById(R.id.ivTgl1);
+		ivTgl2 = (TextView) findViewById(R.id.ivTgl2);
+		ivTgl3 = (TextView) findViewById(R.id.ivTgl3);
+		ivTgl4 = (TextView) findViewById(R.id.ivTgl4);
+		ivTgl5 = (TextView) findViewById(R.id.ivTgl5);
+		ivTgl6 = (TextView) findViewById(R.id.ivTgl6);
+		ivTgl7 = (TextView) findViewById(R.id.ivTgl7);
+		ivTgl8 = (TextView) findViewById(R.id.ivTgl8);
+
+		// textview
+		ivTgl1a = (TextView) findViewById(R.id.ivTgl1a);
+		ivTgl2a = (TextView) findViewById(R.id.ivTgl2a);
+		ivTgl3a = (TextView) findViewById(R.id.ivTgl3a);
+		ivTgl4a = (TextView) findViewById(R.id.ivTgl4a);
+		ivTgl5a = (TextView) findViewById(R.id.ivTgl5a);
+		ivTgl6a = (TextView) findViewById(R.id.ivTgl6a);
+		ivTgl7a = (TextView) findViewById(R.id.ivTgl7a);
+		ivTgl8a = (TextView) findViewById(R.id.ivTgl8a);
+
+		// relative layout
+		RLtgl1 = (RelativeLayout) findViewById(R.id.rl1);
+		RLtgl2 = (RelativeLayout) findViewById(R.id.rl2);
+		RLtgl3 = (RelativeLayout) findViewById(R.id.rl3);
+		RLtgl4 = (RelativeLayout) findViewById(R.id.rl4);
+		RLtgl5 = (RelativeLayout) findViewById(R.id.rl5);
+		RLtgl6 = (RelativeLayout) findViewById(R.id.rl6);
+		RLtgl7 = (RelativeLayout) findViewById(R.id.rl7);
+		RLtgl8 = (RelativeLayout) findViewById(R.id.rl8);
+
+		image_anak = (ImageView) findViewById(R.id.ij3);
 		
+		searchView1 = (SearchView) findViewById(R.id.svKunjungan);
+
+
+		// get child id to retrieve from database and display
+		// hear intent from list activity and form kunjungan activity
+
 		Intent intent = getIntent();
 		id_child_l = intent.getStringExtra("id_child");
 		id_child_k = intent.getStringExtra("id_anak_k");
-
-		if (id_child_l != null ) {
+		child_id_fkra = intent.getStringExtra("child_id_fkra");
+		
+		if (id_child_l != null) {
 			id_child = id_child_l;
-		}
-		else if(id_child_k != null)
-		{
+		} else if (id_child_k != null) {
 			id_child = id_child_k;
+		}
+		else if(child_id_fkra != null)
+		{
+			id_child = child_id_fkra;
+		}
+		else if(intent.getStringExtra("id_child_ka") !=null)
+		{
+			id_child = intent.getStringExtra("id_child_ka");
+		}
+		else if(intent.getStringExtra("id_anak_pencarian") != null)
+		{
+			id_child = intent.getStringExtra("id_anak_pencarian") ;
+		}
+		else if(intent.getStringExtra("id_child_own") != null)
+		{
+			id_child = ""+1 ;
 		}
 		
 		model_anak = tabel_anak.getChildIdentityById(id_child);
@@ -125,15 +203,14 @@ public class KunjunganActivity extends Activity {
 		txt_GOLDA_Anak.setText(model_anak.getBlood_type());
 		txt_ALAMAT_Anak.setText(model_anak.getChild_address());
 
-		// txt_StatusARV.setText(model_anak.getDrug_status_id());
-		txt_JenisARV.setText(model_anak.getDrug_type_id());
-		// txt_DosisARV.setText(model_anak.getDrug_dose_id());
+		//txt_StatusARV.setText(model_anak.getDrug_status_id());
+		//txt_JenisARV.setText(model_anak.getDrug_type_id());
+		txt_DosisARV.setText(model_anak.getDrug_dose_id());
 		txt_StatusARV.setText(tabel_status_arv.getNameStatusARV(model_anak
 				.getDrug_status_id()));
-		txt_JenisARV.setText(tabel_type_arv.getNameTypeARV(model_anak
-				.getDrug_type_id()));
-		txt_DosisARV.setText(tabel_dosis.getNameDose(model_anak
-				.getDrug_dose_id()));
+		txt_JenisARV.setText("Zidovudin");
+//		txt_DosisARV.setText(tabel_dosis.getNameDose(model_anak
+//				.getDrug_dose_id()));
 
 		txt_NamaAyah.setText(model_anak.getFather_name());
 		txt_StatusAyah.setText(tabel_parent_status
@@ -147,7 +224,143 @@ public class KunjunganActivity extends Activity {
 		txt_NomorTelepon.setText(model_anak.getCaregiver_phone());
 		txt_Sekolah.setText(model_anak.getSchool_name());
 		txt_Kelas.setText(tabel_kelas.getNameKelas(model_anak.getClass_id()));
+		getChildFacilities(id_child);
 		txt_Fasilitas.setText(facility_name);
+		// set image
+		String as = "kosong";
+		if (model_anak.getImage_path().equals(as)) {
+			Bitmap bitmap1 = BitmapFactory.decodeResource(
+					context.getResources(), R.drawable.icon);
+			image_anak.setImageBitmap(bitmap1);
+		} else {
+			File image = new File(model_anak.getImage_path());
+
+			BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+
+			Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),
+					bmOptions);
+
+			bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
+			image_anak.setImageBitmap(bitmap);
+
+		}
+
+		// set visit date
+
+		final int[] tvBulan = { R.id.ivTgl1, R.id.ivTgl2, R.id.ivTgl3,
+				R.id.ivTgl4, R.id.ivTgl5, R.id.ivTgl6, R.id.ivTgl7, R.id.ivTgl8 };
+
+		final int[] tvTahun = { R.id.ivTgl1a, R.id.ivTgl2a, R.id.ivTgl3a,
+				R.id.ivTgl4a, R.id.ivTgl5a, R.id.ivTgl6a, R.id.ivTgl7a,
+				R.id.ivTgl8a };
+
+		TextView tv = null;
+		TextView tvYear = null;
+
+		// tanggal
+		ArrayList<Integer> aList = new ArrayList<Integer>();
+		// Add elements to ArrayList object
+		aList.add(1);
+		aList.add(2);
+		aList.add(3);
+		aList.add(4);
+		aList.add(5);
+		aList.add(6);
+		aList.add(7);
+		aList.add(8);
+		aList.add(9);
+
+		// bulan
+		ArrayList<Integer> aListBulan = new ArrayList<Integer>();
+		// Add elements to ArrayList object
+		aListBulan.add(1);
+		aListBulan.add(2);
+		aListBulan.add(3);
+		aListBulan.add(4);
+		aListBulan.add(5);
+		aListBulan.add(6);
+		aListBulan.add(7);
+		aListBulan.add(8);
+		aListBulan.add(9);
+
+		ArrayList<Integer> aListYear = new ArrayList<Integer>();
+		// Add elements to ArrayList object
+		aListYear.add(2011);
+		aListYear.add(2012);
+		aListYear.add(2013);
+		aListYear.add(2014);
+		aListYear.add(2015);
+		aListYear.add(2016);
+		aListYear.add(2017);
+		aListYear.add(2018);
+		aListYear.add(2019);
+
+		if (aList.size() > 7 && aListYear.size() > 7 && aListBulan.size() > 7) {
+			int lastIndex = aList.size() - 1;
+			aList.remove(0);
+			int lastIndexMonth = aListBulan.size() - 1;
+			aListBulan.remove(0);
+			int lastIndexYear = aListYear.size() - 1;
+			aListYear.remove(0);
+		}
+		// String.format("%02d",aList);
+		Collections.reverse(aList);
+		Collections.reverse(aListBulan);
+		Collections.reverse(aListYear);
+
+		for (int j = 0; j < aList.size(); j++) {
+			tv = (TextView) findViewById(tvBulan[j]);
+			tv.setText(formatDigit(aList.get(j)));
+			tv.setGravity(View.TEXT_ALIGNMENT_CENTER);
+			// tv.setText(String.format("%02d",(CharSequence) aList.get(j)));
+		}
+
+		for (int k = 0; k < aListYear.size(); k++) {
+			tvYear = (TextView) findViewById(tvTahun[k]);
+			tvYear.setText(formatDigit(aListBulan.get(k)) + "."
+					+ set2Digit(aListYear.get(k)));
+			tvYear.setGravity(View.TEXT_ALIGNMENT_CENTER);
+			// tv.setText(String.format("%02d",(CharSequence) aList.get(j)));
+		}
+		ivTgl1.setBackgroundDrawable(getResources()
+				.getDrawable(R.drawable.lila));
+		ivTgl3.setBackgroundDrawable(getResources()
+				.getDrawable(R.drawable.lila));
+
+		RLtgl1.setVisibility(View.VISIBLE);
+
+		searchView1.setOnQueryTextListener(new OnQueryTextListener() {
+
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				// TODO Auto-generated method stub
+
+				Toast.makeText(getBaseContext(), "query: " + query,
+						Toast.LENGTH_SHORT).show();
+
+				// setContentView(R.layout.pencarian);
+
+				// String input = svKunjungan.getQuery().toString();
+
+				Intent intent = new Intent(KunjunganActivity.this,
+						Pencarian.class);
+				intent.putExtra("id_anak", ""+id_child);
+				intent.putExtra("input", "" + query);
+				startActivity(intent);
+				// Toast.makeText(getBaseContext(), svKunjungan.getQuery(),
+				// Toast.LENGTH_SHORT).show();
+				return false;
+			}
+
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				// TODO Auto-generated method stub
+
+				// Toast.makeText(getBaseContext(), newText,
+				// Toast.LENGTH_SHORT).show();
+				return false;
+			}
+		});
 
 		back = (ImageView) findViewById(R.id.btn_back);
 		tambah_kunjungan = (LinearLayout) findViewById(R.id.button_tambahkunjungan);
@@ -175,6 +388,26 @@ public class KunjunganActivity extends Activity {
 				}
 			}
 		});
+	}
+
+	public String set2Digit(int input) {
+		// to separate year into single integer
+		int var, var1, var2, var3, var4;
+		var1 = ((int) (input / 1000));
+		var2 = ((int) (input / 100)) - (var1 * 10);
+		var3 = ((int) (input / 10)) - (var1 * 100 + var2 * 10);
+		var4 = input - (var1 * 1000 + var2 * 100 + var3 * 10);
+		String index3 = Integer.toString(var3);
+		String index4 = Integer.toString(var4);
+		String Digit = index3.concat(index4);
+		return Digit;
+	}
+
+	public String formatDigit(int input) {
+		// to separate year into single integer
+		String frmt = String.format("%02d", input);
+
+		return frmt;
 	}
 
 	// get child age
@@ -206,6 +439,19 @@ public class KunjunganActivity extends Activity {
 		return ageS;
 	}
 
+	public String getChildFacilities(String id_child)
+	{
+		ArrayList<ChildFacility_Model> arr = new ArrayList<ChildFacility_Model>();
+		Log.e("Retrieve fasilitas anak", "");
+		arr = tabel_fasilitas_anak.getSemuaFasilitasAnak(id_child);
+		for(ChildFacility_Model a: arr)
+		{
+			facility_name += tabel_cost_fasilitas.getNameCostFacility(a.getFacility_cost_id()) +"\n";
+		}
+		return facility_name;
+		
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

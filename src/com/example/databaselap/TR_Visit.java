@@ -2,6 +2,9 @@ package com.example.databaselap;
 
 import java.util.ArrayList;
 
+import com.example.modellap.Complaint_Model;
+import com.example.modellap.Visit_Model;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -41,16 +44,16 @@ public class TR_Visit {
 	// mendeklarasikan CREATE_TABLE = MEMBUAT TABLE"
 	private static final String CREATE_TABLE = "create table " + NAMA_TABEL
 			+ "(" + ROW_VISIT_ID + " integer PRIMARY KEY autoincrement," + ""
-			+ "" + ROW_CHILD_ID + "varchar ," + ROW_COMPLAINT_ID + "varchar ,"
-			+ ROW_VISIT_TYPE_ID + "varchar ," + ROW_COMPLAINT_STATUS_ID + "varchar,"
-			+ ROW_VISIT_DATE + "varchar," + ROW_ACTION + "VARCHAR," + ROW_NOTE
-			+ "text," + "" + ROW_HEIGHT + "varchar ," + ROW_DRUG_TAKEN
-			+ "varchar," + ROW_WEIGHT + "varchar," + ROW_LILA
-			+ "varchar ," + ROW_REMINDER_ID + "varchar,"
+			+ "" + ROW_CHILD_ID + " varchar ," + ROW_COMPLAINT_ID + " varchar ,"
+			+ ROW_VISIT_TYPE_ID + " varchar ," + ROW_COMPLAINT_STATUS_ID + " varchar,"
+			+ ROW_VISIT_DATE + " varchar," + ROW_ACTION + " VARCHAR," + ROW_NOTE
+			+ " text," + "" + ROW_HEIGHT + " varchar ," + ROW_DRUG_TAKEN
+			+ " varchar," + ROW_WEIGHT + " varchar," + ROW_LILA
+			+ " varchar ," + ROW_REMINDER_ID + " varchar,"
 			+ "" + ROW_CREATED_BY
-			+ "VARCHAR," + ROW_CREATED_TIME + "VARCHAR," + "" + ROW_UPDATE_BY
-			+ "VARCHAR," + ROW_UPDATE_TIME + "VARCHAR," + "" + ROW_DELETE_STATUS
-			+ "VARCHAR,)";
+			+ " VARCHAR," + ROW_CREATED_TIME + " VARCHAR," + "" + ROW_UPDATE_BY
+			+ " VARCHAR," + ROW_UPDATE_TIME + " VARCHAR," + "" + ROW_DELETE_STATUS
+			+ " VARCHAR )";
 
 	// membuat mendeklarasikan Context itu adalah context
 	private final Context context;
@@ -170,6 +173,48 @@ public class TR_Visit {
 			e.printStackTrace();
 			
 		}
+	}
+	
+	public Visit_Model GetLatestVisit(String id_child)
+	{
+		Log.e("Get Latest Visit", "true");
+		ArrayList<Complaint_Model> arr = new ArrayList<Complaint_Model>();
+		Visit_Model model = new Visit_Model();
+		Cursor mCursor = db.rawQuery(
+				"SELECT *  FROM  TR_VISIT WHERE child_id= '"+ id_child + "' order by visit_date limit 1", null);
+		if (mCursor != null) {
+			mCursor.moveToLast();
+			model.setVisitDate(mCursor.getString(mCursor.getColumnIndex(ROW_VISIT_DATE)));
+			model.setHeight(mCursor.getString(mCursor.getColumnIndex(ROW_VISIT_DATE)));
+			model.setWeight(mCursor.getString(mCursor.getColumnIndex(ROW_VISIT_DATE)));
+			model.setLILA(mCursor.getString(mCursor.getColumnIndex(ROW_VISIT_DATE)));
+		}
+		mCursor.close();
+		arr = GetAllComplaintChild(id_child);
+		model.setComplaints(arr);
+		return model;
+	}
+	
+	public ArrayList<Complaint_Model> GetAllComplaintChild(String id_child)
+	{
+		ArrayList<Complaint_Model> arr = new ArrayList<Complaint_Model>();
+		Complaint_Model complaint = new Complaint_Model();
+		Cursor mCursor = db.rawQuery(
+				"SELECT *  FROM  TR_VISIT WHERE child_id= '"+ id_child + "' order by visit_date limit 1", null);
+		if (mCursor != null) {
+			mCursor.moveToFirst();
+			complaint = null;
+			while (!mCursor.isAfterLast()) {
+				complaint.SetKeluhan(mCursor.getString(mCursor.getColumnIndex(ROW_COMPLAINT_ID)));
+				complaint.SetStatusKeluhan(mCursor.getString(mCursor.getColumnIndex(ROW_COMPLAINT_STATUS_ID)));
+				complaint.SetTindakan(mCursor.getString(mCursor.getColumnIndex(ROW_ACTION)));
+				Log.e("Retrieve complaints", "keluhan"+complaint.GetKeluhan()+" status "+complaint.GetStatusKeluhan()+" tindakan "+complaint.GetTindakan());
+				arr.add(complaint);
+			}
+		}
+		mCursor.close();
+		return arr;
+		
 	}
 	
 	//select visit date of child

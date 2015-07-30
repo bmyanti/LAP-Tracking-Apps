@@ -1,5 +1,6 @@
 package com.example.laptrackingapps;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -82,7 +83,7 @@ public class ProfilAnakActivity extends Activity implements
 
 	final Context context = this;
 	ImageView back, tambah_foto;
-	LinearLayout simpan_profil;
+	LinearLayout simpan_profil, linPhone1, linPhone2;
 	EditText txtName, txtFatherName, txtMotherName, txtCareGiverName,
 			txtAddress, txtTeleponNumberCG, txtSchool;
 	TextView tvtambah_jenis_arv;
@@ -137,9 +138,13 @@ public class ProfilAnakActivity extends Activity implements
 
 	// String
 	String picturePath, Path, PathNull;
+	// String temp status, type, and dosis
+	String status_ = "DS000", type_ = "DTY000", dosis_ = "DD000";
 
 	// phone number caregiver
 	EditText txtPhone1, txtPhone2;
+
+	Bitmap thumbnailCamera;
 
 	// arraylist kotamadya dan kecamatan
 	ArrayList<String> arr_kecamatan = new ArrayList<String>();
@@ -227,6 +232,8 @@ public class ProfilAnakActivity extends Activity implements
 		txtTeleponNumberCG = (EditText) findViewById(R.id.edit_telepon);
 		txtSchool = (EditText) findViewById(R.id.edit_sekolah);
 
+		linPhone1 = (LinearLayout) findViewById(R.id.linPhone1);
+		linPhone2 = (LinearLayout) findViewById(R.id.linPhone2);
 		//
 		txtPhone1 = (EditText) findViewById(R.id.edit_telepon1);
 		txtPhone2 = (EditText) findViewById(R.id.edit_telepon2);
@@ -234,8 +241,8 @@ public class ProfilAnakActivity extends Activity implements
 		back = (ImageView) findViewById(R.id.btn_back);
 		simpan_profil = (LinearLayout) findViewById(R.id.button_simpanprofil);
 		golongan_darah = (Spinner) findViewById(R.id.spinner_golongandarah);
-		jenis_obat = (Spinner) findViewById(R.id.spinner_jenisobat);
-		dosis = (Spinner) findViewById(R.id.spinner_dosisobat);
+		// jenis_obat = (Spinner) findViewById(R.id.spinner_jenisobat);
+		// dosis = (Spinner) findViewById(R.id.spinner_dosisobat);
 		status_obat = (Spinner) findViewById(R.id.spinner_statusobat);
 		care_giver = (Spinner) findViewById(R.id.spinner_caregiver);
 		kelas = (Spinner) findViewById(R.id.spinner_kelas);
@@ -272,23 +279,25 @@ public class ProfilAnakActivity extends Activity implements
 		ArrayList<String> data_tipeARV = tabel_type_arv.getAllData();
 		item_jenis_obat = data_tipeARV.toArray(new String[data_tipeARV.size()]);
 
-		Spinner spinner_jenis_obat = (Spinner) findViewById(R.id.spinner_jenisobat);
-		spinner_jenis_obat.setOnItemSelectedListener(this);
-		ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
-				android.R.layout.simple_dropdown_item_1line, item_jenis_obat);
-		adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner_jenis_obat.setAdapter(adapter2);
-		spinner_jenis_obat.setPrompt("select");
+		// Spinner spinner_jenis_obat = (Spinner)
+		// findViewById(R.id.spinner_jenisobat);
+		// spinner_jenis_obat.setOnItemSelectedListener(this);
+		// ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
+		// android.R.layout.simple_dropdown_item_1line, item_jenis_obat);
+		// adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// spinner_jenis_obat.setAdapter(adapter2);
+		// spinner_jenis_obat.setPrompt("select");
 		// dosis
 		ArrayList<String> data_dosisARV = tabel_dosis.getAllData();
 		item_dosis = data_dosisARV.toArray(new String[data_dosisARV.size()]);
 
-		Spinner spinner_dosis = (Spinner) findViewById(R.id.spinner_dosisobat);
-		spinner_dosis.setOnItemSelectedListener(this);
-		ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this,
-				android.R.layout.simple_dropdown_item_1line, item_dosis);
-		adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner_dosis.setAdapter(adapter3);
+		// Spinner spinner_dosis = (Spinner)
+		// findViewById(R.id.spinner_dosisobat);
+		// spinner_dosis.setOnItemSelectedListener(this);
+		// ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this,
+		// android.R.layout.simple_dropdown_item_1line, item_dosis);
+		// adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// spinner_dosis.setAdapter(adapter3);
 
 		// status obat
 		ArrayList<String> data_statusARV = tabel_status_arv.getAllData();
@@ -329,6 +338,7 @@ public class ProfilAnakActivity extends Activity implements
 				.size()]);
 		spinner_kotamadya = (Spinner) findViewById(R.id.spinner_kotamadya);
 		spinner_kotamadya.setOnItemSelectedListener(this);
+
 		// for school
 		spinner_kotamadyasekolah = (Spinner) findViewById(R.id.spinner_kotamadyasekolah);
 		spinner_kotamadyasekolah.setOnItemSelectedListener(this);
@@ -392,8 +402,8 @@ public class ProfilAnakActivity extends Activity implements
 				item_jenis_obat = data_tipeARV.toArray(new String[data_tipeARV
 						.size()]);
 
-				Toast.makeText(getApplicationContext(), "yuhu",
-						Toast.LENGTH_LONG).show();
+				// Toast.makeText(getApplicationContext(), "yuhu",
+				// Toast.LENGTH_LONG).show();
 				pilihArv(item_jenis_obat, "Pilih ARV");
 			}
 		});
@@ -435,10 +445,8 @@ public class ProfilAnakActivity extends Activity implements
 							path_gambar,
 							tabel_status_arv.getIdStatusARV(status_obat
 									.getSelectedItem().toString()),
-							tabel_type_arv.getIdTypeARV(jenis_obat
-									.getSelectedItem().toString()),
-							tabel_dosis.getIdDosisARV(dosis.getSelectedItem()
-									.toString()),
+							type_,
+							dosis_,
 							tabel_kelas.getIdKelas(kelas.getSelectedItem()
 									.toString()),
 							tabel_caregiver.getIdCaregiver(care_giver
@@ -487,22 +495,22 @@ public class ProfilAnakActivity extends Activity implements
 											.getSelectedItem().toString()),
 							tabel_kelas.getIdKelas(kelas.getSelectedItem()
 									.toString()), path_gambar);
-					
-					//update tabel fasilitas anak
+
+					// update tabel fasilitas anak
 					DeleteFasilitasAnak(i.getStringExtra("id_anak"));
 					InsertFasilitasAnak(i.getStringExtra("id_anak"));
 
 				}
 				//
-				Toast.makeText(
-						getApplicationContext(),
-						"status ayah "
-								+ findStatusParent(radio_status_ayah_group,
-										radio_status_ayah)
-								+ " status ibu "
-								+ findStatusParent(radio_status_ibu_group,
-										radio_status_ibu), Toast.LENGTH_LONG)
-						.show();
+				// Toast.makeText(
+				// getApplicationContext(),
+				// "status ayah "
+				// + findStatusParent(radio_status_ayah_group,
+				// radio_status_ayah)
+				// + " status ibu "
+				// + findStatusParent(radio_status_ibu_group,
+				// radio_status_ibu), Toast.LENGTH_LONG)
+				// .show();
 
 				// go to test activity
 				Intent test = new Intent(getApplication(),
@@ -534,15 +542,18 @@ public class ProfilAnakActivity extends Activity implements
 
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
+						// Intent intent = new Intent(
+						// MediaStore.ACTION_IMAGE_CAPTURE);
+						//
+						// File f = new File(android.os.Environment
+						// .getExternalStorageDirectory(), "temp.jpg");
+						//
+						// intent.putExtra(MediaStore.EXTRA_OUTPUT,
+						// Uri.fromFile(f));
+						//
+						// startActivityForResult(intent, 1);
 						Intent intent = new Intent(
 								MediaStore.ACTION_IMAGE_CAPTURE);
-
-						File f = new File(android.os.Environment
-								.getExternalStorageDirectory(), "temp.jpg");
-
-						intent.putExtra(MediaStore.EXTRA_OUTPUT,
-								Uri.fromFile(f));
-
 						startActivityForResult(intent, 1);
 					}
 				});
@@ -554,9 +565,7 @@ public class ProfilAnakActivity extends Activity implements
 						Intent intent = new Intent(
 								Intent.ACTION_PICK,
 								android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
 						startActivityForResult(intent, 2);
-
 					}
 				});
 
@@ -688,7 +697,8 @@ public class ProfilAnakActivity extends Activity implements
 			SetCaregiverPhone(model_anak.getCaregiver_phone());
 
 			// set display name of spinner golda
-			spinner_position = adapter_golda.getPosition(model_anak.getBlood_type());
+			spinner_position = adapter_golda.getPosition(model_anak
+					.getBlood_type());
 			spinner_golda.setSelection(spinner_position);
 
 			// caregiver spinner
@@ -706,10 +716,12 @@ public class ProfilAnakActivity extends Activity implements
 			spinner_kecamatan.setAdapter(kecAdapter);
 			spinner_kecamatan.setSelection(spinner_position);
 
-			Toast.makeText(
-					getApplicationContext(),
-					""+ tabel_subdistrict.getNameSubDistrict(model_anak.getSubdistrict_id()), Toast.LENGTH_SHORT)
-					.show();
+			// Toast.makeText(
+			// getApplicationContext(),
+			// ""+
+			// tabel_subdistrict.getNameSubDistrict(model_anak.getSubdistrict_id()),
+			// Toast.LENGTH_SHORT)
+			// .show();
 			// spinner_kecamatan.setSelection(spinner_position);
 
 			// fetch the id of district id and then populated in names
@@ -720,8 +732,8 @@ public class ProfilAnakActivity extends Activity implements
 			// spinner_position =
 			// kotamadyaAdapter.getPosition(tabel_district.getNameDistrict(tabel_subdistrict.getIDDistrict(model_anak.getSchool_subdistrict_id())));
 			// spinner_kotamadyasekolah.setSelection(spinner_position);
-			
-			//displaying fasilitas anak
+
+			// displaying fasilitas anak
 			RetrieveFasilitasAnak(model_anak.getChild_id());
 		} else {
 			Log.d("***DEBUG****", "Intent was null");
@@ -733,13 +745,13 @@ public class ProfilAnakActivity extends Activity implements
 	public String GetCaregiverPhone() {
 		String result = "";
 		if (!txtTeleponNumberCG.getText().toString().isEmpty()) {
-			result += txtTeleponNumberCG.getText().toString() + ";";
+			result += txtTeleponNumberCG.getText().toString() + ";\n";
 		}
 		if (!txtPhone1.getText().toString().isEmpty()) {
-			result += txtPhone1.getText().toString() + ";";
+			result += txtPhone1.getText().toString() + ";\n";
 		}
 		if (!txtPhone2.getText().toString().isEmpty()) {
-			result += txtPhone2.getText().toString() + ";";
+			result += txtPhone2.getText().toString() + ";\n";
 		}
 		Log.e("Phone number caregiver ", "" + result);
 		return result;
@@ -765,26 +777,26 @@ public class ProfilAnakActivity extends Activity implements
 			}
 		}
 	}
-	
-	public void DeleteFasilitasAnak(String id_anak)
-	{
+
+	public void DeleteFasilitasAnak(String id_anak) {
 		tabel_child_facility.DeleteFasilitasAnak(id_anak);
 		Log.e("Delete obsolete fasiltas anak", id_anak);
 	}
-	
+
 	public void InsertFasilitasAnak(String id_anak) {
 		// cek apakah mk memilih susu
 		Log.e("insert fasilitas anak", "" + true);
 		if (!fasilitas_susu.isEmpty()) {
 			for (String a : fasilitas_susu) {
-				tabel_child_facility.InsertFasilitasAnak(id_anak, "1",tabel_cost_facility.getIdCostFacility(a));
+				tabel_child_facility.InsertFasilitasAnak(id_anak, "1",
+						tabel_cost_facility.getIdCostFacility(a), "0");
 				Log.e("insert ke tabel cost facility -> susu", a);
 			}
 		}
 		if (!fasilitas_vitamin.isEmpty()) {
 			for (String b : fasilitas_vitamin) {
 				tabel_child_facility.InsertFasilitasAnak(id_anak, "2",
-						tabel_cost_facility.getIdCostFacility(b));
+						tabel_cost_facility.getIdCostFacility(b), "0");
 				Log.e("insert ke tabel cost facility -> vitamin", b);
 			}
 		}
@@ -792,7 +804,7 @@ public class ProfilAnakActivity extends Activity implements
 		if (!fasilitas_popok.isEmpty()) {
 			for (String b : fasilitas_popok) {
 				tabel_child_facility.InsertFasilitasAnak(id_anak, "3",
-						tabel_cost_facility.getIdCostFacility(b));
+						tabel_cost_facility.getIdCostFacility(b), "0");
 				Log.e("insert ke tabel cost facility -> popok", b);
 			}
 		}
@@ -809,62 +821,60 @@ public class ProfilAnakActivity extends Activity implements
 		// fasilitas id sekian dengan anak sekian
 		// jika tidak null
 		// set text
-		
+
 		ArrayList<String> fasilitas_susu = new ArrayList<String>();
 		ArrayList<String> fasilitas_vitamin = new ArrayList<String>();
 		ArrayList<String> fasilitas_popok = new ArrayList<String>();
-		ArrayList<ChildFacility_Model> all_facility_id = tabel_child_facility.getSemuaFasilitasAnak(id_anak);
+		ArrayList<ChildFacility_Model> all_facility_id = tabel_child_facility
+				.getSemuaFasilitasAnak(id_anak);
 		if (all_facility_id != null) {
 			for (ChildFacility_Model model : all_facility_id) {
 				if (model.getFacility_id().equals("1")) {
 					Checkbox_Susu.setChecked(true);
 					btn_susu.setVisibility(View.VISIBLE);
 					SelectFasilitas();
-					fasilitas_susu.add(tabel_cost_facility.getNameCostFacility(model.getFacility_cost_id()));
+					fasilitas_susu.add(tabel_cost_facility
+							.getNameCostFacility(model.getFacility_cost_id()));
 					continue;
 				}
 				if (model.getFacility_id().equals("2")) {
 					Checkbox_Vitamin.setChecked(true);
 					btn_vitamin.setVisibility(View.VISIBLE);
 					SelectFasilitas();
-					fasilitas_vitamin.add(tabel_cost_facility.getNameCostFacility(model.getFacility_cost_id()));
+					fasilitas_vitamin.add(tabel_cost_facility
+							.getNameCostFacility(model.getFacility_cost_id()));
 					continue;
 				}
 				if (model.getFacility_id().equals("3")) {
 					Checkbox_Popok.setChecked(true);
 					btn_popok.setVisibility(View.VISIBLE);
 					SelectFasilitas();
-					fasilitas_popok.add(tabel_cost_facility.getNameCostFacility(model.getFacility_cost_id()));
+					fasilitas_popok.add(tabel_cost_facility
+							.getNameCostFacility(model.getFacility_cost_id()));
 					continue;
 				}
 			}
 		}
-		
-		//displaying it
-		if(!fasilitas_susu.isEmpty())
-		{
-			msg="";
-			for(String a : fasilitas_susu)
-			{
-				msg +=a +"\n";
+
+		// displaying it
+		if (!fasilitas_susu.isEmpty()) {
+			msg = "";
+			for (String a : fasilitas_susu) {
+				msg += a + "\n";
 			}
 			tvSusu.setText(msg);
 		}
-		if(!fasilitas_vitamin.isEmpty())
-		{
-			msg="";
-			for(String a : fasilitas_vitamin)
-			{
-				msg +=a +"\n";
+		if (!fasilitas_vitamin.isEmpty()) {
+			msg = "";
+			for (String a : fasilitas_vitamin) {
+				msg += a + "\n";
 			}
 			tvVitamin.setText(msg);
 		}
-		if(!fasilitas_popok.isEmpty())
-		{
-			msg="";
-			for(String a : fasilitas_popok)
-			{
-				msg +=a +"\n";
+		if (!fasilitas_popok.isEmpty()) {
+			msg = "";
+			for (String a : fasilitas_popok) {
+				msg += a + "\n";
 			}
 			tvPopok.setText(msg);
 		}
@@ -1031,114 +1041,78 @@ public class ProfilAnakActivity extends Activity implements
 			spinner_kecamatan.setOnItemSelectedListener(this);
 			spinner_kecamatan.setAdapter(kecAdapter);
 			Log.e("kecamatan", "" + spinner_kecamatan.getSelectedItem());
-			Toast.makeText(getApplicationContext(),
-					"" + spinner_kecamatan.getSelectedItem(),
-					Toast.LENGTH_SHORT).show();
+			// Toast.makeText(getApplicationContext(),
+			// "" + spinner_kecamatan.getSelectedItem(),
+			// Toast.LENGTH_SHORT).show();
 		} else {
 
 			spinner_kecamatansekolah.setOnItemSelectedListener(this);
 			spinner_kecamatansekolah.setAdapter(kecAdapter);
-			Toast.makeText(getApplicationContext(),
-					"" + spinner_kecamatansekolah.getSelectedItem(),
-					Toast.LENGTH_SHORT).show();
+			// Toast.makeText(getApplicationContext(),
+			// "" + spinner_kecamatansekolah.getSelectedItem(),
+			// Toast.LENGTH_SHORT).show();
 			Log.e("kecamatan", "" + spinner_kecamatansekolah.getSelectedItem());
 		}
 
 	}
 
+	ArrayList<String> resultCamera;
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == RESULT_OK) {
-
 			if (requestCode == 1) {
-				File f = new File(Environment.getExternalStorageDirectory().toString());
 
-				for (File temp : f.listFiles()) {
+				thumbnailCamera = (Bitmap) data.getExtras().get("data");
+				thumbnailCamera = Bitmap.createScaledBitmap(thumbnailCamera,
+						132, 105, true);
 
-					if (temp.getName().equals("temp.jpg")) {
+				ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+				thumbnailCamera.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 
-						f = temp;
+				File destination = new File(
+						Environment.getExternalStorageDirectory(),
+						System.currentTimeMillis() + ".jpg");
+				FileOutputStream fo;
 
-						break;
-
-					}
+				final String[] imageColumns = { MediaStore.Images.Media._ID,
+						MediaStore.Images.Media.DATA };
+				final String imageOrderBy = MediaStore.Images.Media._ID
+						+ " DESC";
+				Cursor imageCursor = managedQuery(
+						MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+						imageColumns, null, null, imageOrderBy);
+				resultCamera = new ArrayList<String>(imageCursor.getCount());
+				if (imageCursor.moveToFirst()) {
+					// int id = imageCursor.getInt(imageCursor
+					// .getColumnIndex(MediaStore.Images.Media._ID));
+					// Path = imageCursor.getString(imageCursor
+					// .getColumnIndex(MediaStore.Images.Media.DATA));
+					//
+					final int dataColumn = imageCursor
+							.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+					do {
+						final String data1 = imageCursor.getString(dataColumn);
+						Path = data1;
+						// pathallim=data1;
+						resultCamera.add(data1);
+					} while (imageCursor.isLast());
 
 				}
+				imageCursor.close();
 
 				try {
-
-					Bitmap bitmap;
-
-					BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-					bitmapOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;
-					final String[] imageColumns = {
-							MediaStore.Images.Media._ID,
-							MediaStore.Images.Media.DATA };
-					final String imageOrderBy = MediaStore.Images.Media._ID
-							+ " DESC";
-					Cursor imageCursor = managedQuery(
-							MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-							imageColumns, null, null, imageOrderBy);
-					if (imageCursor.moveToFirst()) {
-						int id = imageCursor.getInt(imageCursor
-								.getColumnIndex(MediaStore.Images.Media._ID));
-						Path = imageCursor.getString(imageCursor
-								.getColumnIndex(MediaStore.Images.Media.DATA));
-						imageCursor.close();
-					}
-
-					bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(),
-
-					bitmapOptions);
-
-					tambah_foto.setImageBitmap(bitmap);
-					// /storage/sdcard0/Pictures/BBM/IMG_20150623_144841
-					// Path = android.os.Environment
-					//
-					// .getExternalStorageDirectory()
-					//
-					// + File.separator
-					//
-					// + "DCIM" + File.separator + "Camera";
-					//
-					// Log.w("ini path", Path);
-					f.delete();
-
-					OutputStream outFile = null;
-
-					File file = new File(Path);
-
-					try {
-
-						outFile = new FileOutputStream(file);
-
-						bitmap.compress(Bitmap.CompressFormat.JPEG, 100,
-								outFile);
-
-						outFile.flush();
-
-						outFile.close();
-
-					} catch (FileNotFoundException e) {
-
-						e.printStackTrace();
-
-					} catch (IOException e) {
-
-						e.printStackTrace();
-
-					} catch (Exception e) {
-
-						e.printStackTrace();
-
-					}
-
-				} catch (Exception e) {
-
+					destination.createNewFile();
+					fo = new FileOutputStream(destination);
+					fo.write(bytes.toByteArray());
+					fo.close();
+				} catch (FileNotFoundException e) {
 					e.printStackTrace();
-
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
+
+				tambah_foto.setImageBitmap(thumbnailCamera);
 
 			} else if (requestCode == 2) {
 
@@ -1407,6 +1381,20 @@ public class ProfilAnakActivity extends Activity implements
 										TextView dos_malam4 = (TextView) findViewById(R.id.dos_malam4);
 										TextView dos_malam5 = (TextView) findViewById(R.id.dos_malam5);
 
+										// temp aja => belum menyimpan id nya
+										/***********************************/
+										if (banyak != 0) {
+											type_ = "DTY001";
+											dosis_ = ""
+													+ popupSpinnerDosisPagi1
+															.getSelectedItem()
+															.toString()
+													+ "pagi, "
+													+ popupSpinnerDosisMalam1
+															.getSelectedItem()
+															.toString()
+													+ " malam";
+										}
 										if (banyak == 1) {
 											linArv1.setVisibility(View.VISIBLE);
 											arv1.setText(msg_list[0]);
@@ -1618,8 +1606,8 @@ public class ProfilAnakActivity extends Activity implements
 		// Spinner popupSpinnerDosisPagi = (Spinner) popupView
 		// .findViewById(R.id.spinDosisPagi);
 
-		ArrayAdapter<String> adapter_dosis = new ArrayAdapter<String>(
-				getApplicationContext(), R.layout.spin, item);
+		ArrayAdapter<String> adapter_dosis = new ArrayAdapter<String>(this,
+				R.layout.spin, item);
 		adapter_dosis
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spin.setAdapter(adapter_dosis);
@@ -1685,7 +1673,8 @@ public class ProfilAnakActivity extends Activity implements
 					Log.e("Array list", "kosong");
 				} else {
 					for (int i = 0; i < selList.size(); i++) {
-						hasil_fasilitas_sementara.add(fasilitas[selList.get(i)].toString());
+						hasil_fasilitas_sementara.add(fasilitas[selList.get(i)]
+								.toString());
 						Log.e("Fasilitas", "tidak kosong");
 						msg += fasilitas[selList.get(i)] + "\n";
 					}
@@ -1707,7 +1696,8 @@ public class ProfilAnakActivity extends Activity implements
 
 		Button bq_pos = alert.getButton(DialogInterface.BUTTON_POSITIVE);
 		Button bq_neg = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
-		bq_pos.setBackgroundDrawable(getResources().getDrawable(R.drawable.button));
+		bq_pos.setBackgroundDrawable(getResources().getDrawable(
+				R.drawable.button));
 		bq_pos.setTextColor(Color.WHITE);
 		bq_neg.setBackgroundDrawable(getResources().getDrawable(
 				R.drawable.button));
@@ -1731,7 +1721,8 @@ public class ProfilAnakActivity extends Activity implements
 
 		case R.id.button_susu:
 			selList.clear();
-			final CharSequence[] susu = tabel_cost_facility.getAllBrandName("FA001");
+			final CharSequence[] susu = tabel_cost_facility
+					.getAllBrandName("FA001");
 			final String flag = "susu";
 			SimpanFasilitasArray(flag, susu, tvSusu);
 
@@ -1739,7 +1730,8 @@ public class ProfilAnakActivity extends Activity implements
 
 		case R.id.button_vitamin:
 			selList.clear();
-			final CharSequence[] vitamin = tabel_cost_facility.getAllBrandName("FA002");
+			final CharSequence[] vitamin = tabel_cost_facility
+					.getAllBrandName("FA002");
 			final String flag_vitamin = "vitamin";
 			SimpanFasilitasArray(flag_vitamin, vitamin, tvVitamin);
 
@@ -1747,17 +1739,18 @@ public class ProfilAnakActivity extends Activity implements
 
 		case R.id.button_popok:
 			selList.clear();
-			final CharSequence[] popok = tabel_cost_facility.getAllBrandName("FA003");
+			final CharSequence[] popok = tabel_cost_facility
+					.getAllBrandName("FA003");
 			final String flag_popok = "popok";
 			SimpanFasilitasArray(flag_popok, popok, tvPopok);
 
 			break;
 		case R.id.button_tambah:
 			// TODO Auto-generated method stub
-			if (txtPhone1.getVisibility() == View.VISIBLE) {
-				txtPhone2.setVisibility(View.VISIBLE);
+			if (linPhone1.getVisibility() == View.VISIBLE) {
+				linPhone2.setVisibility(View.VISIBLE);
 			} else {
-				txtPhone1.setVisibility(View.VISIBLE);
+				linPhone1.setVisibility(View.VISIBLE);
 			}
 			break;
 		}

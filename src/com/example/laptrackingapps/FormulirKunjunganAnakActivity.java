@@ -55,8 +55,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			foto_anak6;
 	Button tambah_keluhan;
 	LinearLayout tambahKeluhan, tambahKeluhan2;
-	Button  btn_foto1, btn_foto2,
-			btn_foto3, btn_foto4, btn_foto5, btn_foto6;
+	Button btn_foto1, btn_foto2, btn_foto3, btn_foto4, btn_foto5, btn_foto6;
 	LinearLayout layout_tambahkeluhan, layout_keluhan, layout_status,
 			layout_tindakan;
 	LinearLayout button_lanjut;
@@ -74,6 +73,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			"Mei", "Juni", "Juli", "Agustus", "September", "Oktober",
 			"November", "Desember" };
 	Bitmap thumbnail1, thumbnail;
+	LinearLayout btn_kembali;
 	String child_id;
 	// instansisasi tabel
 	TM_Visit_Type tabel_visit_type;
@@ -99,10 +99,12 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 
 	int spinner_position;
 	ArrayList<Complaint_Model> complaints = new ArrayList<Complaint_Model>();
-	Complaint_Model complaint = new Complaint_Model();
+	Complaint_Model complaint1 = new Complaint_Model();
+	Complaint_Model complaint2 = new Complaint_Model();
+	Complaint_Model complaint3 = new Complaint_Model();
 
 	final Context context = this;
-
+	Boolean foto1=false,foto2=false,foto3=false,foto4=false,foto5=false,foto6=false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -135,6 +137,8 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 		tindakan1 = (EditText) findViewById(R.id.etTindakan);
 		tindakan2 = (EditText) findViewById(R.id.etTindakan1);
 		tindakan3 = (EditText) findViewById(R.id.etTindakan2);
+		
+		btn_kembali = (LinearLayout) findViewById(R.id.button_kembali);
 
 		layout_tambahkeluhan = (LinearLayout) findViewById(R.id.linearlayout_tambahkeluhan);
 		tambah_keluhan = (Button) findViewById(R.id.button_tambahkeluhan);
@@ -239,14 +243,15 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 		foto_anak5 = (ImageView) findViewById(R.id.foto_anak5);
 		foto_anak6 = (ImageView) findViewById(R.id.foto_anak6);
 
-		bitmap1 = BitmapFactory.decodeResource(context.getResources(),R.drawable.new_button_camera);
+		bitmap1 = BitmapFactory.decodeResource(context.getResources(),
+				R.drawable.new_button_camera);
 		foto_anak1.setImageBitmap(bitmap1);
 		foto_anak2.setImageBitmap(bitmap1);
 		foto_anak3.setImageBitmap(bitmap1);
 		foto_anak4.setImageBitmap(bitmap1);
 		foto_anak5.setImageBitmap(bitmap1);
 		foto_anak6.setImageBitmap(bitmap1);
-		
+
 		btn_foto1 = (Button) findViewById(R.id.btn_foto1);
 		btn_foto2 = (Button) findViewById(R.id.btn_foto2);
 		btn_foto3 = (Button) findViewById(R.id.btn_foto3);
@@ -259,6 +264,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				if (getDrawableImage(foto_anak1) == bitmap1) {
+					foto1 = true;
 					image();
 				} else {
 					alertImage(foto_anak1);
@@ -270,6 +276,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				if (getDrawableImage(foto_anak2) == bitmap1) {
+					foto2 = true;
 					image();
 				} else {
 					alertImage(foto_anak2);
@@ -281,6 +288,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				if (getDrawableImage(foto_anak3) == bitmap1) {
+					foto3 = true;
 					image();
 				} else {
 					alertImage(foto_anak3);
@@ -292,6 +300,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				if (getDrawableImage(foto_anak4) == bitmap1) {
+					foto4 = true;
 					image();
 				} else {
 					alertImage(foto_anak4);
@@ -303,6 +312,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				if (getDrawableImage(foto_anak5) == bitmap1) {
+					foto5 = true;
 					image();
 				} else {
 					alertImage(foto_anak5);
@@ -314,14 +324,13 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				if (getDrawableImage(foto_anak6) == bitmap1) {
+					foto6 = true;
 					image();
 				} else {
 					alertImage(foto_anak6);
 				}
 			}
 		});
-
-		
 
 		// mendapatkan tanggal sekarang
 		final Calendar c = Calendar.getInstance();
@@ -338,26 +347,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 				return true;
 			}
 		});
-
-		Calendar now = Calendar.getInstance();
-		Calendar tanggallahir = Calendar.getInstance();
-
-		tanggallahir.set(mYear, mMonth, mDay);
-
-		int years = now.get(Calendar.YEAR) - tanggallahir.get(Calendar.YEAR);
-		int months = now.get(Calendar.MONTH) - tanggallahir.get(Calendar.MONTH);
-		int days = now.get(Calendar.DAY_OF_MONTH)
-				- tanggallahir.get(Calendar.DAY_OF_MONTH);
-		if (days < 0) {
-			months--;
-			days += now.getActualMaximum(Calendar.DAY_OF_MONTH);
-		}
-		if (months < 0) {
-			years--;
-			months += 12;
-		}
-		String umur = years + " tahun " + months + " bulan " + days + " hari";
-
+		
 		// model
 
 		model_visit = new Visit_Model();
@@ -368,11 +358,16 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			// model_visit = null;
 			child_id = i.getStringExtra("id_anak_fk");
 			Log.i("id anak pda form", " " + child_id);
-		} else if (i.getStringExtra("id_child_ka") != null) {
+			
+		} else if(i.getStringExtra("id_child_own") != null)
+		{
+			child_id = i.getStringExtra("id_child_own");
+		}
+		else if (i.getStringExtra("id_child_ka") != null) {
 			// model visit id di set kembali
 			// semua field pada form diisi sesuai objek kiriman
 			/*********************************************/
-
+			
 			child_id = i.getStringExtra("id_child_ka");
 			Log.e("Child id received", "" + child_id);
 			if (i.getParcelableExtra("Object_VisitModel1") != null) {
@@ -404,155 +399,155 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 					tambahKeluhan2.setVisibility(View.VISIBLE);
 					tambahKeluhan.setVisibility(View.VISIBLE);
 
-					complaint = complaints.get(0);
+					complaint1 = complaints.get(0);
 					// keluhan
 					spinner_position = adptr_keluhan1
 							.getPosition(tabel_complaint
-									.getNameComplaint(complaint.GetKeluhan()));
+									.getNameComplaint(complaint1.GetKeluhan()));
 					keluhan1.setSelection(spinner_position);
 					// status
 					spinner_position = adptr_status1
 							.getPosition(tabel_complaint_status
-									.getNameComplaintStatus(complaint
+									.getNameComplaintStatus(complaint1
 											.GetStatusKeluhan()));
 					status1.setSelection(spinner_position);
 					// tindakan
-					tindakan1.setText(complaint.GetTindakan());
+					tindakan1.setText(complaint1.GetTindakan());
 
-					complaint = complaints.get(1);
+					complaint2 = complaints.get(1);
 					// keluhan
 					spinner_position = adptr_keluhan2
 							.getPosition(tabel_complaint
-									.getNameComplaint(complaint.GetKeluhan()));
+									.getNameComplaint(complaint2.GetKeluhan()));
 					keluhan2.setSelection(spinner_position);
 					// status
 					spinner_position = adptr_status2
 							.getPosition(tabel_complaint_status
-									.getNameComplaintStatus(complaint
+									.getNameComplaintStatus(complaint2
 											.GetStatusKeluhan()));
 					status2.setSelection(spinner_position);
 					// tindakan
-					tindakan2.setText(complaint.GetTindakan());
+					tindakan2.setText(complaint2.GetTindakan());
 
-					complaint = complaints.get(2);
+					complaint3 = complaints.get(2);
 					// keluhan
 					spinner_position = adptr_keluhan3
 							.getPosition(tabel_complaint
-									.getNameComplaint(complaint.GetKeluhan()));
+									.getNameComplaint(complaint3.GetKeluhan()));
 					keluhan3.setSelection(spinner_position);
 					// status
 					spinner_position = adptr_status1
 							.getPosition(tabel_complaint_status
-									.getNameComplaintStatus(complaint
+									.getNameComplaintStatus(complaint3
 											.GetStatusKeluhan()));
 					status3.setSelection(spinner_position);
 					// tindakan
-					tindakan3.setText(complaint.GetTindakan());
+					tindakan3.setText(complaint3.GetTindakan());
 				} else if (complaints.size() == 2) {
 					tambahKeluhan.setVisibility(View.VISIBLE);
 
-					complaint = complaints.get(0);
+					complaint1 = complaints.get(0);
 					// keluhan
 					spinner_position = adptr_keluhan1
 							.getPosition(tabel_complaint
-									.getNameComplaint(complaint.GetKeluhan()));
+									.getNameComplaint(complaint1.GetKeluhan()));
 					keluhan1.setSelection(spinner_position);
 					// status
 					spinner_position = adptr_status1
 							.getPosition(tabel_complaint_status
-									.getNameComplaintStatus(complaint
+									.getNameComplaintStatus(complaint1
 											.GetStatusKeluhan()));
 					status1.setSelection(spinner_position);
 					// tindakan
-					tindakan1.setText(complaint.GetTindakan());
+					tindakan1.setText(complaint1.GetTindakan());
 
-					complaint = complaints.get(1);
+					complaint2 = complaints.get(1);
 					// keluhan
 					spinner_position = adptr_keluhan2
 							.getPosition(tabel_complaint
-									.getNameComplaint(complaint.GetKeluhan()));
+									.getNameComplaint(complaint2.GetKeluhan()));
 					keluhan2.setSelection(spinner_position);
 					// status
 					spinner_position = adptr_status2
 							.getPosition(tabel_complaint_status
-									.getNameComplaintStatus(complaint
+									.getNameComplaintStatus(complaint2
 											.GetStatusKeluhan()));
 					status2.setSelection(spinner_position);
 					// tindakan
-					tindakan2.setText(complaint.GetTindakan());
+					tindakan2.setText(complaint2.GetTindakan());
 
 				} else {
-					complaint = complaints.get(0);
+					complaint1 = complaints.get(0);
 					// keluhan
 					spinner_position = adptr_keluhan1
 							.getPosition(tabel_complaint
-									.getNameComplaint(complaint.GetKeluhan()));
+									.getNameComplaint(complaint1.GetKeluhan()));
 					keluhan1.setSelection(spinner_position);
 					// status
 					spinner_position = adptr_status1
 							.getPosition(tabel_complaint_status
-									.getNameComplaintStatus(complaint
+									.getNameComplaintStatus(complaint1
 											.GetStatusKeluhan()));
 					status1.setSelection(spinner_position);
 					// tindakan
-					tindakan1.setText(complaint.GetTindakan());
+					tindakan1.setText(complaint1.GetTindakan());
 				}
 
 				for (int a = 0; a < complaints.size(); a++) {
 
 					if (a == 0) {
-						complaint = complaints.get(0);
+						complaint1 = complaints.get(0);
 						// keluhan
 						spinner_position = adptr_keluhan1
 								.getPosition(tabel_complaint
-										.getNameComplaint(complaint
+										.getNameComplaint(complaint1
 												.GetKeluhan()));
 						keluhan1.setSelection(spinner_position);
 						// status
 						spinner_position = adptr_status1
 								.getPosition(tabel_complaint_status
-										.getNameComplaintStatus(complaint
+										.getNameComplaintStatus(complaint1
 												.GetStatusKeluhan()));
 						status1.setSelection(spinner_position);
 						// tindakan
-						tindakan1.setText(complaint.GetTindakan());
+						tindakan1.setText(complaint1.GetTindakan());
 					} else if (a == 1) {
-						complaint = complaints.get(1);
+						complaint2 = complaints.get(1);
 						// keluhan
 						spinner_position = adptr_keluhan2
 								.getPosition(tabel_complaint
-										.getNameComplaint(complaint
+										.getNameComplaint(complaint2
 												.GetKeluhan()));
 						keluhan2.setSelection(spinner_position);
 						// status
 						spinner_position = adptr_status2
 								.getPosition(tabel_complaint_status
-										.getNameComplaintStatus(complaint
+										.getNameComplaintStatus(complaint2
 												.GetStatusKeluhan()));
 						status2.setSelection(spinner_position);
 						// tindakan
-						tindakan2.setText(complaint.GetTindakan());
+						tindakan2.setText(complaint2.GetTindakan());
 					} else {
-						complaint = complaints.get(2);
+						complaint3 = complaints.get(2);
 						// keluhan
 						spinner_position = adptr_keluhan3
 								.getPosition(tabel_complaint
-										.getNameComplaint(complaint
+										.getNameComplaint(complaint3
 												.GetKeluhan()));
 						keluhan3.setSelection(spinner_position);
 						// status
-						spinner_position = adptr_status1
-								.getPosition(tabel_complaint_status
-										.getNameComplaintStatus(complaint
+						spinner_position = adptr_status1.getPosition(tabel_complaint_status.getNameComplaintStatus(complaint3
 												.GetStatusKeluhan()));
 						status3.setSelection(spinner_position);
 						// tindakan
-						tindakan3.setText(complaint.GetTindakan());
+						tindakan3.setText(complaint3.GetTindakan());
 					}
 				}
 
 			}
 
+			// remove the array list complaint model
+			complaints.clear();
 			// model_visit = (Visit_Model) getIntent().getSerializableExtra(
 			// "Object_VisitModel1");
 			// // jenis kunj
@@ -607,8 +602,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 
 		case R.id.button_lanjut:
 			Log.i("visit type id",
-					""
-							+ tabel_visit_type.getIdVisitType(jenis_kunjungan
+					""+ tabel_visit_type.getIdVisitType(jenis_kunjungan
 									.getSelectedItem().toString()));
 			Log.i("tb bb ll", "" + tb.getText().toString() + "- "
 					+ bb.getText().toString() + "- " + ll.getText().toString());
@@ -643,40 +637,46 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 
 			// save the complaints
 
-			complaint.SetKeluhan(tabel_complaint.getIdComplaint(keluhan1
+			complaint1.SetKeluhan(tabel_complaint.getIdComplaint(keluhan1
 					.getSelectedItem().toString()));
-			complaint
+			complaint1
 					.SetStatusKeluhan(tabel_complaint_status
 							.getIdComplaintStatus(status1.getSelectedItem()
 									.toString()));
-			complaint.SetTindakan(tindakan1.getText().toString());
+			complaint1.SetTindakan(tindakan1.getText().toString());
 			if (!keluhan1.getSelectedItem().toString().equals("-")
 					&& !status1.getSelectedItem().toString().equals("-")) {
-				complaints.add(complaint);
+				complaints.add(complaint1);
 			}
 
-			complaint.SetKeluhan(tabel_complaint.getIdComplaint(keluhan2
+			complaint2.SetKeluhan(tabel_complaint.getIdComplaint(keluhan2
 					.getSelectedItem().toString()));
-			complaint
+			complaint2
 					.SetStatusKeluhan(tabel_complaint_status
 							.getIdComplaintStatus(status2.getSelectedItem()
 									.toString()));
-			complaint.SetTindakan(tindakan2.getText().toString());
+			complaint2.SetTindakan(tindakan2.getText().toString());
 			if (!keluhan2.getSelectedItem().toString().equals("-")
 					&& !status2.getSelectedItem().toString().equals("-")) {
-				complaints.add(complaint);
+				complaints.add(complaint2);
 			}
 
-			complaint.SetKeluhan(tabel_complaint.getIdComplaint(keluhan3
+			complaint3.SetKeluhan(tabel_complaint.getIdComplaint(keluhan3
 					.getSelectedItem().toString()));
-			complaint
+			complaint3
 					.SetStatusKeluhan(tabel_complaint_status
 							.getIdComplaintStatus(status3.getSelectedItem()
 									.toString()));
-			complaint.SetTindakan(tindakan3.getText().toString());
+			complaint3.SetTindakan(tindakan3.getText().toString());
 			if (!keluhan3.getSelectedItem().toString().equals("-")
 					&& !status3.getSelectedItem().toString().equals("-")) {
-				complaints.add(complaint);
+				complaints.add(complaint3);
+			}
+			for (Complaint_Model a : complaints) {
+				Log.e("keluhan status tindakan",
+						"keluhan " + a.GetKeluhan() + " status"
+								+ a.GetStatusKeluhan() + " tindakan"
+								+ a.GetTindakan());
 			}
 			model_visit.setComplaints(complaints);
 
@@ -685,49 +685,12 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			// save images, facilities
 
 			Intent intent_kunjungan_env = new Intent(
-					FormulirKunjunganAnakActivity.this,
+					this,
 					FormulirKunjunganRumahActivity.class);
-			intent_kunjungan_env.putExtra("id_child_ke", "" + child_id);
-			// intent_kunjungan_env.putExtra("Object_VisitModel", model_visit);
-			// model_visit = new Visit_Model("1","2","3","4","5","6");
-			// model visit = new model_visit("1",complaint);
+			intent_kunjungan_env.putExtra("id", ""+child_id);
 			intent_kunjungan_env.putExtra("Object_VisitModel", model_visit);
 			startActivity(intent_kunjungan_env);
-			// this.startActivityForResult(intent_kunjungan_env, 0);
-			// case R.id.button_tambahkeluhan:
-			// Intent intent2 = new Intent(FormulirKunjunganAnakActivity.this,
-			// ProfilAnakActivity.class);
-			// startActivity(intent2);
-			// layout_tambahkeluhan = (LinearLayout)
-			// findViewById(R.id.linearlayout_tambahkeluhan);
-			// tambah_keluhan.setLayoutParams(new
-			// LayoutParams(LayoutParams.WRAP_CONTENT,
-			// LayoutParams.WRAP_CONTENT));
-			// layout_tambahkeluhan.addView(tambah_keluhan);
-			/*
-			 * for (int i = 1; i < 10; i++) { tambah_keluhan.setLayoutParams(new
-			 * LayoutParams(LayoutParams.WRAP_CONTENT,
-			 * LayoutParams.WRAP_CONTENT)); tambah_keluhan.setText("" + i);
-			 * tambah_keluhan.setId(i);
-			 * layout_tambahkeluhan.addView(tambah_keluhan); //((Button)
-			 * findViewById(i)).setOnClickListener(this); }
-			 */
-			// tambah_keluhan.setVisibility(View.VISIBLE);
-			// LayoutInflater layoutinflater = (LayoutInflater)
-			// getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			// View vi =
-			// layoutinflater.inflate(R.layout.activity_formulir_kunjungan_anak,
-			// null);
-
-			// layout_tambahkeluhan = (LinearLayout)
-			// vi.findViewById(R.id.linearlayout_tambahkeluhan);
-
-			// ViewGroup vg = (ViewGroup)
-			// findViewById(R.id.button_tambahkeluhan);
-			// vg.addView(vi, 0, new
-			// ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-			// ViewGroup.LayoutParams.WRAP_CONTENT));
-			// break;
+			break;
 
 		default:
 			break;
@@ -789,17 +752,12 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 	int count;
 
 	public void image() {
-		count++;
-		if (count > 6) {
-			Toast.makeText(getApplicationContext(),
-					"Anda Tidak Dapat Menambah Foto Lebih Dari 6",
-					Toast.LENGTH_LONG).show();
-		}
+		
 		// create class object
 		gps = new GPSTracker(FormulirKunjunganAnakActivity.this);
 
 		// check if GPS enabled
-		if (gps.canGetLocation() && count < 7) {
+		if (gps.canGetLocation()) {
 
 			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			startActivityForResult(intent, 1);
@@ -815,7 +773,6 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 					getApplicationContext(),
 					"Lokasi Anda - \nLatitude : " + latitude + "\nLongitude : "
 							+ longitude, Toast.LENGTH_LONG).show();
-
 		}
 
 		else {
@@ -823,6 +780,8 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 		}
 	}
 
+	
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -854,18 +813,34 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 					e.printStackTrace();
 				}
 
-				final int[] tvBulan = { R.id.foto_anak1, R.id.foto_anak2,
-						R.id.foto_anak3, R.id.foto_anak4, R.id.foto_anak5,
-						R.id.foto_anak6 };
-				ImageView iv;
+				
 
-				// looping imageview to set image bitmap
-				for (int j = 0; j < count; j++) {
-					iv = (ImageView) findViewById(tvBulan[j]);
-					if (getDrawableImage(iv) == bitmap1) {
-						iv.setImageBitmap(thumbnail);
+				if (getDrawableImage(foto_anak1) == bitmap1 && foto1 == true) {
+					foto_anak1.setImageBitmap(thumbnail);
+				}
 
-					}
+				if (getDrawableImage(foto_anak2) == bitmap1 && foto2 == true) {
+					foto_anak2.setImageBitmap(thumbnail);
+
+				}
+
+				if (getDrawableImage(foto_anak3) == bitmap1 && foto3 == true) {
+					foto_anak3.setImageBitmap(thumbnail);
+
+				}
+
+				if (getDrawableImage(foto_anak4) == bitmap1 && foto4 == true) {
+					foto_anak4.setImageBitmap(thumbnail);
+				}
+
+				if (getDrawableImage(foto_anak5) == bitmap1 && foto5 == true) {
+					foto_anak5.setImageBitmap(thumbnail);
+
+				}
+
+				if (getDrawableImage(foto_anak6) == bitmap1 && foto6 == true) {
+					foto_anak6.setImageBitmap(thumbnail);
+
 				}
 
 				// Bitmap photo = null;
@@ -874,49 +849,73 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 				// photo = extras.getParcelable("data");
 				// }
 				// Intent i = new Intent(this,DialogDeleteImage.class);
-				// i.putExtra("image", photo);
-				// //startActivity(i);
+				// i.putExtra("imag)e", photo);
+				// //startActivity(i;
 
 			}
 		}
 	}
 
-	public void alertImage(final ImageView input) {
-		final Dialog dialog = new Dialog(context);
+	public void alertImage(final ImageView input)
+	 {
+	  final Dialog dialog = new Dialog(context);
+	  
+	  dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+	        dialog.setContentView(R.layout.custom_dialog);
+	        
+	        final Dialog dialogConfirm = new Dialog(context);
+	  
+	        dialogConfirm.requestWindowFeature(Window.FEATURE_NO_TITLE);
+	        
+	        
+	        ImageView imageDialog = (ImageView) dialog.findViewById(R.id.image);
+	        imageDialog.setImageBitmap(getDrawableImage(input).createScaledBitmap(getDrawableImage(input), 258, 150, true));
+	        LinearLayout linHapus = (LinearLayout) dialog.findViewById(R.id.btnHapus);
+	        
+	        linHapus.setOnClickListener(new OnClickListener() {
 
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		dialog.setContentView(R.layout.custom_dialog);
-		ImageView imageDialog = (ImageView) dialog.findViewById(R.id.image);
-		imageDialog.setImageBitmap(getDrawableImage(input).createScaledBitmap(
-				getDrawableImage(input), 258, 150, true));
-		LinearLayout linHapus = (LinearLayout) dialog
-				.findViewById(R.id.btnHapus);
-		final LinearLayout linYakin = (LinearLayout) dialog
-				.findViewById(R.id.btnYakinHapus);
-		final LinearLayout linKembali = (LinearLayout) dialog
-				.findViewById(R.id.button_kembali);
-		linHapus.setOnClickListener(new OnClickListener() {
+	   public void onClick(View v) {
+	    // TODO Auto-generated method stub
+	    
+	    dialogConfirm.setContentView(R.layout.confirm_delete);
+	    
+	    
+	    LinearLayout linYakin = (LinearLayout) dialogConfirm.findViewById(R.id.btnYakinHapus);
+	          LinearLayout linKembali = (LinearLayout) dialogConfirm.findViewById(R.id.button_kembali);
+	          
+	    linYakin.setOnClickListener(new OnClickListener() {
 
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
+	     public void onClick(View v) {
+	      // TODO Auto-generated method stub
+	      input.setImageBitmap(bitmap1);
+	      foto1 = false;
+	      foto2 = false;
+	      foto3 = false;
+	      foto4 = false;
+	      foto5 = false;
+	      foto6 = false;
+	      dialogConfirm.dismiss();
+	      dialog.dismiss();
+	     }
+	    });
+	    
+	    linKembali.setOnClickListener(new OnClickListener() {
 
-				linYakin.setVisibility(View.VISIBLE);
-				linKembali.setVisibility(View.VISIBLE);
-
-				linYakin.setOnClickListener(new OnClickListener() {
-
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						input.setImageBitmap(bitmap1);
-						dialog.dismiss();
-					}
-				});
-
-			}
-		});
-		// input.setImageBitmap(thumbnail);
-		dialog.show();
-	}
+		     public void onClick(View v) {
+		      // TODO Auto-generated method stub
+		      
+		      dialogConfirm.dismiss();
+		      dialog.dismiss();
+		     }
+		    });
+	    
+	    
+	    dialogConfirm.show();
+	   }
+	  });
+	        //input.setImageBitmap(thumbnail);
+	        dialog.show();
+	 }
 
 	public Bitmap getDrawableImage(ImageView input) {
 		input.buildDrawingCache(true);

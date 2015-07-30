@@ -26,7 +26,7 @@ public class TM_Drug_Type {
 
 	// mendeklarasikan membuat CREATE_TABLE = MEMBUAT TABLE"
 	private static final String CREATE_TABLE = "create table " + NAMA_TABEL
-			+ " ( " + ROW_DRUG_TYPE_ID + " integer PRIMARY KEY autoincrement, "
+			+ " ( " + ROW_DRUG_TYPE_ID + " varchar PRIMARY KEY, "
 			+ ROW_DRUG_TYPE_DESCRIPTION + " text, " + ROW_CREATED_BY
 			+ " date, " + " " + ROW_CREATED_TIME + " varchar, " + ROW_UPDATE_BY
 			+ " text, " + ROW_UPDATE_TIME + " varchar  ) ";
@@ -63,6 +63,7 @@ public class TM_Drug_Type {
 			try {
 				ContentValues values = new ContentValues();
 				
+				values.put(ROW_DRUG_TYPE_ID, "DTY000");
 				values.put(ROW_DRUG_TYPE_DESCRIPTION, "-");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -70,42 +71,48 @@ public class TM_Drug_Type {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 				
-				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Sirup1");
+				values.put(ROW_DRUG_TYPE_ID, "DTY001");
+				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Zidovudin");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
 				values.put(ROW_UPDATE_BY, "-");
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
-				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Sirup2");
+				values.put(ROW_DRUG_TYPE_ID, "DTY002");
+				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Hiviral");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
 				values.put(ROW_UPDATE_BY, "-");
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
-				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Sirup3");
+				values.put(ROW_DRUG_TYPE_ID, "DTY003");
+				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Stafudin");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
 				values.put(ROW_UPDATE_BY, "-");
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 				
-				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Sirup4");
+				values.put(ROW_DRUG_TYPE_ID, "DTY004");
+				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Efavirens");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
 				values.put(ROW_UPDATE_BY, "-");
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 				
-				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Sirup5");
+				values.put(ROW_DRUG_TYPE_ID, "DTY005");
+				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Mylan");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
 				values.put(ROW_UPDATE_BY, "-");
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 				
-				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Sirup6");
+				values.put(ROW_DRUG_TYPE_ID, "DTY006");
+				values.put(ROW_DRUG_TYPE_DESCRIPTION, "Ciplan");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
 				values.put(ROW_UPDATE_BY, "-");

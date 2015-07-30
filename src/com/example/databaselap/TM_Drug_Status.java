@@ -63,6 +63,7 @@ public class TM_Drug_Status {
 				
 				// masih data static
 				ContentValues values = new ContentValues();
+				values.put(ROW_DRUG_STATUS_ID, "DS000");
 				values.put(ROW_DRUG_STATUS_ID, "");
 				values.put(ROW_DRUG_STATUS_DESCRIPTION, "-");
 				values.put(ROW_CREATED_BY, "-");
@@ -71,13 +72,8 @@ public class TM_Drug_Status {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 				
-				values.put(ROW_DRUG_STATUS_DESCRIPTION, "Belum");
-				values.put(ROW_CREATED_BY, "-");
-				values.put(ROW_CREATED_TIME, "-");
-				values.put(ROW_UPDATE_BY, "-");
-				values.put(ROW_UPDATE_TIME, "-");
-				db.insert(NAMA_TABEL, null, values);
-
+				
+				values.put(ROW_DRUG_STATUS_ID, "DS001");
 				values.put(ROW_DRUG_STATUS_DESCRIPTION, "Lini 1");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -85,6 +81,7 @@ public class TM_Drug_Status {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 				
+				values.put(ROW_DRUG_STATUS_ID, "DS002");
 				values.put(ROW_DRUG_STATUS_DESCRIPTION, "Lini 2");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -92,7 +89,16 @@ public class TM_Drug_Status {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				values.put(ROW_DRUG_STATUS_ID, "DS003");
 				values.put(ROW_DRUG_STATUS_DESCRIPTION, "Lini 3");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
+				
+				values.put(ROW_DRUG_STATUS_ID, "DS004");
+				values.put(ROW_DRUG_STATUS_DESCRIPTION, "Belum Tertangani");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
 				values.put(ROW_UPDATE_BY, "-");

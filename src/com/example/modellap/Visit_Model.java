@@ -20,11 +20,16 @@ public class Visit_Model implements Parcelable {
 //	private String BMI_Score;
 	private String ARV_Taken;
 //	private String Reminder_ID;
-//	// environment
-//	private ArrayList<Environment_Model> Environments;
+	// environment
+	private ArrayList<Environment_Model> Environments;
 //	// fasilitas
 //	private ArrayList<ChildFacility_Model> ChildFacilities;
-
+	
+	//foto anak
+	private ArrayList<String> Child_Photos;
+	//foto lingkungan
+	private ArrayList<String> Environment_Photos;
+	
 	
 //	public String GetVisitID() {
 //		return this.Visit_id;
@@ -77,10 +82,20 @@ public class Visit_Model implements Parcelable {
 	public ArrayList<Complaint_Model> GetComplaints() {
 		return this.Complaints;
 	}
-//
-//	public ArrayList<Environment_Model> GetEnvironment() {
-//		return this.Environments;
-//	}
+
+	public ArrayList<Environment_Model> GetEnvironment() {
+		return this.Environments;
+	}
+	
+	public ArrayList<String> GetChildPhotos()
+	{
+		return this.Child_Photos;
+	}
+	
+	public ArrayList<String> GetEnvironmentPhotos()
+	{
+		return this.Environment_Photos;
+	}
 
 	// setter
 //	public void setVisitID(String Visit_id) {
@@ -136,9 +151,19 @@ public class Visit_Model implements Parcelable {
 //		this.ChildFacilities = ChildFacilities;
 //	}
 //
-//	public void setEnvironments(ArrayList<Environment_Model> Environments) {
-//		this.Environments = Environments;
-//	}
+	public void setEnvironments(ArrayList<Environment_Model> Environments) {
+		this.Environments = Environments;
+	}
+	
+	public void setChildPhotos(ArrayList<String> Child_Photos)
+	{
+		this.Child_Photos = Child_Photos;
+	}
+	
+	public void setEnvironmentPhotos(ArrayList<String> Environment_Photos)
+	{
+		this.Environment_Photos = Environment_Photos;
+	}
 
 	
 	@Override
@@ -152,6 +177,9 @@ public class Visit_Model implements Parcelable {
 		out.writeString(Note);
 		out.writeString(ARV_Taken);
 		out.writeTypedList(Complaints);
+		out.writeTypedList(Environments);
+		out.writeStringList(Child_Photos);
+		out.writeStringList(Environment_Photos);
 		//out.writeParcelable(comp, flags);
 	}
 
@@ -165,6 +193,9 @@ public class Visit_Model implements Parcelable {
 		Note = in.readString();
 		ARV_Taken = in.readString();
 		Complaints = in.createTypedArrayList(Complaint_Model.CREATOR);
+		Environments = in.createTypedArrayList(Environment_Model.CREATOR);
+		//Child_Photos =  in.readStringList();
+		
 		//in.readTypedList(Complaints, Complaint_Model.CREATOR);
 		//comp = in.readParcelable(Complaint_Model.class.getClassLoader());
 	}

@@ -1,17 +1,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="250dp"
-      android:layout_height="350dp" 
+      android:layout_height="wrap_content" 
       android:background="@android:color/transparent"
-      android:gravity="center"
+      android:gravity="top"
       >
       <LinearLayout
           android:id="@+id/layout_root"
           android:orientation="vertical"
           android:gravity="center"
           android:layout_width="250dp"
-          android:layout_height="350dp"
-          android:padding="10dp"
-         android:background="@android:color/transparent">
+          android:layout_height="wrap_content"
+          android:background="@android:color/transparent">
           
           <ImageView
               android:id="@+id/image"
@@ -49,92 +48,6 @@
                 android:paddingBottom="18dp"
                 android:paddingTop="18dp"
                 android:text="HAPUS"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
-            
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.25" />
-            
-            </LinearLayout>
-
-         <LinearLayout
-             android:id="@+id/btnYakinHapus"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_gravity="center"
-             android:layout_marginTop="16dp"
-             android:layout_weight="0.20"
-             android:background="@drawable/button"
-             android:onClick="onClick" 
-             android:layout_marginBottom="2dp"
-             
-             android:visibility="invisible"
-             >
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.25" />
-
-            <ImageView
-                android:id="@+id/ivyakinhapus"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.69"
-                android:padding="15dp"
-                android:src="@drawable/centang" />
-            
-            <TextView
-                android:id="@+id/tvyakinhapus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:paddingBottom="18dp"
-                android:paddingTop="18dp"
-                android:text="YAKIN HAPUS"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
-            
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.25" />
-            
-            </LinearLayout>
-            
-         <LinearLayout
-             android:id="@+id/button_kembali"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_gravity="center"
-             android:layout_weight="0.5"
-             android:background="@drawable/button"
-             android:onClick="onClick" 
-             android:visibility="invisible">
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1.25" />
-
-            <ImageView
-                android:id="@+id/ivkembali"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="15dp"
-                android:src="@drawable/centang" />
-            
-            <TextView
-                android:id="@+id/tvkembali"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp"
-                android:text="KEMBALI"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
             

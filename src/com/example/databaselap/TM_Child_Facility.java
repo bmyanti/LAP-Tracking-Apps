@@ -18,13 +18,14 @@ public class TM_Child_Facility {
 	private static final String ROW_CHILD_ID = "child_id";
 	private static final String ROW_FACILITY_ID = "facility_id";
 	private static final String ROW_FACILITY_COST_ID = "facility_cost_id";
+	private static final String ROW_FACILITY_QTY = "facility_qty";
 	private static final String ROW_CREATED_BY = "created_by";
 	private static final String ROW_CREATED_TIME = "created_time";
 	private static final String ROW_UPDATE_BY = "update_by";
 	private static final String ROW_UPDATE_TIME = "update_time";
 
 	// mendeklarasikan NAMA_DB DAN TABLE DAN DATABASE VERSION
-	private static final String NAMA_DB = "DB_LAP_CF";
+	private static final String NAMA_DB = "DB_LAP_CFC";
 	private static final String NAMA_TABEL = "TM_Child_Facility";
 	private static final int DB_VERSION = 1;
 
@@ -33,7 +34,7 @@ public class TM_Child_Facility {
 			+ " ( " + ROW_CHILD_FACILITY_ID
 			+ " integer PRIMARY KEY autoincrement, " + ROW_CHILD_ID + " text, "
 			+ " " + ROW_FACILITY_ID + " varchar, " + ROW_FACILITY_COST_ID
-			+ " text, " + ROW_CREATED_BY + " date, " + " " + ROW_CREATED_TIME
+			+ " text, " + ROW_FACILITY_QTY + " varchar, " + ROW_CREATED_BY + " date, " + " " + ROW_CREATED_TIME
 			+ " varchar, " + ROW_UPDATE_BY + " text, " + ROW_UPDATE_TIME
 			+ " varchar  ) ";
 
@@ -79,12 +80,13 @@ public class TM_Child_Facility {
 	}
 
 	public void InsertFasilitasAnak(String child_id, String fasilitas_id,
-			String fasilitas_cost_id) {
+			String fasilitas_cost_id, String fasilitas_qty) {
 		ContentValues values = new ContentValues();
 
 		values.put(ROW_CHILD_ID, child_id);
 		values.put(ROW_FACILITY_ID, fasilitas_id);
 		values.put(ROW_FACILITY_COST_ID, fasilitas_cost_id);
+		values.put(ROW_FACILITY_QTY, fasilitas_qty);
 		values.put(ROW_CREATED_BY, "-");
 		values.put(ROW_CREATED_TIME, "-");
 		values.put(ROW_UPDATE_BY, "-");
@@ -118,7 +120,7 @@ public class TM_Child_Facility {
 		ArrayList<ChildFacility_Model> data = new ArrayList<ChildFacility_Model>();
 		Cursor mCursor = db
 				.rawQuery(
-						"SELECT  child_id,facility_id,facility_cost_id  FROM  TM_Child_Facility WHERE child_id= '"
+						"SELECT  child_id,facility_id,facility_cost_id,facility_qty  FROM  TM_Child_Facility WHERE child_id= '"
 								+ child_id + "'", null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
@@ -126,7 +128,8 @@ public class TM_Child_Facility {
 				// parse data into model
 				Log.e("fasilitas anak", " id anak " + mCursor.getString(0)
 						+ " id fasilitas " + mCursor.getString(1)
-						+ " id cost fasilitas " + mCursor.getString(2));
+						+ " id cost fasilitas " + mCursor.getString(2)
+				+"qty "+mCursor.getString(3));
 				data.add(parseData(mCursor));
 				mCursor.moveToNext();
 			}
@@ -167,6 +170,7 @@ public class TM_Child_Facility {
 				.getColumnIndex(ROW_FACILITY_ID)));
 		curData.setFacility_cost_id(cursor.getString(cursor
 				.getColumnIndex(ROW_FACILITY_COST_ID)));
+		curData.SetFacilityQty(cursor.getString(cursor.getColumnIndex(ROW_FACILITY_QTY)));
 
 		return curData;
 	}

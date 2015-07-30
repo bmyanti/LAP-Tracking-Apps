@@ -75,6 +75,7 @@ public class TM_Drug_Dose {
 				db.insert(NAMA_TABEL, null, values);
 				
 				values.put(ROW_DRUG_DOSE_ID, "DD001");
+				values.put(ROW_DRUG_DOSE_ID, "DD001");
 				values.put(ROW_DRUG_DOSE_DESCRIPTION, "1/2");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -82,6 +83,7 @@ public class TM_Drug_Dose {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				values.put(ROW_DRUG_DOSE_ID, "DD002");
 				values.put(ROW_DRUG_DOSE_ID, "DD002");
 				values.put(ROW_DRUG_DOSE_DESCRIPTION, "1");
 				values.put(ROW_CREATED_BY, "-");
@@ -91,6 +93,7 @@ public class TM_Drug_Dose {
 				db.insert(NAMA_TABEL, null, values);
 
 				values.put(ROW_DRUG_DOSE_ID, "DD003");
+				values.put(ROW_DRUG_DOSE_ID, "DD003");
 				values.put(ROW_DRUG_DOSE_DESCRIPTION, "1 1/2");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -98,6 +101,7 @@ public class TM_Drug_Dose {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				values.put(ROW_DRUG_DOSE_ID, "DD004");
 				values.put(ROW_DRUG_DOSE_ID, "DD004");
 				values.put(ROW_DRUG_DOSE_DESCRIPTION, "2");
 				values.put(ROW_CREATED_BY, "-");
@@ -107,6 +111,7 @@ public class TM_Drug_Dose {
 				db.insert(NAMA_TABEL, null, values);
 				
 				values.put(ROW_DRUG_DOSE_ID, "DD005");
+				values.put(ROW_DRUG_DOSE_ID, "DD005");
 				values.put(ROW_DRUG_DOSE_DESCRIPTION, "2 1/2");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -115,6 +120,7 @@ public class TM_Drug_Dose {
 				db.insert(NAMA_TABEL, null, values);
 
 				values.put(ROW_DRUG_DOSE_ID, "DD006");
+				values.put(ROW_DRUG_DOSE_ID, "DD006");
 				values.put(ROW_DRUG_DOSE_DESCRIPTION, "3");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
@@ -122,8 +128,33 @@ public class TM_Drug_Dose {
 				values.put(ROW_UPDATE_TIME, "-");
 				db.insert(NAMA_TABEL, null, values);
 
+				
 				values.put(ROW_DRUG_DOSE_ID, "DD007");
 				values.put(ROW_DRUG_DOSE_DESCRIPTION, "3 1/2");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
+				
+				values.put(ROW_DRUG_DOSE_ID, "DD008");
+				values.put(ROW_DRUG_DOSE_DESCRIPTION, "1 SDM");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
+				
+				values.put(ROW_DRUG_DOSE_ID, "DD009");
+				values.put(ROW_DRUG_DOSE_DESCRIPTION, "2 SDM");
+				values.put(ROW_CREATED_BY, "-");
+				values.put(ROW_CREATED_TIME, "-");
+				values.put(ROW_UPDATE_BY, "-");
+				values.put(ROW_UPDATE_TIME, "-");
+				db.insert(NAMA_TABEL, null, values);
+				
+				values.put(ROW_DRUG_DOSE_ID, "DD010");
+				values.put(ROW_DRUG_DOSE_DESCRIPTION, "3 SDM");
 				values.put(ROW_CREATED_BY, "-");
 				values.put(ROW_CREATED_TIME, "-");
 				values.put(ROW_UPDATE_BY, "-");

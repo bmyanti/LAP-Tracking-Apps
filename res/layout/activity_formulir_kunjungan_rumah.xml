@@ -463,49 +463,102 @@
 
                 </LinearLayout>
 
-                <LinearLayout
+   <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    android:orientation="vertical" 
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    >
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
-
+                   <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+		
+                        <RelativeLayout
+                        android:layout_width="125dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        >
                         <ImageView
                             android:id="@+id/foto_rumah1"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3.25"
-                            android:onClick="onClick"
-                            android:src="@drawable/new_button_camera" />
+                            android:layout_width="match_parent"
+                            android:layout_height="105dp"
+                            android:paddingBottom="1dp"
+                            android:paddingTop="1dp"
+                            android:background="@drawable/layout_border"
+                            />
+                        
+                        <Button
+                            android:id="@+id/btn_foto_rumah1"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="match_parent"
+                            android:layout_height="105dp"
+                            android:background="@android:color/transparent"
+                            android:onClick="onClick" />
 
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                        android:layout_width="125dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        >
                         <ImageView
                             android:id="@+id/foto_rumah2"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3.25"
-                            android:onClick="onClick"
-                            android:src="@drawable/new_button_camera" />
+                            android:layout_width="match_parent"
+                            android:layout_height="105dp"
+                            android:paddingBottom="1dp"
+                            android:paddingTop="1dp"
+                            android:background="@drawable/layout_border"
+                            />
+                        
+                        <Button
+                            android:id="@+id/btn_foto_rumah2"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="match_parent"
+                            android:layout_height="105dp"
+                            android:background="@android:color/transparent"
+                            android:onClick="onClick" />
+
+                        </RelativeLayout>
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
-
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+		
+                        <RelativeLayout
+                        android:layout_width="125dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        >
                         <ImageView
                             android:id="@+id/foto_rumah3"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3.25"
-                            android:onClick="onClick"
-                            android:src="@drawable/new_button_camera" />
+                            android:layout_width="match_parent"
+                            android:layout_height="105dp"
+                            android:paddingBottom="1dp"
+                            android:paddingTop="1dp"
+                            android:background="@drawable/layout_border"
+                            />
+                        
+                        <Button
+                            android:id="@+id/btn_foto_rumah3"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="match_parent"
+                            android:layout_height="105dp"
+                            android:background="@android:color/transparent"
+                            android:onClick="onClick" />
 
-                        <Space
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="3.25" />
+                        </RelativeLayout>
+
+                        
                     </LinearLayout>
+                 
                 </LinearLayout>
 
             </LinearLayout>
