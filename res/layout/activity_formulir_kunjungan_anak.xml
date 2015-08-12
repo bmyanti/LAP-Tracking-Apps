@@ -72,12 +72,12 @@
                         android:textColor="#ffffff" />
                 </LinearLayout>
                 
-                
-               
 
+                
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content" 
+                    android:paddingLeft="10dp">
 
                     <TextView
                         android:id="@+id/textView3"
@@ -104,7 +104,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp" >
 
                     <TextView
                         android:id="@+id/textView5"
@@ -137,7 +138,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content" 
+                    android:paddingLeft="10dp">
 
                     <TextView
                         android:id="@+id/textView7"
@@ -169,7 +171,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content" 
+                    android:paddingLeft="10dp">
 
                     <TextView
                         android:id="@+id/textView9"
@@ -211,7 +214,8 @@
                         <LinearLayout
                             android:id="@+id/layout_keluhan"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content" 
+                            android:paddingLeft="10dp">
 
                             <TextView
                                 android:id="@+id/textView11"
@@ -239,7 +243,8 @@
                         <LinearLayout
                             android:id="@+id/layout_status"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content" 
+                            android:paddingLeft="10dp">
 
                             <TextView
                                 android:id="@+id/textView13"
@@ -267,7 +272,8 @@
                         <LinearLayout
                             android:id="@+id/layout_tindakan"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp" >
 
                             <TextView
                                 android:id="@+id/textView15"
@@ -299,7 +305,8 @@
                         android:id="@+id/tambah_keluhan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical" >
+                        android:orientation="vertical"
+                        android:paddingLeft="10dp" >
 
                         <Button
                             android:id="@+id/button_tambahkeluhan"
@@ -353,7 +360,8 @@
                         <LinearLayout
                             android:id="@+id/layout_status1"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content" 
+                            android:paddingLeft="10dp">
 
                             <TextView
                                 android:id="@+id/tvStatus1"
@@ -381,7 +389,8 @@
                         <LinearLayout
                             android:id="@+id/layout_tindakan1"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content" 
+                            android:paddingLeft="10dp">
 
                             <TextView
                                 android:id="@+id/tvTindakan1"
@@ -449,7 +458,8 @@
                         <LinearLayout
                             android:id="@+id/layout_status2"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content" 
+                            android:paddingLeft="10dp">
 
                             <TextView
                                 android:id="@+id/tvStatus2"
@@ -477,7 +487,8 @@
                         <LinearLayout
                             android:id="@+id/layout_tindakan2"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content" 
+                            android:paddingLeft="10dp">
 
                             <TextView
                                 android:id="@+id/tvTindakan2"
@@ -514,7 +525,9 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content" 
+                    android:paddingLeft="10dp"
+                    android:layout_marginBottom="2dp">
 
                     <TextView
                         android:id="@+id/textView17"
@@ -540,10 +553,307 @@
                         android:ems="10"
                         android:textColor="@color/black" />
                 </LinearLayout>
+<!--                 test -->
+                             <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" 
+                    android:orientation="horizontal"
+                    android:id="@+id/linAntarSusu"
+                    android:paddingLeft="10dp">
+                    
+                    <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" 
+                    android:orientation="horizontal"
+                    android:id="@+id/linAntarSusu1"
+                    >
 
+                    <TextView
+                        android:id="@+id/tvAntarSusu"
+                        android:layout_width="68dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:text="ANTAR SUSU "
+                        android:textColor="@color/blue" 
+                        />
+                    <TextView
+                        android:layout_marginLeft="5dp"
+                        android:id="@+id/tv:susu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:text=": "
+                        android:textColor="@color/blue" />
+
+                   
+                    </LinearLayout>
+                    <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" 
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    >
+                    
+  				<LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" 
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/linAntarSusu2"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="3dp">
+                    <EditText
+                        android:id="@+id/etSusu1"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:ems="10"
+                        android:textColor="@color/black" 
+                        android:textSize="15dp"
+                        android:text=""
+                        android:inputType="number"
+                        android:gravity="center"
+                        android:background="@drawable/layout_border"/>
+                    <TextView
+                        android:paddingLeft="10dp"
+                        android:id="@+id/tvSusu1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_weight="0.5"
+                        android:text="-"
+                        android:textColor="@color/blue" />
+                    </LinearLayout>
+                    <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" 
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/linAntarSusub"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/etSusub"
+                         android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:ems="10"
+                        android:textColor="@color/black" 
+                        android:textSize="15dp"
+                        android:text=""
+                        android:inputType="number"
+                        android:gravity="center"
+                        android:background="@drawable/layout_border" />
+
+                    <TextView
+                        android:paddingLeft="10dp"
+                        android:id="@+id/tvSusub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_weight="0.5"
+                        android:text="-"
+                        android:textColor="@color/blue" />
+                    </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+               
+<!--                  antar vitamin -->
+    <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" 
+                    android:orientation="horizontal"
+                    android:id="@+id/linAntarVitamin"
+                    android:layout_marginTop="5dp">
+                    
+                    <LinearLayout
+                        android:id="@+id/linAntarVitamin1"
+                        android:layout_width="97dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" 
+                        android:paddingLeft="10dp">
+
+                    <TextView
+                        android:id="@+id/tvAntarVitamin"
+                        android:layout_width="68dp"
+                        android:layout_height="match_parent"
+                        android:text="ANTAR VITAMIN "
+                        android:textColor="@color/blue" />
+
+                   <TextView
+                       android:id="@+id/tvvit:"
+                       android:layout_width="wrap_content"
+                       android:layout_height="match_parent"
+                       android:layout_marginLeft="5dp"
+                       android:text=": "
+                       android:textColor="@color/blue" />
+                   
+                    </LinearLayout>
+                    <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" 
+                    android:orientation="vertical"
+                    >
+                    
+  				<LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" 
+                    android:id="@+id/linAntarVitamin2"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="3dp">
+
+                    <EditText
+                        android:id="@+id/etVitamin1"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginLeft="2dp"
+                        android:background="@drawable/layout_border"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:text=""
+                        android:inputType="number"
+                        android:textColor="@color/black"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:paddingLeft="10dp"
+                        android:id="@+id/tvVitamin1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_weight="0.5"
+                        android:text="-"
+                        android:textColor="@color/blue" />
+                    </LinearLayout>
+                    <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" 
+                    android:id="@+id/linAntarVitaminb"
+                    android:layout_marginLeft="22dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/etVitaminb"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:ems="10"
+                        android:textColor="@color/black" 
+                        android:textSize="15dp"
+                        android:text=""
+                        android:inputType="number"
+                        android:gravity="center"
+                        android:background="@drawable/layout_border"/>
+
+                    <TextView
+                        android:paddingLeft="10dp"
+                        android:id="@+id/tvVitaminb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_weight="0.5"
+                        android:text="-"
+                        android:textColor="@color/blue" />
+                    </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+                
+<!--     antar popok -->
+    <LinearLayout
+        android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" 
+                    android:orientation="horizontal"
+                    android:id="@+id/linAntarPopok">
+                    
+                    <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" 
+                    android:orientation="horizontal"
+                    android:id="@+id/linAntarSusuPopok"
+                    android:paddingLeft="10dp">
+
+                    <TextView
+                        android:id="@+id/tvAntarPopok"
+                        android:layout_width="68dp"
+                        android:layout_height="match_parent"
+                        android:text="ANTAR POPOK "
+                        android:textColor="@color/blue" />
+
+                   <TextView
+                        android:layout_marginLeft="5dp"
+                        android:id="@+id/tv:pop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:text=": "
+                        android:textColor="@color/blue" />
+
+                   
+                    </LinearLayout>
+                    <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" 
+                    android:orientation="vertical"
+                    >
+                    
+  				<LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" 
+                    android:layout_marginLeft="30dp"
+                    android:id="@+id/linAntarPopok2"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="3dp">
+
+                    <EditText
+                        android:id="@+id/etPopok1"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:background="@drawable/layout_border"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:text=""
+                        android:inputType="number"
+                        android:textColor="@color/black"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:paddingLeft="10dp"
+                        android:id="@+id/tvPopok1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_weight="0.5"
+                        android:text="-"
+                        android:textColor="@color/blue" />
+                    </LinearLayout>
+                    <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" 
+                    android:layout_marginLeft="30dp"
+                    android:id="@+id/linAntarPopokb"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/etPopokb"
+                         android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:background="@drawable/layout_border"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:text=""
+                        android:inputType="number"
+                        android:textColor="@color/black"
+                        android:textSize="15dp"/>
+
+                    <TextView
+                        android:paddingLeft="10dp"
+                        android:id="@+id/tvPopokb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="25dp"
+                        android:layout_weight="0.5"
+                        android:text="-"
+                        android:textColor="@color/blue" />
+                   		 </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+		<!-- test -->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content" 
+                    android:paddingLeft="10dp"
+                    android:layout_marginBottom="3dp">
 
                     <TextView
                         android:id="@+id/textView19"

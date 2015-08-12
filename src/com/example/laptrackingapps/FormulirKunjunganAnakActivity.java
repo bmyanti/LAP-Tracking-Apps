@@ -5,25 +5,26 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import com.example.databaselap.TM_Complaint;
-import com.example.databaselap.TM_Complaint_Status;
-import com.example.databaselap.TM_Visit_Type;
+import com.example.databaselap.Database;
+import com.example.modellap.ChildFacility_Model;
 import com.example.modellap.Complaint_Model;
+import com.example.modellap.Image_Model;
+import com.example.modellap.Visit_Facility;
 import com.example.modellap.Visit_Model;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcel;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -42,6 +43,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -50,7 +52,8 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 
 	// untuk foto anak (kamera)
 	private static final int Image_take = 1;
-
+	
+	Database db;
 	ImageView back, foto_anak1, foto_anak2, foto_anak3, foto_anak4, foto_anak5,
 			foto_anak6;
 	Button tambah_keluhan;
@@ -75,10 +78,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 	Bitmap thumbnail1, thumbnail;
 	LinearLayout btn_kembali;
 	String child_id;
-	// instansisasi tabel
-	TM_Visit_Type tabel_visit_type;
-	TM_Complaint tabel_complaint;
-	TM_Complaint_Status tabel_complaint_status;
+	
 	// Spinner jenis kunjungan
 	Spinner jenis_kunjungan;
 	// tb,bb,ll
@@ -91,6 +91,9 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 
 	// arraylist data keluhan dan status
 	ArrayList<String> arr_keluhan, arr_status;
+	
+	//arr fasilias
+	ArrayList<ChildFacility_Model> arr_fasilitas = new ArrayList<ChildFacility_Model>();
 
 	Visit_Model model_visit;
 
@@ -99,12 +102,24 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 
 	int spinner_position;
 	ArrayList<Complaint_Model> complaints = new ArrayList<Complaint_Model>();
+	ArrayList<Visit_Facility> facilities = new ArrayList<Visit_Facility>();
+	Visit_Facility facility1 = new Visit_Facility();
+	Visit_Facility facility2 = new Visit_Facility();
+	Visit_Facility facility3 = new Visit_Facility();
+	Visit_Facility facility4 = new Visit_Facility();
+	Visit_Facility facility5 = new Visit_Facility();
+	Visit_Facility facility6 = new Visit_Facility();
+	
 	Complaint_Model complaint1 = new Complaint_Model();
 	Complaint_Model complaint2 = new Complaint_Model();
 	Complaint_Model complaint3 = new Complaint_Model();
 
 	final Context context = this;
 	Boolean foto1=false,foto2=false,foto3=false,foto4=false,foto5=false,foto6=false;
+	
+	TextView subfas1, subfas2, subfas3, subfas4, subfas5, subfas6;
+	EditText et_subfas1, et_subfas2,et_subfas3,et_subfas4,et_subfas5,et_subfas6;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -112,10 +127,23 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 		setContentView(R.layout.activity_formulir_kunjungan_anak);
 
 		// this object is store information all visit data
-
-		// instasiasi tabel yang berelasi
-		InstansisasiTabel();
-
+		db = new Database(this);
+		
+		//inisialisasi properti fasilitas
+		subfas1 = (TextView) findViewById(R.id.tvSusu1);
+		subfas2 = (TextView) findViewById(R.id.tvSusub);
+		subfas3 = (TextView) findViewById(R.id.tvVitamin1);
+		subfas4 = (TextView) findViewById(R.id.tvVitaminb);
+		subfas5 = (TextView) findViewById(R.id.tvPopok1);
+		subfas6 = (TextView) findViewById(R.id.tvPopokb);
+		
+		et_subfas1 = (EditText) findViewById(R.id.etSusu1);
+		et_subfas2 = (EditText) findViewById(R.id.etSusub);
+		et_subfas3 = (EditText) findViewById(R.id.etVitamin1);
+		et_subfas4 = (EditText) findViewById(R.id.etVitaminb);
+		et_subfas5 = (EditText) findViewById(R.id.etPopok1);
+		et_subfas6 = (EditText) findViewById(R.id.etPopokb);
+			
 		txtDate = (EditText) findViewById(R.id.edittext_ttl);
 		button_lanjut = (LinearLayout) findViewById(R.id.button_lanjut);
 		back = (ImageView) findViewById(R.id.btn_back);
@@ -149,21 +177,6 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 				// // TODO Auto-generated method stub
-				// //TextView tv1 = new TextView(v.getContext());
-				// //tv1.setText("TAMBAH KELUHAN");
-				// //layout_tambahkeluhan.addView(tv1);
-				// //((LinearLayout)findViewById(R.id.linearlayout_tambahkeluhan)).addView(layout_tambahkeluhan);
-				// LinearLayout layout_tambahkeluhan = (LinearLayout)
-				// findViewById(R.id.linearlayout_tambahkeluhan);
-				// LinearLayout tambah_keluhan = new
-				// LinearLayout(v.getContext());
-				// //tambah_keluhan.setLayoutParams(new
-				// LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
-				// LinearLayout.LayoutParams.FILL_PARENT));
-				// layout_tambahkeluhan.addView(tambah_keluhan);
-				// //getLayoutInflater().inflate(R.id.tambah_keluhan,
-				// layout_tambahkeluhan);
-				// //layout_tambahkeluhan.setVisibility(View.VISIBLE);
 
 				if (tambahKeluhan.getVisibility() == View.VISIBLE) {
 					tambahKeluhan2.setVisibility(View.VISIBLE);
@@ -177,64 +190,107 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			}
 		});
 
+		/********************************LISTENING INTENT ********************************/
+		model_visit = new Visit_Model();
+		// get id child
+		Intent i = getIntent();
+		Bundle extras = i.getExtras();
+		if (i.getStringExtra("id_anak_fk") != null) {
+			// model_visit = null;
+			child_id = i.getStringExtra("id_anak_fk");
+			Log.i("id anak pda form", " " + child_id);
+			
+		} 
+		
+		/*********************************************************************************/
 		// spinner visit type
-		ArrayList<String> data_visit = tabel_visit_type.getDataVisitType();
+		ArrayList<String> data_visit = db.getDataVisitType();
 		// item_kelas = data_kelas.toArray(new String[data_kelas.size()]);
 		jenis_kunjungan.setOnItemSelectedListener(this);
-		adptr_visit_type = new ArrayAdapter<String>(this,
-				android.R.layout.simple_dropdown_item_1line, data_visit);
-		adptr_visit_type
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adptr_visit_type = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, data_visit);
+		adptr_visit_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		jenis_kunjungan.setAdapter(adptr_visit_type);
 		// InitiateSpinner(data_visit, jenis_kunjungan);
 
 		// keluhan, status, tindakan
 		/*************************************/
-		arr_keluhan = tabel_complaint.getDataComplaint();
-		arr_status = tabel_complaint_status.getDataComplaintStatus();
+		arr_keluhan = db.getDataComplaint();
+		arr_status = db.getDataComplaintStatus();
 
 		// 1
-		adptr_keluhan1 = new ArrayAdapter<String>(this,
-				android.R.layout.simple_dropdown_item_1line, arr_keluhan);
-		adptr_keluhan1
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adptr_keluhan1 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_keluhan);
+		adptr_keluhan1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		keluhan1.setAdapter(adptr_keluhan1);
 		// 2
-		adptr_keluhan2 = new ArrayAdapter<String>(this,
-				android.R.layout.simple_dropdown_item_1line, arr_keluhan);
-		adptr_keluhan2
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adptr_keluhan2 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_keluhan);
+		adptr_keluhan2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		keluhan2.setAdapter(adptr_keluhan2);
 		// 3
-		adptr_keluhan3 = new ArrayAdapter<String>(this,
-				android.R.layout.simple_dropdown_item_1line, arr_keluhan);
-		adptr_keluhan3
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adptr_keluhan3 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_keluhan);
+		adptr_keluhan3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		keluhan3.setAdapter(adptr_keluhan3);
 
 		// sts 1
-		adptr_status1 = new ArrayAdapter<String>(this,
-				android.R.layout.simple_dropdown_item_1line, arr_status);
-		adptr_status1
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adptr_status1 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_status);
+		adptr_status1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		status1.setAdapter(adptr_status1);
 		// sts 2
-		adptr_status2 = new ArrayAdapter<String>(this,
-				android.R.layout.simple_dropdown_item_1line, arr_status);
-		adptr_status2
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adptr_status2 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_status);
+		adptr_status2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		status2.setAdapter(adptr_status2);
 
 		// sts 3
-		adptr_status3 = new ArrayAdapter<String>(this,
-				android.R.layout.simple_dropdown_item_1line, arr_status);
-		adptr_status3
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adptr_status3 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_status);
+		adptr_status3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		status3.setAdapter(adptr_status3);
 
 		// note
 		note = (EditText) findViewById(R.id.editText_catatan);
-
+		
+		//fasilitas anak
+		
+		arr_fasilitas = db.getSemuaFasilitasAnak(child_id);
+		Log.e("arr", ""+arr_fasilitas.size());
+		
+		for(ChildFacility_Model model : arr_fasilitas)
+		{
+			if(model.getFacility_id().equals("FA001"))
+			{
+				if(!subfas1.getText().toString().equals("-"))
+				{
+					subfas2.setText(db.getNameCostFacility(model.getFacility_cost_id()));
+				}
+				else
+				{
+					subfas1.setText(db.getNameCostFacility(model.getFacility_cost_id()));
+				}
+				
+			}
+			if(model.getFacility_id().equals("FA002"))
+			{
+				if(!subfas3.getText().toString().equals("-"))
+				{
+					subfas4.setText(db.getNameCostFacility(model.getFacility_cost_id()));
+				}
+				else
+				{
+					subfas3.setText(db.getNameCostFacility(model.getFacility_cost_id()));
+				}
+			}
+			if(model.getFacility_id().equals("FA003"))
+			{
+				if(!subfas5.getText().toString().equals("-"))
+				{
+					subfas6.setText(db.getNameCostFacility(model.getFacility_cost_id()));
+				}
+				else
+				{
+					subfas5.setText(db.getNameCostFacility(model.getFacility_cost_id()));
+				}
+			}
+			Log.e("Displaying facility",""+"id anak "+model.getChild_id()+" fasilitas id "+model.getFacility_id()+" fasilitas cost id "+model.getFacility_cost_id());
+		}
+		
 		// bagian foto anak
 		foto_anak1 = (ImageView) findViewById(R.id.foto_anak1);
 		foto_anak2 = (ImageView) findViewById(R.id.foto_anak2);
@@ -243,8 +299,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 		foto_anak5 = (ImageView) findViewById(R.id.foto_anak5);
 		foto_anak6 = (ImageView) findViewById(R.id.foto_anak6);
 
-		bitmap1 = BitmapFactory.decodeResource(context.getResources(),
-				R.drawable.new_button_camera);
+		bitmap1 = BitmapFactory.decodeResource(context.getResources(),R.drawable.new_button_camera);
 		foto_anak1.setImageBitmap(bitmap1);
 		foto_anak2.setImageBitmap(bitmap1);
 		foto_anak3.setImageBitmap(bitmap1);
@@ -350,20 +405,19 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 		
 		// model
 
-		model_visit = new Visit_Model();
-		// get id child
-		Intent i = getIntent();
-		//
-		if (i.getStringExtra("id_anak_fk") != null) {
-			// model_visit = null;
-			child_id = i.getStringExtra("id_anak_fk");
-			Log.i("id anak pda form", " " + child_id);
-			
-		} else if(i.getStringExtra("id_child_own") != null)
-		{
-			child_id = i.getStringExtra("id_child_own");
+		
+		if (extras.containsKey("id_child_ka")) {
+			// Do stuff because extra has been added
+			child_id = extras.getString("id_child_ka");
+			model_visit = (Visit_Model) extras.getParcelable("Object_VisitModel");
+			Log.e("Intent Received from Kunj Rumah", "true" + extras.getString("id_child_ka"));
+		} else {
+			// imposibble hehehe
+			/**************************/
 		}
-		else if (i.getStringExtra("id_child_ka") != null) {
+		//
+		
+		if (i.getStringExtra("id_child_ka") != null) {
 			// model visit id di set kembali
 			// semua field pada form diisi sesuai objek kiriman
 			/*********************************************/
@@ -371,15 +425,9 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			child_id = i.getStringExtra("id_child_ka");
 			Log.e("Child id received", "" + child_id);
 			if (i.getParcelableExtra("Object_VisitModel1") != null) {
-				model_visit = (Visit_Model) i
-						.getParcelableExtra("Object_VisitModel1");
-				Log.e("Object Kiriman Visit Type",
-						""
-								+ tabel_visit_type.getNameVisitType(model_visit
-										.GetVisitTypeID()));
-				spinner_position = adptr_visit_type
-						.getPosition(tabel_visit_type
-								.getNameVisitType(model_visit.GetVisitTypeID()));
+				model_visit = (Visit_Model) i.getParcelableExtra("Object_VisitModel1");
+				Log.e("Object Kiriman Visit Type",""+ db.getNameVisitType(model_visit.GetVisitTypeID()));
+				spinner_position = adptr_visit_type.getPosition(db.getNameVisitType(model_visit.GetVisitTypeID()));
 				jenis_kunjungan.setSelection(spinner_position);
 				// tb
 				tb.setText(model_visit.GetHeight());
@@ -401,45 +449,30 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 
 					complaint1 = complaints.get(0);
 					// keluhan
-					spinner_position = adptr_keluhan1
-							.getPosition(tabel_complaint
-									.getNameComplaint(complaint1.GetKeluhan()));
+					spinner_position = adptr_keluhan1.getPosition(db.getNameComplaint(complaint1.GetKeluhan()));
 					keluhan1.setSelection(spinner_position);
 					// status
-					spinner_position = adptr_status1
-							.getPosition(tabel_complaint_status
-									.getNameComplaintStatus(complaint1
-											.GetStatusKeluhan()));
+					spinner_position = adptr_status1.getPosition(db.getNameComplaintStatus(complaint1.GetStatusKeluhan()));
 					status1.setSelection(spinner_position);
 					// tindakan
 					tindakan1.setText(complaint1.GetTindakan());
 
 					complaint2 = complaints.get(1);
 					// keluhan
-					spinner_position = adptr_keluhan2
-							.getPosition(tabel_complaint
-									.getNameComplaint(complaint2.GetKeluhan()));
+					spinner_position = adptr_keluhan2.getPosition(db.getNameComplaint(complaint2.GetKeluhan()));
 					keluhan2.setSelection(spinner_position);
 					// status
-					spinner_position = adptr_status2
-							.getPosition(tabel_complaint_status
-									.getNameComplaintStatus(complaint2
-											.GetStatusKeluhan()));
+					spinner_position = adptr_status2.getPosition(db.getNameComplaintStatus(complaint2.GetStatusKeluhan()));
 					status2.setSelection(spinner_position);
 					// tindakan
 					tindakan2.setText(complaint2.GetTindakan());
 
 					complaint3 = complaints.get(2);
 					// keluhan
-					spinner_position = adptr_keluhan3
-							.getPosition(tabel_complaint
-									.getNameComplaint(complaint3.GetKeluhan()));
+					spinner_position = adptr_keluhan3.getPosition(db.getNameComplaint(complaint3.GetKeluhan()));
 					keluhan3.setSelection(spinner_position);
 					// status
-					spinner_position = adptr_status1
-							.getPosition(tabel_complaint_status
-									.getNameComplaintStatus(complaint3
-											.GetStatusKeluhan()));
+					spinner_position = adptr_status1.getPosition(db.getNameComplaintStatus(complaint3.GetStatusKeluhan()));
 					status3.setSelection(spinner_position);
 					// tindakan
 					tindakan3.setText(complaint3.GetTindakan());
@@ -448,30 +481,20 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 
 					complaint1 = complaints.get(0);
 					// keluhan
-					spinner_position = adptr_keluhan1
-							.getPosition(tabel_complaint
-									.getNameComplaint(complaint1.GetKeluhan()));
+					spinner_position = adptr_keluhan1.getPosition(db.getNameComplaint(complaint1.GetKeluhan()));
 					keluhan1.setSelection(spinner_position);
 					// status
-					spinner_position = adptr_status1
-							.getPosition(tabel_complaint_status
-									.getNameComplaintStatus(complaint1
-											.GetStatusKeluhan()));
+					spinner_position = adptr_status1.getPosition(db.getNameComplaintStatus(complaint1.GetStatusKeluhan()));
 					status1.setSelection(spinner_position);
 					// tindakan
 					tindakan1.setText(complaint1.GetTindakan());
 
 					complaint2 = complaints.get(1);
 					// keluhan
-					spinner_position = adptr_keluhan2
-							.getPosition(tabel_complaint
-									.getNameComplaint(complaint2.GetKeluhan()));
+					spinner_position = adptr_keluhan2.getPosition(db.getNameComplaint(complaint2.GetKeluhan()));
 					keluhan2.setSelection(spinner_position);
 					// status
-					spinner_position = adptr_status2
-							.getPosition(tabel_complaint_status
-									.getNameComplaintStatus(complaint2
-											.GetStatusKeluhan()));
+					spinner_position = adptr_status2.getPosition(db.getNameComplaintStatus(complaint2.GetStatusKeluhan()));
 					status2.setSelection(spinner_position);
 					// tindakan
 					tindakan2.setText(complaint2.GetTindakan());
@@ -479,15 +502,10 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 				} else {
 					complaint1 = complaints.get(0);
 					// keluhan
-					spinner_position = adptr_keluhan1
-							.getPosition(tabel_complaint
-									.getNameComplaint(complaint1.GetKeluhan()));
+					spinner_position = adptr_keluhan1.getPosition(db.getNameComplaint(complaint1.GetKeluhan()));
 					keluhan1.setSelection(spinner_position);
 					// status
-					spinner_position = adptr_status1
-							.getPosition(tabel_complaint_status
-									.getNameComplaintStatus(complaint1
-											.GetStatusKeluhan()));
+					spinner_position = adptr_status1.getPosition(db.getNameComplaintStatus(complaint1.GetStatusKeluhan()));
 					status1.setSelection(spinner_position);
 					// tindakan
 					tindakan1.setText(complaint1.GetTindakan());
@@ -498,46 +516,30 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 					if (a == 0) {
 						complaint1 = complaints.get(0);
 						// keluhan
-						spinner_position = adptr_keluhan1
-								.getPosition(tabel_complaint
-										.getNameComplaint(complaint1
-												.GetKeluhan()));
+						spinner_position = adptr_keluhan1.getPosition(db.getNameComplaint(complaint1.GetKeluhan()));
 						keluhan1.setSelection(spinner_position);
 						// status
-						spinner_position = adptr_status1
-								.getPosition(tabel_complaint_status
-										.getNameComplaintStatus(complaint1
-												.GetStatusKeluhan()));
+						spinner_position = adptr_status1.getPosition(db.getNameComplaintStatus(complaint1.GetStatusKeluhan()));
 						status1.setSelection(spinner_position);
 						// tindakan
 						tindakan1.setText(complaint1.GetTindakan());
 					} else if (a == 1) {
 						complaint2 = complaints.get(1);
 						// keluhan
-						spinner_position = adptr_keluhan2
-								.getPosition(tabel_complaint
-										.getNameComplaint(complaint2
-												.GetKeluhan()));
+						spinner_position = adptr_keluhan2.getPosition(db.getNameComplaint(complaint2.GetKeluhan()));
 						keluhan2.setSelection(spinner_position);
 						// status
-						spinner_position = adptr_status2
-								.getPosition(tabel_complaint_status
-										.getNameComplaintStatus(complaint2
-												.GetStatusKeluhan()));
+						spinner_position = adptr_status2.getPosition(db.getNameComplaintStatus(complaint2.GetStatusKeluhan()));
 						status2.setSelection(spinner_position);
 						// tindakan
 						tindakan2.setText(complaint2.GetTindakan());
 					} else {
 						complaint3 = complaints.get(2);
 						// keluhan
-						spinner_position = adptr_keluhan3
-								.getPosition(tabel_complaint
-										.getNameComplaint(complaint3
-												.GetKeluhan()));
+						spinner_position = adptr_keluhan3.getPosition(db.getNameComplaint(complaint3.GetKeluhan()));
 						keluhan3.setSelection(spinner_position);
 						// status
-						spinner_position = adptr_status1.getPosition(tabel_complaint_status.getNameComplaintStatus(complaint3
-												.GetStatusKeluhan()));
+						spinner_position = adptr_status1.getPosition(db.getNameComplaintStatus(complaint3.GetStatusKeluhan()));
 						status3.setSelection(spinner_position);
 						// tindakan
 						tindakan3.setText(complaint3.GetTindakan());
@@ -548,15 +550,48 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 
 			// remove the array list complaint model
 			complaints.clear();
-			// model_visit = (Visit_Model) getIntent().getSerializableExtra(
-			// "Object_VisitModel1");
-			// // jenis kunj
-
-			// //keluhan1, status1, tindakan
-			//
+			
 
 		}
 
+	}
+	
+	public Boolean validate()
+	{
+		Boolean result = false;
+		if(jenis_kunjungan.getSelectedItem().toString().equals("-"))
+		{
+			
+			Toast.makeText(getApplicationContext(), "Anda harus memilih tipe kunjungan ", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		if(!keluhan1.getSelectedItem().toString().equals("-") && !keluhan2.getSelectedItem().toString().equals("-") && keluhan1.getSelectedItem().toString().equals(keluhan2.getSelectedItem().toString()))
+		{
+			Toast.makeText(getApplicationContext(), "Anda tidak boleh memilih keluhan yang sama (Keluhan 1 & 2)", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		if(!keluhan1.getSelectedItem().toString().equals("-") && !keluhan3.getSelectedItem().toString().equals("-") && keluhan1.getSelectedItem().toString().equals(keluhan3.getSelectedItem().toString()))
+		{
+			Toast.makeText(getApplicationContext(), "Anda tidak boleh memilih keluhan yang sama (Keluhan 1 & 3)", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		
+		if(!keluhan2.getSelectedItem().toString().equals("-") && !keluhan3.getSelectedItem().toString().equals("-") && keluhan2.getSelectedItem().toString().equals(keluhan3.getSelectedItem().toString()) )
+		{
+			Toast.makeText(getApplicationContext(), "Anda tidak boleh memilih keluhan yang sama (Keluhan 2 & 3)", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		if(keluhan1.getSelectedItem().toString().equals("-") && keluhan2.getSelectedItem().toString().equals("-") && keluhan3.getSelectedItem().toString().equals("-"))
+		{
+			
+			Toast.makeText(getApplicationContext(), "Anda harus memilih minimal satu keluhan", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		else 
+		{
+			return true;
+		}
+			
 	}
 
 	// foto anak
@@ -576,13 +611,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 	 * }
 	 */
 
-	public void InstansisasiTabel() {
-		tabel_visit_type = new TM_Visit_Type(getApplicationContext());
-		tabel_complaint = new TM_Complaint(getApplicationContext());
-		tabel_complaint_status = new TM_Complaint_Status(
-				getApplicationContext());
-
-	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -601,11 +630,12 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			break;
 
 		case R.id.button_lanjut:
-			Log.i("visit type id",
-					""+ tabel_visit_type.getIdVisitType(jenis_kunjungan
-									.getSelectedItem().toString()));
-			Log.i("tb bb ll", "" + tb.getText().toString() + "- "
-					+ bb.getText().toString() + "- " + ll.getText().toString());
+			
+			//inisialisasi kembali arr keluhan
+			complaints.clear();
+			
+			Log.i("visit type id",""+ db.getIdVisitType(jenis_kunjungan.getSelectedItem().toString()));
+			Log.i("tb bb ll", "" + tb.getText().toString() + "- "+ bb.getText().toString() + "- " + ll.getText().toString());
 			Log.i("note", "" + note.getText().toString());
 			Log.i("tanggal lahir", "" + txtDate.getText().toString());
 			Log.i("***************************", "");
@@ -620,76 +650,154 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			Log.i("tindakan1", "" + tindakan1.getText().toString());
 			Log.i("tindakan2", "" + tindakan2.getText().toString());
 			Log.i("tindakan3", "" + tindakan3.getText().toString());
-
 			Log.e("Sending intent into fk_env", "" + child_id);
+			
 			// save into object first then send intent
-
 			model_visit.setChildID(child_id);
-			model_visit.setVisitTypeID(tabel_visit_type
-					.getIdVisitType(jenis_kunjungan.getSelectedItem()
-							.toString()));
+			model_visit.setVisitTypeID(db.getIdVisitType(jenis_kunjungan.getSelectedItem().toString()));
 			model_visit.setHeight(tb.getText().toString());
 			model_visit.setWeight(bb.getText().toString());
 			model_visit.setLILA(ll.getText().toString());
 			model_visit.setNote(note.getText().toString());
 			model_visit.setARVTaken(txtDate.getText().toString());
-			//
-
+			
 			// save the complaints
-
-			complaint1.SetKeluhan(tabel_complaint.getIdComplaint(keluhan1
-					.getSelectedItem().toString()));
-			complaint1
-					.SetStatusKeluhan(tabel_complaint_status
-							.getIdComplaintStatus(status1.getSelectedItem()
-									.toString()));
+			
+			complaint1.SetKeluhan(db.getIdComplaint(keluhan1.getSelectedItem().toString()));
+			complaint1.SetStatusKeluhan(db.getIdComplaintStatus(status1.getSelectedItem().toString()));
 			complaint1.SetTindakan(tindakan1.getText().toString());
-			if (!keluhan1.getSelectedItem().toString().equals("-")
-					&& !status1.getSelectedItem().toString().equals("-")) {
+			if (!keluhan1.getSelectedItem().toString().equals("-") && !status1.getSelectedItem().toString().equals("-")) {
 				complaints.add(complaint1);
 			}
 
-			complaint2.SetKeluhan(tabel_complaint.getIdComplaint(keluhan2
-					.getSelectedItem().toString()));
-			complaint2
-					.SetStatusKeluhan(tabel_complaint_status
-							.getIdComplaintStatus(status2.getSelectedItem()
-									.toString()));
+			complaint2.SetKeluhan(db.getIdComplaint(keluhan2.getSelectedItem().toString()));
+			complaint2.SetStatusKeluhan(db.getIdComplaintStatus(status2.getSelectedItem().toString()));
 			complaint2.SetTindakan(tindakan2.getText().toString());
-			if (!keluhan2.getSelectedItem().toString().equals("-")
-					&& !status2.getSelectedItem().toString().equals("-")) {
+			if (!keluhan2.getSelectedItem().toString().equals("-") && !status2.getSelectedItem().toString().equals("-")) {
 				complaints.add(complaint2);
 			}
 
-			complaint3.SetKeluhan(tabel_complaint.getIdComplaint(keluhan3
-					.getSelectedItem().toString()));
-			complaint3
-					.SetStatusKeluhan(tabel_complaint_status
-							.getIdComplaintStatus(status3.getSelectedItem()
-									.toString()));
+			complaint3.SetKeluhan(db.getIdComplaint(keluhan3.getSelectedItem().toString()));
+			complaint3.SetStatusKeluhan(db.getIdComplaintStatus(status3.getSelectedItem().toString()));
 			complaint3.SetTindakan(tindakan3.getText().toString());
-			if (!keluhan3.getSelectedItem().toString().equals("-")
-					&& !status3.getSelectedItem().toString().equals("-")) {
+			if (!keluhan3.getSelectedItem().toString().equals("-") && !status3.getSelectedItem().toString().equals("-")) {
 				complaints.add(complaint3);
 			}
 			for (Complaint_Model a : complaints) {
-				Log.e("keluhan status tindakan",
-						"keluhan " + a.GetKeluhan() + " status"
-								+ a.GetStatusKeluhan() + " tindakan"
-								+ a.GetTindakan());
+				Log.e("keluhan status tindakan","keluhan " + a.GetKeluhan() + " status"+ a.GetStatusKeluhan() + " tindakan"+ a.GetTindakan());
 			}
+			
 			model_visit.setComplaints(complaints);
-
-			// model_visit.setComplaints(complaints);
+			//save facilities
+			//migrasi dari tabel child_facility ke visit_facility
+			for(ChildFacility_Model model : arr_fasilitas)
+			{
+				if(model.getFacility_id().equals("FA001"))
+				{
+					if(facility1.getFacility_id() != null)
+					{
+						facility2.setChild_id(child_id);
+						facility2.setFacility_id(model.getFacility_id());
+						facility2.setFacility_cost_id(model.getFacility_cost_id());
+						facility2.SetFacilityQty(et_subfas2.getText().toString());
+						facility2.SetVisitDate(GetTimeNow());
+						facilities.add(facility2);//--> arraylist
+					}
+					else
+					{
+						facility1.setChild_id(child_id);
+						facility1.setFacility_id(model.getFacility_id());
+						facility1.setFacility_cost_id(model.getFacility_cost_id());
+						facility1.SetFacilityQty(et_subfas1.getText().toString());
+						facility1.SetVisitDate(GetTimeNow());
+						facilities.add(facility1);//--> arraylist
+					}
+					
+				}
+				if(model.getFacility_id().equals("FA002"))
+				{
+					if(facility3.getFacility_id() != null)
+					{
+						facility4.setChild_id(child_id);
+						facility4.setFacility_id(model.getFacility_id());
+						facility4.setFacility_cost_id(model.getFacility_cost_id());
+						facility4.SetFacilityQty(et_subfas4.getText().toString());
+						facility4.SetVisitDate(GetTimeNow());
+						facilities.add(facility4);//--> arraylist
+					}
+					else
+					{
+						facility3.setChild_id(child_id);
+						facility3.setFacility_id(model.getFacility_id());
+						facility3.setFacility_cost_id(model.getFacility_cost_id());
+						facility3.SetFacilityQty(et_subfas3.getText().toString());
+						facility3.SetVisitDate(GetTimeNow());
+						facilities.add(facility3);//--> arraylist
+					}
+					
+				}
+				if(model.getFacility_id().equals("FA003"))
+				{
+					if(facility5.getFacility_id() != null)
+					{
+						facility6.setChild_id(child_id);
+						facility6.setFacility_id(model.getFacility_id());
+						facility6.setFacility_cost_id(model.getFacility_cost_id());
+						facility6.SetFacilityQty(et_subfas6.getText().toString());
+						facility6.SetVisitDate(GetTimeNow());
+						facilities.add(facility6);//--> arraylist
+					}
+					else
+					{
+						facility5.setChild_id(child_id);
+						facility5.setFacility_id(model.getFacility_id());
+						facility5.setFacility_cost_id(model.getFacility_cost_id());
+						facility5.SetFacilityQty(et_subfas5.getText().toString());
+						facility5.SetVisitDate(GetTimeNow());
+						facilities.add(facility5);//--> arraylist
+					}
+				}
+			}
+			
+			model_visit.setFasilitasKunjungan(facilities);
+			
 			/*************************************************/
-			// save images, facilities
+			// save images
+			image_anak.add(img_1);
+			image_anak.add(img_2);
+			image_anak.add(img_3);
+			image_anak.add(img_4);
+			image_anak.add(img_5);
+			image_anak.add(img_6);
+			//tracing
+			for(Image_Model a : image_anak)
+			{
+				if(a == null)
+				{
+					continue;
+				}
+				else
+				{
+					Log.e("Foto Anak", "Nama foto : "+a.GetImage_name()+" nama path : "+a.GetImage_path()+" latitude : "+a.GetImage_latitude()+" longitude : "+a.GetImage_longitude());
+				}
+			}
+			model_visit.setChildPhotos(image_anak);
+			
+			//----------------------> validate
+			Boolean valid = validate();
+			if(valid == true)
+			{
+				Intent intent_kunjungan_env = new Intent(this,FormulirKunjunganRumahActivity.class);
+				intent_kunjungan_env.putExtra("id", ""+child_id);
+				intent_kunjungan_env.putExtra("Object_VisitModel", model_visit);
+				startActivity(intent_kunjungan_env);
+			}
+			else
+			{
+				
+			}
 
-			Intent intent_kunjungan_env = new Intent(
-					this,
-					FormulirKunjunganRumahActivity.class);
-			intent_kunjungan_env.putExtra("id", ""+child_id);
-			intent_kunjungan_env.putExtra("Object_VisitModel", model_visit);
-			startActivity(intent_kunjungan_env);
+			
 			break;
 
 		default:
@@ -748,183 +856,184 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 		// TODO Auto-generated method stub
 
 	}
+	
+	public String GetTimeNow() {
+		Calendar c = Calendar.getInstance();
 
+		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+		return df.format(c.getTime());
+	}
+	
 	int count;
 
-	public void image() {
-		
-		// create class object
-		gps = new GPSTracker(FormulirKunjunganAnakActivity.this);
-
-		// check if GPS enabled
-		if (gps.canGetLocation()) {
-
-			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-			startActivityForResult(intent, 1);
-
-			// }
-			// else if (gps.canGetLocation())
-			// {
-			double latitude = gps.getLatitude();
-			double longitude = gps.getLongitude();
-
-			// \n is for new line
-			Toast.makeText(
-					getApplicationContext(),
-					"Lokasi Anda - \nLatitude : " + latitude + "\nLongitude : "
-							+ longitude, Toast.LENGTH_LONG).show();
-		}
-
-		else {
-			gps.showSettingsAlert();
-		}
+	public String image() {	  
+		  // create class object
+		  gps = new GPSTracker(FormulirKunjunganAnakActivity.this);
+		  double latitude=0;
+		  double longitude=0;
+		  // check if GPS enabled
+		  if (gps.canGetLocation()) {
+			   Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			   startActivityForResult(intent, 1);
+			   latitude = gps.getLatitude();
+			   longitude = gps.getLongitude();
+			   
+			   Toast.makeText(getApplicationContext(),"Lokasi Anda - \nLatitude : " + latitude + "\nLongitude : "+ longitude, Toast.LENGTH_LONG).show();
+			   
+		  }else {
+				gps.showSettingsAlert();
+		  }
+		  return Double.toString(longitude)+"~"+Double.toString(latitude);
 	}
 
-	
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK) {
-			if (requestCode == 1) {
-				thumbnail = (Bitmap) data.getExtras().get("data");
-				thumbnail = Bitmap
-						.createScaledBitmap(thumbnail, 132, 105, true);
-				thumbnail1 = (Bitmap) data.getExtras().get("data");
-				thumbnail1 = Bitmap.createScaledBitmap(thumbnail, 258, 150,
-						true);
-				//
-				ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-				thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-				thumbnail1.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+	ArrayList<Image_Model> image_anak = new ArrayList<Image_Model>();
+	Image_Model img_1, img_2, img_3, img_4, img_5, img_6;
+		 
+		 @Override
+		 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		  super.onActivityResult(requestCode, resultCode, data);
+		  if (resultCode == RESULT_OK) {
+		   if (requestCode == 1) {
+		       thumbnail = (Bitmap) data.getExtras().get("data");
+		       thumbnail = Bitmap.createScaledBitmap(thumbnail, 132, 105, true);
+		       thumbnail1 = (Bitmap) data.getExtras().get("data");
+		       thumbnail1 = Bitmap.createScaledBitmap(thumbnail1, 258, 150,true);
+		       ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		       thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+		       thumbnail1.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
 
-				File destination = new File(
-						Environment.getExternalStorageDirectory(),
-						System.currentTimeMillis() + ".jpg");
-				FileOutputStream fo;
-				try {
-					destination.createNewFile();
-					fo = new FileOutputStream(destination);
-					fo.write(bytes.toByteArray());
-					fo.close();
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+		       File destination = new File(Environment.getExternalStorageDirectory(),System.currentTimeMillis() + ".jpg");
+		       FileOutputStream fo;
+		       //Uri selectedImage = data.getData();
+		       String[] filePathColumn = {MediaStore.Images.Media.DATA};
+		       //Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+		       final String imageOrderBy = MediaStore.Images.Media._ID+ " DESC";
+		       Cursor cursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,filePathColumn, null, null, imageOrderBy);            
+		       cursor.moveToFirst();
+		       int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+		       String filePath = cursor.getString(columnIndex);
+		       Log.v("log","filePath is : "+filePath);
+		       Toast.makeText(getApplicationContext(),"nama foto" + GetPhotoName(filePath), Toast.LENGTH_LONG).show();
+		       Toast.makeText(getApplicationContext(),"path" + filePath, Toast.LENGTH_LONG).show();
+		       try {
+			        destination.createNewFile();
+			        fo = new FileOutputStream(destination);
+			        fo.write(bytes.toByteArray());
+			        fo.close();
+		       } catch (FileNotFoundException e) {
+		        e.printStackTrace();
+		       } catch (IOException e) {
+		        e.printStackTrace();
+		       }
+		    
+		    String[] split = image().split("~");
+		    
+		    if (getDrawableImage(foto_anak1) == bitmap1 && foto1 == true) {
+		     foto_anak1.setImageBitmap(thumbnail);
+		     //fix it
+		     //split latitude and longitude
+		     img_1 = new Image_Model(GetPhotoName(filePath), GetTimeNow(), child_id, filePath, "-", "1", split[0], split[1]);
+		    }
 
+		    if (getDrawableImage(foto_anak2) == bitmap1 && foto2 == true) {
+		     foto_anak2.setImageBitmap(thumbnail);
+		     img_2 = new Image_Model(GetPhotoName(filePath), GetTimeNow(), child_id, filePath, "-", "1", split[0], split[1]);
+		    }
+
+		    if (getDrawableImage(foto_anak3) == bitmap1 && foto3 == true) {
+		     foto_anak3.setImageBitmap(thumbnail);
+		     img_3 = new Image_Model(GetPhotoName(filePath), GetTimeNow(), child_id, filePath, "-", "1", split[0], split[1]);
+		    }
+
+		    if (getDrawableImage(foto_anak4) == bitmap1 && foto4 == true) {
+		     foto_anak4.setImageBitmap(thumbnail);
+		     img_4 = new Image_Model(GetPhotoName(filePath), GetTimeNow(), child_id, filePath, "-", "1", split[0], split[1]);
+		    }
+
+		    if (getDrawableImage(foto_anak5) == bitmap1 && foto5 == true) {
+		     foto_anak5.setImageBitmap(thumbnail);
+		     img_5 = new Image_Model(GetPhotoName(filePath), GetTimeNow(), child_id, filePath, "-", "1", split[0], split[1]);
+		    }
+
+		    if (getDrawableImage(foto_anak6) == bitmap1 && foto6 == true) {
+		     foto_anak6.setImageBitmap(thumbnail);
+		     img_6 = new Image_Model(GetPhotoName(filePath), GetTimeNow(), child_id, filePath, "-", "1", split[0], split[1]);
+		    }
+		    // Bitmap photo = null;
+		    // Bundle extras = data.getExtras();
+		    // if (extras != null) {
+		    // photo = extras.getParcelable("data");
+		    // }
+		    // Intent i = new Intent(this,DialogDeleteImage.class);
+		    // i.putExtra("imag)e", photo);
+		    // //startActivity(i;
+
+		   }
+		  }
+		 }
+
+		 public void alertImage(final ImageView input)
+		 {
+		   final Dialog dialog = new Dialog(context); 
+		   dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		   dialog.setContentView(R.layout.custom_dialog);   
+		   final Dialog dialogConfirm = new Dialog(context);
+		   dialogConfirm.requestWindowFeature(Window.FEATURE_NO_TITLE);      
+		   ImageView imageDialog = (ImageView) dialog.findViewById(R.id.image);
+		   imageDialog.setImageBitmap(getDrawableImage(input).createScaledBitmap(getDrawableImage(input), 258, 150, true));
+		   
+		   LinearLayout linHapus = (LinearLayout) dialog.findViewById(R.id.btnHapus);      
+		   linHapus.setOnClickListener(new OnClickListener() {
+			   public void onClick(View v) {
+				// TODO Auto-generated method stub     
+				dialogConfirm.setContentView(R.layout.confirm_delete);
+				LinearLayout linYakin = (LinearLayout) dialogConfirm.findViewById(R.id.btnYakinHapus);
+				LinearLayout linKembali = (LinearLayout) dialogConfirm.findViewById(R.id.button_kembali);    
 				
+				linYakin.setOnClickListener(new OnClickListener() {
+				      public void onClick(View v) {
+				       // TODO Auto-generated method stub
+				       input.setImageBitmap(bitmap1);
+//				       foto1 = false;
+//				       foto2 = false;
+//				       foto3 = false;
+//				       foto4 = false;
+//				       foto5 = false;
+//				       foto6 = false;
+				       dialogConfirm.dismiss();
+				       dialog.dismiss();
+				      }
+				     });
+		     
+		     linKembali.setOnClickListener(new OnClickListener() {
+		       public void onClick(View v) {
+		        // TODO Auto-generated method stub	        
+		        dialogConfirm.dismiss();
+		        dialog.dismiss();
+		       }
+		      });
+		     	     
+		     dialogConfirm.show();
+		     
+		    }});
+		         //input.setImageBitmap(thumbnail);
+		         dialog.show();
+		  }
 
-				if (getDrawableImage(foto_anak1) == bitmap1 && foto1 == true) {
-					foto_anak1.setImageBitmap(thumbnail);
-				}
-
-				if (getDrawableImage(foto_anak2) == bitmap1 && foto2 == true) {
-					foto_anak2.setImageBitmap(thumbnail);
-
-				}
-
-				if (getDrawableImage(foto_anak3) == bitmap1 && foto3 == true) {
-					foto_anak3.setImageBitmap(thumbnail);
-
-				}
-
-				if (getDrawableImage(foto_anak4) == bitmap1 && foto4 == true) {
-					foto_anak4.setImageBitmap(thumbnail);
-				}
-
-				if (getDrawableImage(foto_anak5) == bitmap1 && foto5 == true) {
-					foto_anak5.setImageBitmap(thumbnail);
-
-				}
-
-				if (getDrawableImage(foto_anak6) == bitmap1 && foto6 == true) {
-					foto_anak6.setImageBitmap(thumbnail);
-
-				}
-
-				// Bitmap photo = null;
-				// Bundle extras = data.getExtras();
-				// if (extras != null) {
-				// photo = extras.getParcelable("data");
-				// }
-				// Intent i = new Intent(this,DialogDeleteImage.class);
-				// i.putExtra("imag)e", photo);
-				// //startActivity(i;
-
-			}
-		}
-	}
-
-	public void alertImage(final ImageView input)
-	 {
-	  final Dialog dialog = new Dialog(context);
-	  
-	  dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-	        dialog.setContentView(R.layout.custom_dialog);
-	        
-	        final Dialog dialogConfirm = new Dialog(context);
-	  
-	        dialogConfirm.requestWindowFeature(Window.FEATURE_NO_TITLE);
-	        
-	        
-	        ImageView imageDialog = (ImageView) dialog.findViewById(R.id.image);
-	        imageDialog.setImageBitmap(getDrawableImage(input).createScaledBitmap(getDrawableImage(input), 258, 150, true));
-	        LinearLayout linHapus = (LinearLayout) dialog.findViewById(R.id.btnHapus);
-	        
-	        linHapus.setOnClickListener(new OnClickListener() {
-
-	   public void onClick(View v) {
-	    // TODO Auto-generated method stub
-	    
-	    dialogConfirm.setContentView(R.layout.confirm_delete);
-	    
-	    
-	    LinearLayout linYakin = (LinearLayout) dialogConfirm.findViewById(R.id.btnYakinHapus);
-	          LinearLayout linKembali = (LinearLayout) dialogConfirm.findViewById(R.id.button_kembali);
-	          
-	    linYakin.setOnClickListener(new OnClickListener() {
-
-	     public void onClick(View v) {
-	      // TODO Auto-generated method stub
-	      input.setImageBitmap(bitmap1);
-	      foto1 = false;
-	      foto2 = false;
-	      foto3 = false;
-	      foto4 = false;
-	      foto5 = false;
-	      foto6 = false;
-	      dialogConfirm.dismiss();
-	      dialog.dismiss();
-	     }
-	    });
-	    
-	    linKembali.setOnClickListener(new OnClickListener() {
-
-		     public void onClick(View v) {
-		      // TODO Auto-generated method stub
-		      
-		      dialogConfirm.dismiss();
-		      dialog.dismiss();
-		     }
-		    });
-	    
-	    
-	    dialogConfirm.show();
-	   }
-	  });
-	        //input.setImageBitmap(thumbnail);
-	        dialog.show();
-	 }
-
-	public Bitmap getDrawableImage(ImageView input) {
-		input.buildDrawingCache(true);
-		Bitmap bitmap = input.getDrawingCache(true);
-
-		BitmapDrawable drawable = (BitmapDrawable) input.getDrawable();
-		bitmap56 = drawable.getBitmap();
-
-		return bitmap56;
-	}
+		 public Bitmap getDrawableImage(ImageView input) {
+			  input.buildDrawingCache(true);
+			  Bitmap bitmap = input.getDrawingCache(true);
+			  BitmapDrawable drawable = (BitmapDrawable) input.getDrawable();
+			  bitmap56 = drawable.getBitmap();
+			  return bitmap56;
+		 }
+		 
+		 public String GetPhotoName(String path)
+		 {
+			 String result;
+			 String[] splitting = path.split("/");
+			 result = splitting[splitting.length-1];
+			 return result;
+		 }
 
 }

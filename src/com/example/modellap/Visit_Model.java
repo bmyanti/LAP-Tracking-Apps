@@ -7,33 +7,29 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Visit_Model implements Parcelable {
-//	private String Visit_id;
 	private String Visit_date;
 	private String Child_id;
-	// complaint
-	private ArrayList<Complaint_Model> Complaints;
 	private String Visit_Type_Id;
 	private String Note;
 	private String Height;
 	private String Weight;
 	private String LILA;
-//	private String BMI_Score;
+	private String BMI_Score;
 	private String ARV_Taken;
-//	private String Reminder_ID;
+	private String Reminder_ID;
+	// complaint
+	private ArrayList<Complaint_Model> Complaints;
 	// environment
 	private ArrayList<Environment_Model> Environments;
-//	// fasilitas
-//	private ArrayList<ChildFacility_Model> ChildFacilities;
-	
-	//foto anak
-	private ArrayList<String> Child_Photos;
-	//foto lingkungan
-	private ArrayList<String> Environment_Photos;
-	
-	
-//	public String GetVisitID() {
-//		return this.Visit_id;
-//	}
+	// fasilitas
+	private ArrayList<Visit_Facility> ChildFacilities;
+//	//foto anak
+//	private ArrayList<String> Child_Photos;
+//	//foto lingkungan
+//	private ArrayList<String> Environment_Photos;
+	//foto
+	private ArrayList<Image_Model> Photos;
+
 
 	public String GetVisitDate() {
 		return this.Visit_date;
@@ -63,22 +59,22 @@ public class Visit_Model implements Parcelable {
 		return this.LILA;
 	}
 
-//	public String GetBMIScore() {
-//		return this.BMI_Score;
-//	}
+	public String GetBMIScore() {
+		return this.BMI_Score;
+	}
 
 	public String GetARVTaken() {
 		return this.ARV_Taken;
 	}
 
-//	public String GetReminderID() {
-//		return this.Reminder_ID;
-//	}
+	public String GetReminderID() {
+		return this.Reminder_ID;
+	}
 
-//	public ArrayList<ChildFacility_Model> GetChildFacility() {
-//		return this.ChildFacilities;
-//	}
-//
+	public ArrayList<Visit_Facility> GetFasilitasKunjungan() {
+		return this.ChildFacilities;
+	}
+
 	public ArrayList<Complaint_Model> GetComplaints() {
 		return this.Complaints;
 	}
@@ -87,20 +83,12 @@ public class Visit_Model implements Parcelable {
 		return this.Environments;
 	}
 	
-	public ArrayList<String> GetChildPhotos()
+	public ArrayList<Image_Model> GetPhotos()
 	{
-		return this.Child_Photos;
-	}
-	
-	public ArrayList<String> GetEnvironmentPhotos()
-	{
-		return this.Environment_Photos;
+		return this.Photos;
 	}
 
 	// setter
-//	public void setVisitID(String Visit_id) {
-//		this.Visit_id = Visit_id;
-//	}
 
 	public void setVisitDate(String Visit_date) {
 		this.Visit_date = Visit_date;
@@ -130,39 +118,33 @@ public class Visit_Model implements Parcelable {
 		this.LILA = LILA;
 	}
 
-//	public void setBMIScore(String BMI_Score) {
-//		this.BMI_Score = BMI_Score;
-//	}
+	public void setBMIScore(String BMI_Score) {
+		this.BMI_Score = BMI_Score;
+	}
 
 	public void setARVTaken(String ARV_Taken) {
 		this.ARV_Taken = ARV_Taken;
 	}
 
-//	public void setReminder_ID(String Reminder_ID) {
-//		this.Reminder_ID = Reminder_ID;
-//	}
+	public void setReminder_ID(String Reminder_ID) {
+		this.Reminder_ID = Reminder_ID;
+	}
 
 	public void setComplaints(ArrayList<Complaint_Model> Complaints) {
 		this.Complaints = Complaints;
 	}
-//
-//	public void setChildFacilities(
-//			ArrayList<ChildFacility_Model> ChildFacilities) {
-//		this.ChildFacilities = ChildFacilities;
-//	}
-//
+
+	public void setFasilitasKunjungan(ArrayList<Visit_Facility> ChildFacilities) {
+		this.ChildFacilities = ChildFacilities;
+	}
+
 	public void setEnvironments(ArrayList<Environment_Model> Environments) {
 		this.Environments = Environments;
 	}
 	
-	public void setChildPhotos(ArrayList<String> Child_Photos)
+	public void setChildPhotos(ArrayList<Image_Model> Photos)
 	{
-		this.Child_Photos = Child_Photos;
-	}
-	
-	public void setEnvironmentPhotos(ArrayList<String> Environment_Photos)
-	{
-		this.Environment_Photos = Environment_Photos;
+		this.Photos = Photos;
 	}
 
 	
@@ -178,9 +160,8 @@ public class Visit_Model implements Parcelable {
 		out.writeString(ARV_Taken);
 		out.writeTypedList(Complaints);
 		out.writeTypedList(Environments);
-		out.writeStringList(Child_Photos);
-		out.writeStringList(Environment_Photos);
-		//out.writeParcelable(comp, flags);
+		out.writeTypedList(ChildFacilities);
+		out.writeTypedList(Photos);
 	}
 
 	private Visit_Model(Parcel in) {
@@ -194,14 +175,14 @@ public class Visit_Model implements Parcelable {
 		ARV_Taken = in.readString();
 		Complaints = in.createTypedArrayList(Complaint_Model.CREATOR);
 		Environments = in.createTypedArrayList(Environment_Model.CREATOR);
-		//Child_Photos =  in.readStringList();
-		
-		//in.readTypedList(Complaints, Complaint_Model.CREATOR);
-		//comp = in.readParcelable(Complaint_Model.class.getClassLoader());
+		ChildFacilities = in.createTypedArrayList(Visit_Facility.CREATOR);
+		Photos = in.createTypedArrayList(Image_Model.CREATOR);
 	}
 
 	public Visit_Model() {
 		Complaints = new ArrayList<Complaint_Model>();
+		ChildFacilities = new ArrayList<Visit_Facility>();
+		Photos = new ArrayList<Image_Model>();
 	}
 
 	@Override
@@ -209,15 +190,14 @@ public class Visit_Model implements Parcelable {
 		return 0;
 	}
 
-	 public static final Parcelable.Creator<Visit_Model> CREATOR
-     = new Parcelable.Creator<Visit_Model>() {
+	 public static final Parcelable.Creator<Visit_Model> CREATOR= new Parcelable.Creator<Visit_Model>() {
 
  // This simply calls our new constructor (typically private) and 
  // passes along the unmarshalled `Parcel`, and then returns the new object!
 	 @Override
 	 public Visit_Model createFromParcel(Parcel in) {
 	     return new Visit_Model(in);
- }
+	 }
 	 @Override
      public Visit_Model[] newArray(int size) {
          return new Visit_Model[size];

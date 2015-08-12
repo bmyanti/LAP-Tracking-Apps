@@ -181,7 +181,7 @@ public class TR_Visit {
 		ArrayList<Complaint_Model> arr = new ArrayList<Complaint_Model>();
 		Visit_Model model = new Visit_Model();
 		Cursor mCursor = db.rawQuery(
-				"SELECT *  FROM  TR_VISIT WHERE child_id= '"+ id_child + "' order by visit_date limit 1", null);
+				"SELECT *  FROM  TR_VISIT WHERE child_id= '"+ id_child + "' ", null);
 		if (mCursor != null) {
 			mCursor.moveToLast();
 			model.setVisitDate(mCursor.getString(mCursor.getColumnIndex(ROW_VISIT_DATE)));
@@ -190,8 +190,8 @@ public class TR_Visit {
 			model.setLILA(mCursor.getString(mCursor.getColumnIndex(ROW_VISIT_DATE)));
 		}
 		mCursor.close();
-		arr = GetAllComplaintChild(id_child);
-		model.setComplaints(arr);
+		//arr = GetAllComplaintChild(id_child);
+		//model.setComplaints(arr);
 		return model;
 	}
 	

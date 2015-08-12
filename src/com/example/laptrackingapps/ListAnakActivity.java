@@ -22,7 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.asyntask.library.JSONParser;
-import com.example.databaselap.TM_Child;
+import com.example.databaselap.Database;
 import com.example.modellap.Child_Model;
 
 import android.os.AsyncTask;
@@ -59,6 +59,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class ListAnakActivity extends Activity implements OnQueryTextListener {
 
+	Database db;
 	// search
 	ListView lv;
 	SearchView search_view;
@@ -118,6 +119,7 @@ public class ListAnakActivity extends Activity implements OnQueryTextListener {
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_list_anak);
 
+		db = new Database(this);
 		lv = (ListView) findViewById(R.id.list_view);
 		search_view = (SearchView) findViewById(R.id.search_view);
 
@@ -127,15 +129,16 @@ public class ListAnakActivity extends Activity implements OnQueryTextListener {
 		jumlah2 = (TextView) findViewById(R.id.jumlah2);
 		
 		btnMerahLab = (ImageView) findViewById(R.id.angka1);
-		  btnMerahObat = (ImageView) findViewById(R.id.angka2);
+		btnMerahObat = (ImageView) findViewById(R.id.angka2);
 
 		String[] locales = Locale.getISOCountries();
 		countries = new ArrayList<String>();
-		TM_Child table_anak = new TM_Child(getApplicationContext());
+		
 		ArrayList<Child_Model> arr = new ArrayList<Child_Model>();
-		arr = table_anak.getAllData();
-
-		arr6 = table_anak.getAllChildName();
+		
+		arr = db.getSemuaDataAnak();
+		
+		arr6 = db.getAllChildName();
 		// Toast.makeText(getApplicationContext(), ""+arr6.toString(),
 		// Toast.LENGTH_LONG).show();
 		// arrSt=arr6;
@@ -168,16 +171,16 @@ public class ListAnakActivity extends Activity implements OnQueryTextListener {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					final int arg2, long arg3) {
-				TM_Child tabel_anak;
+				
 				String id_child;
 				Child_Model model_anak = new Child_Model();
-				tabel_anak = new TM_Child(getApplicationContext());
+				
 
 				// TODO Auto-generated method stub
 				final View selectedView = arg1;
 				String str = lv.getItemAtPosition(arg2).toString();
 
-				String iniId = tabel_anak.SearchChild(str).getChild_id()
+				String iniId = db.SearchChild(str).getChild_id()
 						.toString();
 
 				// Toast.makeText(getApplicationContext(), ""+str,
@@ -669,6 +672,7 @@ public class ListAnakActivity extends Activity implements OnQueryTextListener {
 		case R.id.button_tambahprofil:
 			Intent intent2 = new Intent(ListAnakActivity.this,
 					ProfilAnakActivity.class);
+			intent2.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 			startActivity(intent2);
 			break;
 

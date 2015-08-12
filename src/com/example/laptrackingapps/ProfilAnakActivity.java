@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -22,18 +23,8 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import com.example.databaselap.TM_Caregiver;
-import com.example.databaselap.TM_Child;
-import com.example.databaselap.TM_Child_Facility;
-import com.example.databaselap.TM_Class;
-import com.example.databaselap.TM_Cost_Facility;
-import com.example.databaselap.TM_District;
-import com.example.databaselap.TM_Drug_Dose;
-import com.example.databaselap.TM_Drug_Status;
-import com.example.databaselap.TM_Drug_Type;
-import com.example.databaselap.TM_Facility;
-import com.example.databaselap.TM_Parent_Status;
-import com.example.databaselap.TM_Subdistrict;
+import com.example.databaselap.Database;
+import com.example.modellap.ChildARV_Model;
 import com.example.modellap.ChildFacility_Model;
 import com.example.modellap.Child_Model;
 
@@ -41,6 +32,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings.Secure;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -53,8 +45,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -81,6 +73,8 @@ import android.widget.Toast;
 public class ProfilAnakActivity extends Activity implements
 		OnItemSelectedListener {
 
+	//database
+	Database db;
 	final Context context = this;
 	ImageView back, tambah_foto;
 	LinearLayout simpan_profil, linPhone1, linPhone2;
@@ -90,6 +84,7 @@ public class ProfilAnakActivity extends Activity implements
 	Button susu, vitamin, popok;
 	TextView tvSusu, tvVitamin, tvPopok, tvarv1, tvarv2, tvarv3, tvarv4,
 			tvarv5;
+	
 
 	// spinner
 	Spinner spin;
@@ -113,6 +108,8 @@ public class ProfilAnakActivity extends Activity implements
 	// this still static
 	String item_jenis_obat[];
 	String item_dosis[];
+	String item_dosis_pagi[];
+	String item_dosis_malam[];
 	String item_status_obat[];
 
 	String item_kelas[];
@@ -151,31 +148,15 @@ public class ProfilAnakActivity extends Activity implements
 	ArrayList<String> arr_kotamadya = new ArrayList<String>();
 	ArrayList<String> data_tipeARV = new ArrayList<String>();
 	ArrayList<String> data_kotamadya;
-
-	// table arv dose,arv status, arv type, arv facility, caregiver,
-	// parent_status , tabel class
-	TM_Caregiver tabel_caregiver;
-	TM_Class tabel_kelas;
-	TM_Drug_Dose tabel_dosis;
-	TM_Drug_Status tabel_status_arv;
-	TM_Drug_Type tabel_type_arv;
-	TM_Facility tabel_facility;
-	TM_Parent_Status tabel_parent_status;
-	TM_Child tabel_anak;
-	TM_District tabel_kotamadya;
-	TM_District tabel_district;
-	TM_Subdistrict tabel_subdistrict;
-	TM_Child_Facility tabel_child_facility;
-	TM_Cost_Facility tabel_cost_facility;
-	// simpan fasilitas
+	
+	String filePath;
 
 	ArrayList<Integer> selList = new ArrayList();
 	String msg = "";
 	// this is concated facilities id
 	String facility_id = " ";
 	Boolean status_susu = false, status_vitamin = false, status_popok = false;
-	String fasilitas_susu_id = " ", fasilitas_vitamin_id = " ",
-			fasilitas_popok_id = " ";
+	String fasilitas_susu_id = " ", fasilitas_vitamin_id = " ",fasilitas_popok_id = " ";
 	ArrayList<String> fasilitas_susu = new ArrayList<String>();
 	ArrayList<String> fasilitas_vitamin = new ArrayList<String>();
 	ArrayList<String> fasilitas_popok = new ArrayList<String>();
@@ -195,26 +176,67 @@ public class ProfilAnakActivity extends Activity implements
 	Spinner spinner_cg;
 	Spinner spinner_golda;
 
+
+	int banyak;
+	ArrayList<String> selectedItems = new ArrayList<String>();
+	ArrayList<ChildARV_Model> arv_anak = new ArrayList<ChildARV_Model>();
+	ChildARV_Model arv_model1 = new ChildARV_Model();
+	ChildARV_Model arv_model2 = new ChildARV_Model();
+	ChildARV_Model arv_model3 = new ChildARV_Model();
+	ChildARV_Model arv_model4 = new ChildARV_Model();
+	ChildARV_Model arv_model5 = new ChildARV_Model();
+	
+	Button btnDismiss;
+	TextView tv0,tv1,tv2 ,tv3 ,tv4; 
+
+	LinearLayout linARV1,linARV2 ,linARV3, linARV4 ,linARV5;
+	
+	LinearLayout linArv1,linArv2 ,linArv3,linArv4 ,linArv5;
+
+	// arv
+	TextView arv1,arv2 ,arv3,arv4,arv5;
+
+	// dosis_pagi from spinner
+	TextView dos_pagi1 ,dos_pagi2 ,dos_pagi3 ,dos_pagi4,dos_pagi5 ;
+
+	// dosis_pagi from spinner
+	TextView dos_malam1,dos_malam2,dos_malam3,dos_malam4, dos_malam5;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_profil_anak);
 
+		//database
+		db = new Database(this);
 		// textview
 		// arv from spinner
-		TextView arv1 = (TextView) findViewById(R.id.arv1);
-		TextView arv2 = (TextView) findViewById(R.id.arv2);
-		TextView arv3 = (TextView) findViewById(R.id.arv3);
-		TextView arv4 = (TextView) findViewById(R.id.arv4);
-		TextView arv5 = (TextView) findViewById(R.id.arv5);
+		linArv1 = (LinearLayout) findViewById(R.id.linArv1);
+		linArv2 = (LinearLayout) findViewById(R.id.linArv2);
+		linArv3 = (LinearLayout) findViewById(R.id.linArv3);
+		linArv4 = (LinearLayout) findViewById(R.id.linArv4);
+		linArv5 = (LinearLayout) findViewById(R.id.linArv5);
+		// arv
+		arv1 = (TextView) findViewById(R.id.arv1);
+		arv2 = (TextView) findViewById(R.id.arv2);
+		arv3 = (TextView) findViewById(R.id.arv3);
+		arv4 = (TextView) findViewById(R.id.arv4);
+		arv5 = (TextView) findViewById(R.id.arv5);
 
-		// linear layout from spinner
-		LinearLayout linArv1 = (LinearLayout) findViewById(R.id.linArv1);
-		LinearLayout linArv2 = (LinearLayout) findViewById(R.id.linArv2);
-		LinearLayout linArv3 = (LinearLayout) findViewById(R.id.linArv3);
-		LinearLayout linArv4 = (LinearLayout) findViewById(R.id.linArv4);
-		LinearLayout linArv5 = (LinearLayout) findViewById(R.id.linArv5);
+		// dosis_pagi from spinner
+		dos_pagi1 = (TextView) findViewById(R.id.dos_pagi1);
+		dos_pagi2 = (TextView) findViewById(R.id.dos_pagi2);
+		dos_pagi3 = (TextView) findViewById(R.id.dos_pagi3);
+		dos_pagi4 = (TextView) findViewById(R.id.dos_pagi4);
+		dos_pagi5 = (TextView) findViewById(R.id.dos_pagi5);
+
+		// dosis_pagi from spinner
+		dos_malam1 = (TextView) findViewById(R.id.dos_malam1);
+		dos_malam2 = (TextView) findViewById(R.id.dos_malam2);
+		dos_malam3 = (TextView) findViewById(R.id.dos_malam3);
+		dos_malam4 = (TextView) findViewById(R.id.dos_malam4);
+		dos_malam5 = (TextView) findViewById(R.id.dos_malam5);
 
 		// textview
 		tvSusu = (TextView) findViewById(R.id.textview_susu);
@@ -262,80 +284,45 @@ public class ProfilAnakActivity extends Activity implements
 		btn_vitamin = (Button) findViewById(R.id.button_vitamin);
 		btn_popok = (Button) findViewById(R.id.button_popok);
 
-		// insertt to local database
-		InsertDataToLocalDatabase();
+		
 		SelectFasilitas();
 		// spinner
 		// fetch golongan darah
 		spinner_golda = (Spinner) findViewById(R.id.spinner_golongandarah);
 		spinner_golda.setOnItemSelectedListener(this);
-		adapter_golda = new ArrayAdapter<String>(this,
-				android.R.layout.simple_dropdown_item_1line, item_golongandarah);
-		adapter_golda
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adapter_golda = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, item_golongandarah);
+		adapter_golda.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner_golda.setAdapter(adapter_golda);
-
-		// jenis obat
-		ArrayList<String> data_tipeARV = tabel_type_arv.getAllData();
-		item_jenis_obat = data_tipeARV.toArray(new String[data_tipeARV.size()]);
-
-		// Spinner spinner_jenis_obat = (Spinner)
-		// findViewById(R.id.spinner_jenisobat);
-		// spinner_jenis_obat.setOnItemSelectedListener(this);
-		// ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
-		// android.R.layout.simple_dropdown_item_1line, item_jenis_obat);
-		// adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// spinner_jenis_obat.setAdapter(adapter2);
-		// spinner_jenis_obat.setPrompt("select");
-		// dosis
-		ArrayList<String> data_dosisARV = tabel_dosis.getAllData();
-		item_dosis = data_dosisARV.toArray(new String[data_dosisARV.size()]);
-
-		// Spinner spinner_dosis = (Spinner)
-		// findViewById(R.id.spinner_dosisobat);
-		// spinner_dosis.setOnItemSelectedListener(this);
-		// ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this,
-		// android.R.layout.simple_dropdown_item_1line, item_dosis);
-		// adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// spinner_dosis.setAdapter(adapter3);
-
 		// status obat
-		ArrayList<String> data_statusARV = tabel_status_arv.getAllData();
-		item_status_obat = data_statusARV.toArray(new String[data_statusARV
-				.size()]);
+		ArrayList<String> data_statusARV = db.getAllDataARVStatus();
+		item_status_obat = data_statusARV.toArray(new String[data_statusARV.size()]);
 		Spinner spinner_status_obat = (Spinner) findViewById(R.id.spinner_statusobat);
 		spinner_status_obat.setOnItemSelectedListener(this);
-		ArrayAdapter<String> adapter4 = new ArrayAdapter<String>(this,
-				android.R.layout.simple_dropdown_item_1line, item_status_obat);
+		ArrayAdapter<String> adapter4 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, item_status_obat);
 		adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner_status_obat.setAdapter(adapter4);
 
 		// kelas
-		ArrayList<String> data_kelas = tabel_kelas.getDataKelas();
+		ArrayList<String> data_kelas = db.getDataKelas();
 		item_kelas = data_kelas.toArray(new String[data_kelas.size()]);
 		Spinner spinner_kelas = (Spinner) findViewById(R.id.spinner_kelas);
 		spinner_kelas.setOnItemSelectedListener(this);
-		ArrayAdapter<String> adapter5 = new ArrayAdapter<String>(this,
-				android.R.layout.simple_dropdown_item_1line, item_kelas);
+		ArrayAdapter<String> adapter5 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, item_kelas);
 		adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner_kelas.setAdapter(adapter5);
 
 		// caregiver
-		ArrayList<String> data_caregiver = tabel_caregiver.getAllData();
-		item_caregiver = data_caregiver.toArray(new String[data_caregiver
-				.size()]);
+		ArrayList<String> data_caregiver = db.getAllDataCareGiver();
+		item_caregiver = data_caregiver.toArray(new String[data_caregiver.size()]);
 		spinner_cg = (Spinner) findViewById(R.id.spinner_caregiver);
 		spinner_cg.setOnItemSelectedListener(this);
-		adapter_caregiver = new ArrayAdapter<String>(this,
-				android.R.layout.simple_dropdown_item_1line, item_caregiver);
-		adapter_caregiver
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adapter_caregiver = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, item_caregiver);
+		adapter_caregiver.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner_cg.setAdapter(adapter_caregiver);
 
 		// wilayah kotamadya dan kecamatan
-		data_kotamadya = tabel_kotamadya.getAllData();
-		item_kotamadya = data_kotamadya.toArray(new String[data_kotamadya
-				.size()]);
+		data_kotamadya = db.getAllDataDistrict();
+		item_kotamadya = data_kotamadya.toArray(new String[data_kotamadya.size()]);
 		spinner_kotamadya = (Spinner) findViewById(R.id.spinner_kotamadya);
 		spinner_kotamadya.setOnItemSelectedListener(this);
 
@@ -346,10 +333,8 @@ public class ProfilAnakActivity extends Activity implements
 		spinner_kecamatansekolah = (Spinner) findViewById(R.id.spinner_kecamatansekolah);
 
 		//
-		ArrayAdapter<String> kotamadyaAdapter = new ArrayAdapter<String>(this,
-				R.layout.spin, item_kotamadya);
-		kotamadyaAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		ArrayAdapter<String> kotamadyaAdapter = new ArrayAdapter<String>(this,R.layout.spin, item_kotamadya);
+		kotamadyaAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner_kotamadya.setAdapter(kotamadyaAdapter);
 		spinner_kotamadyasekolah.setAdapter(kotamadyaAdapter);
 
@@ -371,39 +356,26 @@ public class ProfilAnakActivity extends Activity implements
 		// this is for gender
 		radio_gender_group = (RadioGroup) findViewById(R.id.radioGenderGroup);
 		radio_gender_group.clearCheck();
-		radio_gender_group
-				.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+		radio_gender_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(RadioGroup group, int checkedId) {
-						RadioButton rb_gender = (RadioButton) group
-								.findViewById(checkedId);
+						RadioButton rb_gender = (RadioButton) group.findViewById(checkedId);
 						if (null != rb_gender && checkedId > -1) {
 							gender = rb_gender.getText().toString();
-							// Toast.makeText(getApplicationContext(),
-							// "" + rb_gender.getText(),
-							// Toast.LENGTH_SHORT).show();
 						}
 					}
 				});
 
 		// // this is getting id status of
-		status_ayah = findStatusParent(radio_status_ayah_group,
-				radio_status_ayah);
+		status_ayah = findStatusParent(radio_status_ayah_group,radio_status_ayah);
 		status_ibu = findStatusParent(radio_status_ibu_group, radio_status_ibu);
 
 		// pop up tambah obat
 		tvtambah_jenis_arv.setOnClickListener(new View.OnClickListener() {
-			// button tambah foto
-
 			@Override
 			public void onClick(View v) {
-
-				ArrayList<String> data_tipeARV = tabel_type_arv.getAllData();
-				item_jenis_obat = data_tipeARV.toArray(new String[data_tipeARV
-						.size()]);
-
-				// Toast.makeText(getApplicationContext(), "yuhu",
-				// Toast.LENGTH_LONG).show();
+				ArrayList<String> data_tipeARV = db.getAllDataARVType();
+				item_jenis_obat = data_tipeARV.toArray(new String[data_tipeARV.size()]);
 				pilihArv(item_jenis_obat, "Pilih ARV");
 			}
 		});
@@ -413,64 +385,67 @@ public class ProfilAnakActivity extends Activity implements
 			@Override
 			public void onClick(View arg0) {
 				GetCaregiverPhone();
-				tabel_anak = new TM_Child(getApplicationContext());
 				// check whether it is create or update -> krn me-refer ke
 				// activity yang sama
 				String path_gambar = "";
 				Intent i = getIntent();
 				PathNull = "kosong";
 				if (picturePath != null) {
-					path_gambar = picturePath;
-				}
-
-				else if (Path != null) {
-					path_gambar = Path;
+				     path_gambar = picturePath;
+				}else if (filePath != null) {
+				     path_gambar = filePath;
 				} else if (PathNull != null) {
-
 					path_gambar = PathNull;
-				}
+				    }
 				if (i.getStringExtra("id_anak") == null) {
-
-					tabel_anak.addRow(
+					/**************************INSERT DATA ANAK ******************************/
+					db.InsertDataAnak(GetChildID(), 
 							txtName.getText().toString(),
-							txtDate.getText().toString(),
-							gender,
-							golongan_darah.getSelectedItem().toString(),
-							txtFatherName.getText().toString(),
-							txtMotherName.getText().toString(),
-							txtCareGiverName.getText().toString(),
-							txtAddress.getText().toString(),
-							GetCaregiverPhone(),
-							txtSchool.getText().toString(),
-							path_gambar,
-							tabel_status_arv.getIdStatusARV(status_obat
-									.getSelectedItem().toString()),
-							type_,
-							dosis_,
-							tabel_kelas.getIdKelas(kelas.getSelectedItem()
-									.toString()),
-							tabel_caregiver.getIdCaregiver(care_giver
-									.getSelectedItem().toString()),
-							"-",
-							findStatusParent(radio_status_ayah_group,
-									radio_status_ayah),
-							findStatusParent(radio_status_ibu_group,
-									radio_status_ibu), tabel_subdistrict
-									.getIdSubDistrict(spinner_kecamatan
-											.getSelectedItem().toString()),
-							tabel_subdistrict
-									.getIdSubDistrict(spinner_kecamatansekolah
-											.getSelectedItem().toString()));
-
-					// insert semua fasilitas anak
-					InsertFasilitasAnak(tabel_anak.getLastInsertedChild());
-
-					// insert arv
-
-					Log.e("gender ", "" + gender);
+							txtDate.getText().toString(), 
+							gender, 
+							golongan_darah.getSelectedItem().toString(), 
+							txtFatherName.getText().toString(), 
+							txtMotherName.getText().toString(), 
+							txtCareGiverName.getText().toString(), 
+							txtAddress.getText().toString(), 
+							GetCaregiverPhone(), 
+							txtSchool.getText().toString(), 
+							path_gambar, 
+							db.getIdStatusARV(status_obat.getSelectedItem().toString()), 
+							type_, 
+							dosis_, 
+							db.getIdKelas(kelas.getSelectedItem().toString()),
+							db.getIdCaregiver(care_giver.getSelectedItem().toString()), 
+							"-", 
+							findStatusParent(radio_status_ayah_group,radio_status_ayah), 
+							findStatusParent(radio_status_ibu_group,radio_status_ibu), 
+							db.getIdSubDistrict(spinner_kecamatan.getSelectedItem().toString()), 
+							db.getIdSubDistrict(spinner_kecamatansekolah.getSelectedItem().toString()), 
+							"",
+							"", 
+							"",
+							"",
+							"", 
+							"", 
+							"", 
+							"");
+					Log.e("Insert Data Anak", "ID "+GetChildID() +" path "+path_gambar);
+					/***************************INSERT FASILITAS ANAK **********************************/
+					InsertFasilitasAnak(db.getLastInsertedChild());
+					/**************************INSERT ARV ANAK******************************************/
+					for(ChildARV_Model mod_arv : arv_anak)
+					{
+						//insert untuk data dosis pagi & malam
+						db.InsertARVAnak(db.getLastInsertedChild(), mod_arv.GetDrugTypeID(), mod_arv.GetDrugDoseID(), "Sartika", GetTimeNow());
+						db.InsertARVAnak(db.getLastInsertedChild(), mod_arv.GetDrugTypeID(), mod_arv.GetDrugDoseID1(), "Sartika", GetTimeNow());
+					}
+					
+					
 				} else {
-					tabel_anak.updateChildIdentityById(
-							i.getStringExtra("id_anak"),
+					/***************************UPDATE DATA ANAK******************************************/
+					String id = i.getStringExtra("id_anak");
+					db.updateChildIdentityById(
+							id,
 							txtName.getText().toString(),
 							txtDate.getText().toString(),
 							gender,
@@ -481,98 +456,74 @@ public class ProfilAnakActivity extends Activity implements
 							txtAddress.getText().toString(),
 							GetCaregiverPhone(),
 							txtSchool.getText().toString(),
-							findStatusParent(radio_status_ayah_group,
-									radio_status_ayah),
-							findStatusParent(radio_status_ibu_group,
-									radio_status_ibu), tabel_caregiver
-									.getIdCaregiver(care_giver
-											.getSelectedItem().toString()),
-							tabel_subdistrict
-									.getIdSubDistrict(spinner_kecamatan
-											.getSelectedItem().toString()),
-							tabel_subdistrict
-									.getIdSubDistrict(spinner_kecamatansekolah
-											.getSelectedItem().toString()),
-							tabel_kelas.getIdKelas(kelas.getSelectedItem()
-									.toString()), path_gambar);
+							findStatusParent(radio_status_ayah_group,radio_status_ayah),
+							findStatusParent(radio_status_ibu_group,radio_status_ibu), 
+							db.getIdCaregiver(care_giver.getSelectedItem().toString()),
+							db.getIdSubDistrict(spinner_kecamatan.getSelectedItem().toString()),
+							db.getIdSubDistrict(spinner_kecamatansekolah.getSelectedItem().toString()),
+							db.getIdKelas(kelas.getSelectedItem().toString()), path_gambar,"-","-");
 
-					// update tabel fasilitas anak
+					/**************************UPDATE FASILITAS ANAK **********************************/
 					DeleteFasilitasAnak(i.getStringExtra("id_anak"));
 					InsertFasilitasAnak(i.getStringExtra("id_anak"));
+					
+					/************************ UPDATE ARV *********************************************/
+					db.DeleteARVAnak(i.getStringExtra("id_anak"));
+					for(ChildARV_Model mod_arv : arv_anak)
+					{
+						//insert untuk data dosis pagi & malam
+						db.InsertARVAnak(i.getStringExtra("id_anak"), mod_arv.GetDrugTypeID(), mod_arv.GetDrugDoseID(), "Sartika", GetTimeNow());
+						db.InsertARVAnak(i.getStringExtra("id_anak"), mod_arv.GetDrugTypeID(), mod_arv.GetDrugDoseID1(), "Sartika", GetTimeNow());
+					}
 
 				}
-				//
-				// Toast.makeText(
-				// getApplicationContext(),
-				// "status ayah "
-				// + findStatusParent(radio_status_ayah_group,
-				// radio_status_ayah)
-				// + " status ibu "
-				// + findStatusParent(radio_status_ibu_group,
-				// radio_status_ibu), Toast.LENGTH_LONG)
-				// .show();
 
 				// go to test activity
-				Intent test = new Intent(getApplication(),
-						ListAnakActivity.class);
+				Intent test = new Intent(getApplication(),ListAnakActivity.class);
 				startActivity(test);
 
 			}
 		});
 
 		tambah_foto.setOnClickListener(new View.OnClickListener() {
-			// button tambah foto
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				LayoutInflater layoutinflater = LayoutInflater.from(context);
-				View promptView = layoutinflater.inflate(
-						R.layout.activity_foto_dialog, null);
+			   // button tambah foto
+			   @Override
+			   public void onClick(View v) {
+			    // TODO Auto-generated method stub
+			    LayoutInflater layoutinflater = LayoutInflater.from(context);
+			    View promptView = layoutinflater.inflate(R.layout.activity_foto_dialog, null);
 
-				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-						context);
-				alertDialogBuilder.setView(promptView);
+			    final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+			    alertDialogBuilder.setView(promptView);
 
-				final Button btn_kamera = (Button) promptView
-						.findViewById(R.id.button_kamera);
-				final Button btn_galeri = (Button) promptView
-						.findViewById(R.id.button_galeri);
+			    final Button btn_kamera = (Button) promptView.findViewById(R.id.button_kamera);
+			    final Button btn_galeri = (Button) promptView.findViewById(R.id.button_galeri);
 
-				btn_kamera.setOnClickListener(new OnClickListener() {
+			    filePath=null;
+			    btn_kamera.setOnClickListener(new OnClickListener() {
 
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						// Intent intent = new Intent(
-						// MediaStore.ACTION_IMAGE_CAPTURE);
-						//
-						// File f = new File(android.os.Environment
-						// .getExternalStorageDirectory(), "temp.jpg");
-						//
-						// intent.putExtra(MediaStore.EXTRA_OUTPUT,
-						// Uri.fromFile(f));
-						//
-						// startActivityForResult(intent, 1);
-						Intent intent = new Intent(
-								MediaStore.ACTION_IMAGE_CAPTURE);
-						startActivityForResult(intent, 1);
-					}
-				});
+			     public void onClick(View v) {
+			      // TODO Auto-generated method stub
+			      Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			      startActivityForResult(intent, 1);
+			      alertDialogBuilder.create().dismiss();
+			     }
+			    });
 
-				btn_galeri.setOnClickListener(new OnClickListener() {
+			    btn_galeri.setOnClickListener(new OnClickListener() {
 
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						Intent intent = new Intent(
-								Intent.ACTION_PICK,
-								android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-						startActivityForResult(intent, 2);
-					}
-				});
+			     public void onClick(View v) {
+			      // TODO Auto-generated method stub
+			      Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+			      startActivityForResult(intent, 2);
+			      alertDialogBuilder.create().dismiss();
+			     }
+			    });
 
-				AlertDialog alertD = alertDialogBuilder.create();
-				alertD.show();
-			}
-		});
+			    AlertDialog alertD = alertDialogBuilder.create();
+			    alertD.show();
+			   }
+			  });
 
 		// mendapatkan tanggal sekarang
 		final Calendar c = Calendar.getInstance();
@@ -592,9 +543,7 @@ public class ProfilAnakActivity extends Activity implements
 
 		Calendar now = Calendar.getInstance();
 		Calendar tanggallahir = Calendar.getInstance();
-
 		tanggallahir.set(mYear, mMonth, mDay);
-
 		int years = now.get(Calendar.YEAR) - tanggallahir.get(Calendar.YEAR);
 		int months = now.get(Calendar.MONTH) - tanggallahir.get(Calendar.MONTH);
 		int days = now.get(Calendar.DAY_OF_MONTH)
@@ -607,17 +556,15 @@ public class ProfilAnakActivity extends Activity implements
 			years--;
 			months += 12;
 		}
-		String umur = years + " tahun " + months + " bulan " + days + " hari";
 
-		// check for update view
-		// intent3.putExtra("id_anak",id_child);
+		/*******************************UPDATING DATA ANAK ******************************/
 		Intent i = getIntent();
 		if (i != null && i.getStringExtra("id_anak") != null) {
 			Log.d("***DEBUG****", "For update data anak");
 			String id_child = i.getStringExtra("id_anak");
 			Child_Model model_anak = new Child_Model();
-			tabel_anak = new TM_Child(getApplicationContext());
-			model_anak = tabel_anak.getChildIdentityById(id_child);
+			
+			model_anak = db.getChildIdentityById(id_child);
 			// displaying foto
 			// cek jika poto belum dimasukkan -> maka display default
 			if (!model_anak.getImage_path().equals("kosong")) {
@@ -697,24 +644,19 @@ public class ProfilAnakActivity extends Activity implements
 			SetCaregiverPhone(model_anak.getCaregiver_phone());
 
 			// set display name of spinner golda
-			spinner_position = adapter_golda.getPosition(model_anak
-					.getBlood_type());
+			spinner_position = adapter_golda.getPosition(model_anak.getBlood_type());
 			spinner_golda.setSelection(spinner_position);
 
 			// caregiver spinner
-			spinner_position = adapter_caregiver.getPosition(tabel_caregiver
-					.getNameCaregiver(model_anak.getCaregiver_id()));
+			spinner_position = adapter_caregiver.getPosition(db.getNameCaregiver(model_anak.getCaregiver_id()));
 			spinner_cg.setSelection(spinner_position);
 
 			// spinner kotamadya dan kecamatan
-
-			arr_kecamatan = tabel_subdistrict.getAllDistrict();
-			kecAdapter = new ArrayAdapter<String>(getApplicationContext(),
-					R.layout.spin, arr_kecamatan);
-			spinner_position = kecAdapter.getPosition(tabel_subdistrict
-					.getNameSubDistrict(model_anak.getSubdistrict_id()));
-			spinner_kecamatan.setAdapter(kecAdapter);
-			spinner_kecamatan.setSelection(spinner_position);
+//			arr_kecamatan = db.getAllDataSubdistrict();
+//			kecAdapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.spin, arr_kecamatan);
+//			spinner_position = kecAdapter.getPosition(db.getNameSubDistrict(model_anak.getSubdistrict_id()));
+//			spinner_kecamatan.setAdapter(kecAdapter);
+//			spinner_kecamatan.setSelection(spinner_position);
 
 			// Toast.makeText(
 			// getApplicationContext(),
@@ -734,14 +676,26 @@ public class ProfilAnakActivity extends Activity implements
 			// spinner_kotamadyasekolah.setSelection(spinner_position);
 
 			// displaying fasilitas anak
+			/***************************** DISPLAYING FASILITAS ANAK ******************************/
 			RetrieveFasilitasAnak(model_anak.getChild_id());
+			/*****************************DISPLAYING ARV ANAK *************************************/
+			RetrieveARVAnak(model_anak.getChild_id());
 		} else {
-			Log.d("***DEBUG****", "Intent was null");
+			Log.d("***DEBUG****", "This is for create new child profil");
 
 		}
 
 	}
+	
+	
 
+	public String GetTimeNow() {
+		Calendar c = Calendar.getInstance();
+
+		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+		return df.format(c.getTime());
+	}
+	
 	public String GetCaregiverPhone() {
 		String result = "";
 		if (!txtTeleponNumberCG.getText().toString().isEmpty()) {
@@ -779,7 +733,7 @@ public class ProfilAnakActivity extends Activity implements
 	}
 
 	public void DeleteFasilitasAnak(String id_anak) {
-		tabel_child_facility.DeleteFasilitasAnak(id_anak);
+		db.DeleteFasilitasAnak(id_anak);
 		Log.e("Delete obsolete fasiltas anak", id_anak);
 	}
 
@@ -788,23 +742,20 @@ public class ProfilAnakActivity extends Activity implements
 		Log.e("insert fasilitas anak", "" + true);
 		if (!fasilitas_susu.isEmpty()) {
 			for (String a : fasilitas_susu) {
-				tabel_child_facility.InsertFasilitasAnak(id_anak, "1",
-						tabel_cost_facility.getIdCostFacility(a), "0");
+				db.InsertFasilitasAnak(id_anak, "FA001",db.getIdCostFacility(a));
 				Log.e("insert ke tabel cost facility -> susu", a);
 			}
 		}
 		if (!fasilitas_vitamin.isEmpty()) {
 			for (String b : fasilitas_vitamin) {
-				tabel_child_facility.InsertFasilitasAnak(id_anak, "2",
-						tabel_cost_facility.getIdCostFacility(b), "0");
+				db.InsertFasilitasAnak(id_anak, "FA002",db.getIdCostFacility(b));
 				Log.e("insert ke tabel cost facility -> vitamin", b);
 			}
 		}
 
 		if (!fasilitas_popok.isEmpty()) {
 			for (String b : fasilitas_popok) {
-				tabel_child_facility.InsertFasilitasAnak(id_anak, "3",
-						tabel_cost_facility.getIdCostFacility(b), "0");
+				db.InsertFasilitasAnak(id_anak, "FA003",db.getIdCostFacility(b));
 				Log.e("insert ke tabel cost facility -> popok", b);
 			}
 		}
@@ -825,7 +776,7 @@ public class ProfilAnakActivity extends Activity implements
 		ArrayList<String> fasilitas_susu = new ArrayList<String>();
 		ArrayList<String> fasilitas_vitamin = new ArrayList<String>();
 		ArrayList<String> fasilitas_popok = new ArrayList<String>();
-		ArrayList<ChildFacility_Model> all_facility_id = tabel_child_facility
+		ArrayList<ChildFacility_Model> all_facility_id = db
 				.getSemuaFasilitasAnak(id_anak);
 		if (all_facility_id != null) {
 			for (ChildFacility_Model model : all_facility_id) {
@@ -833,24 +784,21 @@ public class ProfilAnakActivity extends Activity implements
 					Checkbox_Susu.setChecked(true);
 					btn_susu.setVisibility(View.VISIBLE);
 					SelectFasilitas();
-					fasilitas_susu.add(tabel_cost_facility
-							.getNameCostFacility(model.getFacility_cost_id()));
+					fasilitas_susu.add(db.getNameCostFacility(model.getFacility_cost_id()));
 					continue;
 				}
 				if (model.getFacility_id().equals("2")) {
 					Checkbox_Vitamin.setChecked(true);
 					btn_vitamin.setVisibility(View.VISIBLE);
 					SelectFasilitas();
-					fasilitas_vitamin.add(tabel_cost_facility
-							.getNameCostFacility(model.getFacility_cost_id()));
+					fasilitas_vitamin.add(db.getNameCostFacility(model.getFacility_cost_id()));
 					continue;
 				}
 				if (model.getFacility_id().equals("3")) {
 					Checkbox_Popok.setChecked(true);
 					btn_popok.setVisibility(View.VISIBLE);
 					SelectFasilitas();
-					fasilitas_popok.add(tabel_cost_facility
-							.getNameCostFacility(model.getFacility_cost_id()));
+					fasilitas_popok.add(db.getNameCostFacility(model.getFacility_cost_id()));
 					continue;
 				}
 			}
@@ -879,9 +827,66 @@ public class ProfilAnakActivity extends Activity implements
 			tvPopok.setText(msg);
 		}
 		Log.e("retrieve fasilitas anak", "true");
-
 	}
-
+	
+	public void RetrieveARVAnak(String id_anak)
+	{
+		arv_anak = db.getSemuaARVAnak(id_anak);
+		//make for object first
+		ChildARV_Model arv = new ChildARV_Model(); 
+		arv.SetARVTypeID("-");arv.SetARVDoseID("-");arv.SetARVDoseID1("-");
+		for(ChildARV_Model mod_arv : arv_anak)
+		{
+			Log.e("Retrieve arv anak","true"+arv_anak.size());
+			if(arv.GetDrugTypeID().equals("-"))
+			{
+				arv.SetARVTypeID(db.getNameTypeARV(mod_arv.GetDrugTypeID()));
+				arv.SetARVDoseID(db.getNameDose(mod_arv.GetDrugDoseID()));
+				continue;
+			}
+			else
+			{
+				arv.SetARVDoseID1(db.getNameDose(mod_arv.GetDrugDoseID()));
+				Log.e("Dosis Malam", ""+arv.GetDrugDoseID1());
+				if(linArv1.getVisibility() == View.INVISIBLE)
+				{
+					linArv1.setVisibility(View.VISIBLE);
+					arv1.setText(arv.GetDrugTypeID());
+					dos_pagi1.setText(arv.GetDrugDoseID());
+					dos_malam1.setText(arv.GetDrugDoseID1());
+				}else if(linArv2.getVisibility() == View.INVISIBLE)
+				{
+					linArv2.setVisibility(View.VISIBLE);
+					arv2.setText(arv.GetDrugTypeID());
+					dos_pagi2.setText(arv.GetDrugDoseID());
+					dos_malam2.setText(arv.GetDrugDoseID1());
+					
+				}else if(linArv3.getVisibility() == View.INVISIBLE)
+				{
+					linArv3.setVisibility(View.VISIBLE);
+					arv3.setText(arv.GetDrugTypeID());
+					dos_pagi3.setText(arv.GetDrugDoseID());
+					dos_malam3.setText(arv.GetDrugDoseID1());
+				}else if(linArv4.getVisibility() == View.INVISIBLE)
+				{
+					linArv4.setVisibility(View.VISIBLE);
+					arv4.setText(arv.GetDrugTypeID());
+					dos_pagi4.setText(mod_arv.GetDrugDoseID());
+					dos_malam4.setText(arv.GetDrugDoseID1());
+				}else if(linArv5.getVisibility() == View.INVISIBLE)
+				{
+					linArv5.setVisibility(View.VISIBLE);
+					arv5.setText(arv.GetDrugTypeID());
+					dos_pagi5.setText(mod_arv.GetDrugDoseID());
+					dos_malam5.setText(arv.GetDrugDoseID1());
+				}
+				
+				arv.SetARVTypeID("-");arv.SetARVDoseID("-");arv.SetARVDoseID1("-");
+			}
+		}		
+	}
+	
+	
 	// this method is to get facility the caregiver selected into a child
 	public void SelectFasilitas() {
 		Checkbox_Susu.setOnClickListener(new OnClickListener() {
@@ -1004,8 +1009,7 @@ public class ProfilAnakActivity extends Activity implements
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View view,
 					int position, long id) {
-				String sKotaMadya = tabel_kotamadya
-						.getIdDistrict(item_kotamadya[position]);
+				String sKotaMadya = db.getIdDistrict(item_kotamadya[position]);
 				if (position == 0) {
 
 				} else {
@@ -1031,7 +1035,7 @@ public class ProfilAnakActivity extends Activity implements
 	public void Kecamatan(String id_kotamadya, int flag) {
 		// flag => to check kecamatan is child address or school address
 		// 1 = child address
-		arr_kecamatan = tabel_subdistrict.getAllNameDistrict(id_kotamadya);
+		arr_kecamatan = db.getAllNameSubDistrict(id_kotamadya);
 
 		kecAdapter = new ArrayAdapter<String>(getApplicationContext(),
 				R.layout.spin, arr_kecamatan);
@@ -1041,118 +1045,77 @@ public class ProfilAnakActivity extends Activity implements
 			spinner_kecamatan.setOnItemSelectedListener(this);
 			spinner_kecamatan.setAdapter(kecAdapter);
 			Log.e("kecamatan", "" + spinner_kecamatan.getSelectedItem());
-			// Toast.makeText(getApplicationContext(),
-			// "" + spinner_kecamatan.getSelectedItem(),
-			// Toast.LENGTH_SHORT).show();
 		} else {
 
 			spinner_kecamatansekolah.setOnItemSelectedListener(this);
 			spinner_kecamatansekolah.setAdapter(kecAdapter);
-			// Toast.makeText(getApplicationContext(),
-			// "" + spinner_kecamatansekolah.getSelectedItem(),
-			// Toast.LENGTH_SHORT).show();
 			Log.e("kecamatan", "" + spinner_kecamatansekolah.getSelectedItem());
 		}
 
 	}
 
 	ArrayList<String> resultCamera;
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+	 
+	 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	  super.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == RESULT_OK) {
-			if (requestCode == 1) {
+	  if (resultCode == RESULT_OK) {
+	   if (requestCode == 1) {
 
-				thumbnailCamera = (Bitmap) data.getExtras().get("data");
-				thumbnailCamera = Bitmap.createScaledBitmap(thumbnailCamera,
-						132, 105, true);
+	    thumbnailCamera = (Bitmap) data.getExtras().get("data");
+	    thumbnailCamera = Bitmap.createScaledBitmap(thumbnailCamera, 132, 105, true);
+	    
+	    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+	    thumbnailCamera.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+	    
+	    File destination = new File(Environment.getExternalStorageDirectory(),System.currentTimeMillis() + ".jpg");
+	    FileOutputStream fo;
+	    //Uri selectedImage = data.getData();
 
-				ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-				thumbnailCamera.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+	    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+	    //Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+	    final String imageOrderBy = MediaStore.Images.Media._ID+ " DESC";
+	    Cursor cursor = managedQuery(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,filePathColumn, null, null, imageOrderBy);
+	             
+	    cursor.moveToFirst();
+	    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+	    filePath = cursor.getString(columnIndex);
+	    Log.v("log","filePath is : "+filePath); 
+	    
+	    try {
+	    	destination.createNewFile();
+	    	fo = new FileOutputStream(destination);
+	    	fo.write(bytes.toByteArray());
+	     
+	    	fo.close();
+	    } catch (FileNotFoundException e) {
+	    	e.printStackTrace();
+	    } catch (IOException e) {
+	    	e.printStackTrace();
+	    }
 
-				File destination = new File(
-						Environment.getExternalStorageDirectory(),
-						System.currentTimeMillis() + ".jpg");
-				FileOutputStream fo;
+	    tambah_foto.setImageBitmap(thumbnailCamera);
 
-				final String[] imageColumns = { MediaStore.Images.Media._ID,
-						MediaStore.Images.Media.DATA };
-				final String imageOrderBy = MediaStore.Images.Media._ID
-						+ " DESC";
-				Cursor imageCursor = managedQuery(
-						MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-						imageColumns, null, null, imageOrderBy);
-				resultCamera = new ArrayList<String>(imageCursor.getCount());
-				if (imageCursor.moveToFirst()) {
-					// int id = imageCursor.getInt(imageCursor
-					// .getColumnIndex(MediaStore.Images.Media._ID));
-					// Path = imageCursor.getString(imageCursor
-					// .getColumnIndex(MediaStore.Images.Media.DATA));
-					//
-					final int dataColumn = imageCursor
-							.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-					do {
-						final String data1 = imageCursor.getString(dataColumn);
-						Path = data1;
-						// pathallim=data1;
-						resultCamera.add(data1);
-					} while (imageCursor.isLast());
+	   } else if (requestCode == 2) {
 
-				}
-				imageCursor.close();
-
-				try {
-					destination.createNewFile();
-					fo = new FileOutputStream(destination);
-					fo.write(bytes.toByteArray());
-					fo.close();
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-				tambah_foto.setImageBitmap(thumbnailCamera);
-
-			} else if (requestCode == 2) {
-
-				Uri selectedImage = data.getData();
-
-				String[] filePath = { MediaStore.Images.Media.DATA };
-
-				Cursor c = getContentResolver().query(selectedImage, filePath,
-						null, null, null);
-
-				c.moveToFirst();
-
-				int columnIndex = c.getColumnIndex(filePath[0]);
-
-				picturePath = c.getString(columnIndex);
-
-				c.close();
-
-				Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-
-				Log.w("path of image from gallery......******************.........",
-						picturePath + "");
-
-				tambah_foto.setImageBitmap(thumbnail);
-
-			}
-
-		}
-
-	}
-
-	int banyak;
-	ArrayList<String> selectedItems = new ArrayList<String>();
+	    Uri selectedImage = data.getData();
+	    String[] filePath = { MediaStore.Images.Media.DATA };
+	    Cursor c = getContentResolver().query(selectedImage, filePath,null, null, null);
+	    c.moveToFirst();
+	    int columnIndex = c.getColumnIndex(filePath[0]);
+	    picturePath = c.getString(columnIndex);
+	    c.close();
+	    Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
+	    Log.w("path of image from gallery......******************.........",picturePath + "");
+	    tambah_foto.setImageBitmap(thumbnail);
+	   }
+	  }
+	 }
 
 	private void pilihArv(final String[] arv, String Title) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(Title);
-		builder.setMultiChoiceItems(arv, null,
-				new DialogInterface.OnMultiChoiceClickListener() {
-
+		builder.setMultiChoiceItems(arv, null,new DialogInterface.OnMultiChoiceClickListener() {
 					@Override
 					public void onClick(DialogInterface arg0, int arg1,
 							boolean arg2) {
@@ -1160,11 +1123,7 @@ public class ProfilAnakActivity extends Activity implements
 
 						if (arg2) {
 							selList.add(arg1);
-
 							banyak = selList.size();
-							// Toast.makeText(getApplicationContext(),
-							// "" + banyak + arg1,
-							// Toast.LENGTH_SHORT).show();
 							selectedItems.add(arv[arg1]);
 
 						} else if (selList.contains(arg1)) {
@@ -1173,12 +1132,9 @@ public class ProfilAnakActivity extends Activity implements
 						}
 
 						if (banyak >= 6) {
-							Toast.makeText(
-									context,
-									"Anda Tidak Dapat Memilih Obat Lebih Dari 5 ",
-									Toast.LENGTH_LONG).show();
-							((AlertDialog) arg0).getListView().setItemChecked(
-									arg1, false);
+							//alert
+							Toast.makeText(context,"Anda Tidak Dapat Memilih Obat Lebih Dari 5 ",Toast.LENGTH_LONG).show();
+							((AlertDialog) arg0).getListView().setItemChecked(arg1, false);
 							banyak--;
 							// ((AlertDialog)arg0).getButton(DialogInterface.BUTTON_POSITIVE).setVisibility(View.INVISIBLE);
 						}
@@ -1193,60 +1149,42 @@ public class ProfilAnakActivity extends Activity implements
 					}
 				});
 
-		builder.setPositiveButton("SIMPAN",
-				new DialogInterface.OnClickListener() {
+		builder.setPositiveButton("SIMPAN",new DialogInterface.OnClickListener() {
 
 					public void onClick(DialogInterface dialog, int which) {
 						msg = "";
-
 						for (int i = 0; i < selList.size(); i++) {
 							msg = msg + arv[selList.get(i)] + "\n";
-
 						}
+						
 						String msg_list[] = msg.split("\n");
 						int lngth = msg_list.length;
+						
+						ArrayList<String> data_dosis = db.getAllDataARVDose();		
+						item_dosis = data_dosis.toArray(new String[data_dosis.size()]);
+						ArrayList<String> data_dosis_pagi = db.getDataDosisPagi();
+						item_dosis_pagi =  data_dosis_pagi.toArray(new String[data_dosis_pagi.size()]);
+						ArrayList<String> data_dosis_malam = db.getDataDosisMalam();
+						item_dosis_malam =  data_dosis_malam.toArray(new String[data_dosis_malam.size()]);
+						
+						LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+						popupView = layoutInflater.inflate(R.layout.popup, null);
+						final PopupWindow popupWindow = new PopupWindow(popupView, LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+						
+						Button btnDismiss = (Button) popupView.findViewById(R.id.dismiss);
+						TextView tv0 = (TextView) popupView.findViewById(R.id.tv1);
+						TextView tv1 = (TextView) popupView.findViewById(R.id.tv2);
+						TextView tv2 = (TextView) popupView.findViewById(R.id.tv3);
+						TextView tv3 = (TextView) popupView.findViewById(R.id.tv4);
+						TextView tv4 = (TextView) popupView.findViewById(R.id.tv5);
 
-						for (int j = 0; j < lngth; j++) {
-							// System.out.println("Split Output: "+
-							// msg_list[j]);
-						}
-
-						ArrayList<String> data_dosis_pagi = tabel_dosis
-								.getAllData();
-						item_dosis = data_dosis_pagi
-								.toArray(new String[data_dosis_pagi.size()]);
-
-						LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
-								.getSystemService(LAYOUT_INFLATER_SERVICE);
-						popupView = layoutInflater
-								.inflate(R.layout.popup, null);
-						final PopupWindow popupWindow = new PopupWindow(
-								popupView, LayoutParams.WRAP_CONTENT,
-								LayoutParams.WRAP_CONTENT);
-
-						Button btnDismiss = (Button) popupView
-								.findViewById(R.id.dismiss);
-						TextView tv0 = (TextView) popupView
-								.findViewById(R.id.tv1);
-						TextView tv1 = (TextView) popupView
-								.findViewById(R.id.tv2);
-						TextView tv2 = (TextView) popupView
-								.findViewById(R.id.tv3);
-						TextView tv3 = (TextView) popupView
-								.findViewById(R.id.tv4);
-						TextView tv4 = (TextView) popupView
-								.findViewById(R.id.tv5);
-
-						LinearLayout linARV1 = (LinearLayout) popupView
-								.findViewById(R.id.linARV1);
-						LinearLayout linARV2 = (LinearLayout) popupView
-								.findViewById(R.id.linARV2);
-						LinearLayout linARV3 = (LinearLayout) popupView
-								.findViewById(R.id.linARV3);
-						LinearLayout linARV4 = (LinearLayout) popupView
-								.findViewById(R.id.linARV4);
-						LinearLayout linARV5 = (LinearLayout) popupView
-								.findViewById(R.id.linARV5);
+						LinearLayout linARV1 = (LinearLayout) popupView.findViewById(R.id.linARV1);
+						LinearLayout linARV2 = (LinearLayout) popupView.findViewById(R.id.linARV2);
+						LinearLayout linARV3 = (LinearLayout) popupView.findViewById(R.id.linARV3);
+						LinearLayout linARV4 = (LinearLayout) popupView.findViewById(R.id.linARV4);
+						LinearLayout linARV5 = (LinearLayout) popupView.findViewById(R.id.linARV5);
+						
+						
 
 						if (banyak == 1) {
 							linARV1.setVisibility(View.VISIBLE);
@@ -1290,69 +1228,56 @@ public class ProfilAnakActivity extends Activity implements
 
 						// dosis pagi1
 
-						final Spinner popupSpinnerDosisPagi1 = (Spinner) popupView
-								.findViewById(R.id.spinDosisPagi1);
-						setSpin(item_dosis, popupSpinnerDosisPagi1);
+						final Spinner popupSpinnerDosisPagi1 = (Spinner) popupView.findViewById(R.id.spinDosisPagi1);
+						setSpin(item_dosis_pagi, popupSpinnerDosisPagi1);
 						// popupSpinnerDosisPagi1.setOnItemSelectedListener(this);
 
 						// dosis malam1
-						final Spinner popupSpinnerDosisMalam1 = (Spinner) popupView
-								.findViewById(R.id.spinDosisMalam1);
-						setSpin(item_dosis, popupSpinnerDosisMalam1);
+						final Spinner popupSpinnerDosisMalam1 = (Spinner) popupView.findViewById(R.id.spinDosisMalam1);
+						setSpin(item_dosis_malam, popupSpinnerDosisMalam1);
 
 						// dosis pagi2
 
-						final Spinner popupSpinnerDosisPagi2 = (Spinner) popupView
-								.findViewById(R.id.spinDosisPagi2);
-						setSpin(item_dosis, popupSpinnerDosisPagi2);
+						final Spinner popupSpinnerDosisPagi2 = (Spinner) popupView.findViewById(R.id.spinDosisPagi2);
+						setSpin(item_dosis_pagi, popupSpinnerDosisPagi2);
 
 						// dosis malam2
-						final Spinner popupSpinnerDosisMalam2 = (Spinner) popupView
-								.findViewById(R.id.spinDosisMalam2);
-						setSpin(item_dosis, popupSpinnerDosisMalam2);
+						final Spinner popupSpinnerDosisMalam2 = (Spinner) popupView.findViewById(R.id.spinDosisMalam2);
+						setSpin(item_dosis_malam, popupSpinnerDosisMalam2);
 
 						// dosis pagi3
 
-						final Spinner popupSpinnerDosisPagi3 = (Spinner) popupView
-								.findViewById(R.id.spinDosisPagi3);
-						setSpin(item_dosis, popupSpinnerDosisPagi3);
+						final Spinner popupSpinnerDosisPagi3 = (Spinner) popupView.findViewById(R.id.spinDosisPagi3);
+						setSpin(item_dosis_pagi, popupSpinnerDosisPagi3);
 
 						// dosis malam3
-						final Spinner popupSpinnerDosisMalam3 = (Spinner) popupView
-								.findViewById(R.id.spinDosisMalam3);
-						setSpin(item_dosis, popupSpinnerDosisMalam3);
+						final Spinner popupSpinnerDosisMalam3 = (Spinner) popupView.findViewById(R.id.spinDosisMalam3);
+						setSpin(item_dosis_malam, popupSpinnerDosisMalam3);
 
 						// dosis pagi4
-
-						final Spinner popupSpinnerDosisPagi4 = (Spinner) popupView
-								.findViewById(R.id.spinDosisPagi4);
-						setSpin(item_dosis, popupSpinnerDosisPagi4);
+						final Spinner popupSpinnerDosisPagi4 = (Spinner) popupView.findViewById(R.id.spinDosisPagi4);
+						setSpin(item_dosis_pagi, popupSpinnerDosisPagi4);
 
 						// dosis malam4
-						final Spinner popupSpinnerDosisMalam4 = (Spinner) popupView
-								.findViewById(R.id.spinDosisMalam4);
-						setSpin(item_dosis, popupSpinnerDosisMalam4);
+						final Spinner popupSpinnerDosisMalam4 = (Spinner) popupView.findViewById(R.id.spinDosisMalam4);
+						setSpin(item_dosis_malam, popupSpinnerDosisMalam4);
 
 						// dosis pagi5
 
-						final Spinner popupSpinnerDosisPagi5 = (Spinner) popupView
-								.findViewById(R.id.spinDosisPagi5);
-						setSpin(item_dosis, popupSpinnerDosisPagi5);
+						final Spinner popupSpinnerDosisPagi5 = (Spinner) popupView.findViewById(R.id.spinDosisPagi5);
+						setSpin(item_dosis_pagi, popupSpinnerDosisPagi5);
 
 						// dosis malam5
-						final Spinner popupSpinnerDosisMalam5 = (Spinner) popupView
-								.findViewById(R.id.spinDosisMalam5);
-						setSpin(item_dosis, popupSpinnerDosisMalam5);
+						final Spinner popupSpinnerDosisMalam5 = (Spinner) popupView.findViewById(R.id.spinDosisMalam5);
+						setSpin(item_dosis_malam, popupSpinnerDosisMalam5);
 
-						btnDismiss
-								.setOnClickListener(new Button.OnClickListener() {
-
+						btnDismiss.setOnClickListener(new Button.OnClickListener() {
 									@Override
 									public void onClick(View v) {
 										popupWindow.dismiss();
-
+										
 										String msg_list[] = msg.split("\n");
-
+										// linear layout from spinner
 										// linear layout from spinner
 										LinearLayout linArv1 = (LinearLayout) findViewById(R.id.linArv1);
 										LinearLayout linArv2 = (LinearLayout) findViewById(R.id.linArv2);
@@ -1381,181 +1306,88 @@ public class ProfilAnakActivity extends Activity implements
 										TextView dos_malam4 = (TextView) findViewById(R.id.dos_malam4);
 										TextView dos_malam5 = (TextView) findViewById(R.id.dos_malam5);
 
-										// temp aja => belum menyimpan id nya
-										/***********************************/
-										if (banyak != 0) {
-											type_ = "DTY001";
-											dosis_ = ""
-													+ popupSpinnerDosisPagi1
-															.getSelectedItem()
-															.toString()
-													+ "pagi, "
-													+ popupSpinnerDosisMalam1
-															.getSelectedItem()
-															.toString()
-													+ " malam";
-										}
+										arv_anak.clear();
+										//set into text view and store in to object
 										if (banyak == 1) {
 											linArv1.setVisibility(View.VISIBLE);
 											arv1.setText(msg_list[0]);
-											// setSpinner(popupSpinnerDosisPagi1,dos_pagi1);
-											dos_pagi1
-													.setText(popupSpinnerDosisPagi1
-															.getSelectedItem()
-															.toString());
-											dos_malam1
-													.setText(popupSpinnerDosisMalam1
-															.getSelectedItem()
-															.toString());
-
+											dos_pagi1.setText(popupSpinnerDosisPagi1.getSelectedItem().toString());
+											dos_malam1.setText(popupSpinnerDosisMalam1.getSelectedItem().toString());
+											arv_model1.SetARVTypeID(db.getIdTypeARV(msg_list[0]));
+											arv_model1.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisPagi1.getSelectedItem().toString(), "Pagi"));
+											arv_model1.SetARVDoseID1(db.getIdDosisARV(popupSpinnerDosisMalam1.getSelectedItem().toString(), "Malam"));
+											arv_anak.add(arv_model1);
+											
 										} else if (banyak == 2) {
 											linArv1.setVisibility(View.VISIBLE);
 											linArv2.setVisibility(View.VISIBLE);
-											arv1.setText(msg_list[0]);
-											arv2.setText(msg_list[1]);
-											dos_pagi1
-													.setText(popupSpinnerDosisPagi1
-															.getSelectedItem()
-															.toString());
-											dos_malam1
-													.setText(popupSpinnerDosisMalam1
-															.getSelectedItem()
-															.toString());
-											dos_pagi2
-													.setText(popupSpinnerDosisPagi2
-															.getSelectedItem()
-															.toString());
-											dos_malam2
-													.setText(popupSpinnerDosisMalam2
-															.getSelectedItem()
-															.toString());
+											arv1.setText(msg_list[0]);arv_model1.SetARVTypeID(db.getIdTypeARV(msg_list[0]));
+											arv2.setText(msg_list[1]);arv_model2.SetARVTypeID(db.getIdTypeARV(msg_list[1]));
+											dos_pagi1.setText(popupSpinnerDosisPagi1.getSelectedItem().toString());arv_model1.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisPagi1.getSelectedItem().toString(), "Pagi"));
+											dos_malam1.setText(popupSpinnerDosisMalam1.getSelectedItem().toString());arv_model1.SetARVDoseID1(db.getIdDosisARV(popupSpinnerDosisMalam1.getSelectedItem().toString(), "Malam"));
+											dos_pagi2.setText(popupSpinnerDosisPagi2.getSelectedItem().toString());arv_model2.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisPagi2.getSelectedItem().toString(), "Pagi"));
+											dos_malam2.setText(popupSpinnerDosisMalam2.getSelectedItem().toString());arv_model2.SetARVDoseID1(db.getIdDosisARV(popupSpinnerDosisMalam2.getSelectedItem().toString(), "Malam"));
+											arv_anak.add(arv_model1);arv_anak.add(arv_model2);
+											
 
 										} else if (banyak == 3) {
 											linArv1.setVisibility(View.VISIBLE);
 											linArv2.setVisibility(View.VISIBLE);
 											linArv3.setVisibility(View.VISIBLE);
-											arv1.setText(msg_list[0]);
-											arv2.setText(msg_list[1]);
-											arv3.setText(msg_list[2]);
-											dos_pagi1
-													.setText(popupSpinnerDosisPagi1
-															.getSelectedItem()
-															.toString());
-											dos_malam1
-													.setText(popupSpinnerDosisMalam1
-															.getSelectedItem()
-															.toString());
-											dos_pagi2
-													.setText(popupSpinnerDosisPagi2
-															.getSelectedItem()
-															.toString());
-											dos_malam2
-													.setText(popupSpinnerDosisMalam2
-															.getSelectedItem()
-															.toString());
-											dos_pagi3
-													.setText(popupSpinnerDosisPagi3
-															.getSelectedItem()
-															.toString());
-											dos_malam3
-													.setText(popupSpinnerDosisMalam3
-															.getSelectedItem()
-															.toString());
-
+											arv1.setText(msg_list[0]);arv_model1.SetARVTypeID(db.getIdTypeARV(msg_list[0]));
+											arv2.setText(msg_list[1]);arv_model2.SetARVTypeID(db.getIdTypeARV(msg_list[1]));
+											arv3.setText(msg_list[2]);arv_model3.SetARVTypeID(db.getIdTypeARV(msg_list[2]));
+											dos_pagi1.setText(popupSpinnerDosisPagi1.getSelectedItem().toString());arv_model1.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisPagi1.getSelectedItem().toString(), "Pagi"));
+											dos_malam1.setText(popupSpinnerDosisMalam1.getSelectedItem().toString());arv_model1.SetARVDoseID1(db.getIdDosisARV(popupSpinnerDosisMalam1.getSelectedItem().toString(), "Malam"));
+											dos_pagi2.setText(popupSpinnerDosisPagi2.getSelectedItem().toString());arv_model2.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisPagi2.getSelectedItem().toString(), "Pagi"));
+											dos_malam2.setText(popupSpinnerDosisMalam2.getSelectedItem().toString());arv_model2.SetARVDoseID1(db.getIdDosisARV(popupSpinnerDosisMalam2.getSelectedItem().toString(), "Malam"));
+											dos_pagi3.setText(popupSpinnerDosisPagi3.getSelectedItem().toString());arv_model3.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisPagi3.getSelectedItem().toString(), "Pagi"));
+											dos_malam3.setText(popupSpinnerDosisMalam3.getSelectedItem().toString());arv_model3.SetARVDoseID1(db.getIdDosisARV(popupSpinnerDosisMalam3.getSelectedItem().toString(), "Malam"));
+											arv_anak.add(arv_model1);arv_anak.add(arv_model2);arv_anak.add(arv_model3);
+											
 										} else if (banyak == 4) {
 											linArv1.setVisibility(View.VISIBLE);
 											linArv2.setVisibility(View.VISIBLE);
 											linArv3.setVisibility(View.VISIBLE);
 											linArv4.setVisibility(View.VISIBLE);
-											arv1.setText(msg_list[0]);
-											arv2.setText(msg_list[1]);
-											arv3.setText(msg_list[2]);
-											arv4.setText(msg_list[3]);
+											arv1.setText(msg_list[0]);arv_model1.SetARVTypeID(db.getIdTypeARV(msg_list[0]));
+											arv2.setText(msg_list[1]);arv_model2.SetARVTypeID(db.getIdTypeARV(msg_list[1]));
+											arv3.setText(msg_list[2]);arv_model3.SetARVTypeID(db.getIdTypeARV(msg_list[2]));
+											arv4.setText(msg_list[3]);arv_model4.SetARVTypeID(db.getIdTypeARV(msg_list[3]));
 
-											dos_pagi1
-													.setText(popupSpinnerDosisPagi1
-															.getSelectedItem()
-															.toString());
-											dos_malam1
-													.setText(popupSpinnerDosisMalam1
-															.getSelectedItem()
-															.toString());
-											dos_pagi2
-													.setText(popupSpinnerDosisPagi2
-															.getSelectedItem()
-															.toString());
-											dos_malam2
-													.setText(popupSpinnerDosisMalam2
-															.getSelectedItem()
-															.toString());
-											dos_pagi3
-													.setText(popupSpinnerDosisPagi3
-															.getSelectedItem()
-															.toString());
-											dos_malam3
-													.setText(popupSpinnerDosisMalam3
-															.getSelectedItem()
-															.toString());
-											dos_pagi4
-													.setText(popupSpinnerDosisPagi4
-															.getSelectedItem()
-															.toString());
-											dos_malam4
-													.setText(popupSpinnerDosisMalam4
-															.getSelectedItem()
-															.toString());
+											dos_pagi1.setText(popupSpinnerDosisPagi1.getSelectedItem().toString());arv_model1.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisPagi1.getSelectedItem().toString(), "Pagi"));
+											dos_malam1.setText(popupSpinnerDosisMalam1.getSelectedItem().toString());arv_model1.SetARVDoseID1(db.getIdDosisARV(popupSpinnerDosisMalam1.getSelectedItem().toString(), "Malam"));
+											dos_pagi2.setText(popupSpinnerDosisPagi2.getSelectedItem().toString());arv_model2.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisPagi2.getSelectedItem().toString(), "Pagi"));
+											dos_malam2.setText(popupSpinnerDosisMalam2.getSelectedItem().toString());arv_model2.SetARVDoseID1(db.getIdDosisARV(popupSpinnerDosisMalam2.getSelectedItem().toString(), "Malam"));
+											dos_pagi3.setText(popupSpinnerDosisPagi3.getSelectedItem().toString());arv_model3.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisPagi3.getSelectedItem().toString(), "Pagi"));
+											dos_malam3.setText(popupSpinnerDosisMalam3.getSelectedItem().toString());arv_model3.SetARVDoseID1(db.getIdDosisARV(popupSpinnerDosisMalam3.getSelectedItem().toString(), "Malam"));
+											dos_pagi4.setText(popupSpinnerDosisPagi4.getSelectedItem().toString());arv_model4.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisPagi4.getSelectedItem().toString(), "Pagi"));
+											dos_malam4.setText(popupSpinnerDosisMalam4.getSelectedItem().toString());arv_model4.SetARVDoseID1(db.getIdDosisARV(popupSpinnerDosisMalam4.getSelectedItem().toString(), "Malam"));
 
+											arv_anak.add(arv_model1);arv_anak.add(arv_model2);arv_anak.add(arv_model3);arv_anak.add(arv_model4);
 										} else if (banyak == 5) {
 											linArv1.setVisibility(View.VISIBLE);
 											linArv2.setVisibility(View.VISIBLE);
 											linArv3.setVisibility(View.VISIBLE);
 											linArv4.setVisibility(View.VISIBLE);
 											linArv5.setVisibility(View.VISIBLE);
-											arv1.setText(msg_list[0]);
-											arv2.setText(msg_list[1]);
-											arv3.setText(msg_list[2]);
-											arv4.setText(msg_list[3]);
-											arv5.setText(msg_list[4]);
-											dos_pagi1
-													.setText(popupSpinnerDosisPagi1
-															.getSelectedItem()
-															.toString());
-											dos_malam1
-													.setText(popupSpinnerDosisMalam1
-															.getSelectedItem()
-															.toString());
-											dos_pagi2
-													.setText(popupSpinnerDosisPagi2
-															.getSelectedItem()
-															.toString());
-											dos_malam2
-													.setText(popupSpinnerDosisMalam2
-															.getSelectedItem()
-															.toString());
-											dos_pagi3
-													.setText(popupSpinnerDosisPagi3
-															.getSelectedItem()
-															.toString());
-											dos_malam3
-													.setText(popupSpinnerDosisMalam3
-															.getSelectedItem()
-															.toString());
-											dos_pagi4
-													.setText(popupSpinnerDosisPagi4
-															.getSelectedItem()
-															.toString());
-											dos_malam4
-													.setText(popupSpinnerDosisMalam4
-															.getSelectedItem()
-															.toString());
-											dos_pagi5
-													.setText(popupSpinnerDosisPagi5
-															.getSelectedItem()
-															.toString());
-											dos_malam5
-													.setText(popupSpinnerDosisMalam5
-															.getSelectedItem()
-															.toString());
+											arv1.setText(msg_list[0]);arv_model1.SetARVTypeID(db.getIdTypeARV(msg_list[0]));
+											arv2.setText(msg_list[1]);arv_model2.SetARVTypeID(db.getIdTypeARV(msg_list[1]));
+											arv3.setText(msg_list[2]);arv_model3.SetARVTypeID(db.getIdTypeARV(msg_list[2]));
+											arv4.setText(msg_list[3]);arv_model4.SetARVTypeID(db.getIdTypeARV(msg_list[3]));
+											arv5.setText(msg_list[4]);arv_model5.SetARVTypeID(db.getIdTypeARV(msg_list[4]));
+											dos_pagi1.setText(popupSpinnerDosisPagi1.getSelectedItem().toString());arv_model1.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisPagi1.getSelectedItem().toString(), "Pagi"));
+											dos_malam1.setText(popupSpinnerDosisMalam1.getSelectedItem().toString());arv_model1.SetARVDoseID1(db.getIdDosisARV(popupSpinnerDosisMalam1.getSelectedItem().toString(), "Malam"));
+											dos_pagi2.setText(popupSpinnerDosisPagi2.getSelectedItem().toString());arv_model2.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisPagi2.getSelectedItem().toString(), "Pagi"));
+											dos_malam2.setText(popupSpinnerDosisMalam2.getSelectedItem().toString());arv_model2.SetARVDoseID1(db.getIdDosisARV(popupSpinnerDosisMalam2.getSelectedItem().toString(), "Malam"));
+											dos_pagi3.setText(popupSpinnerDosisPagi3.getSelectedItem().toString());arv_model3.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisPagi3.getSelectedItem().toString(), "Pagi"));
+											dos_malam3.setText(popupSpinnerDosisMalam3.getSelectedItem().toString());arv_model3.SetARVDoseID1(db.getIdDosisARV(popupSpinnerDosisMalam3.getSelectedItem().toString(), "Malam"));
+											dos_pagi4.setText(popupSpinnerDosisPagi4.getSelectedItem().toString());arv_model4.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisPagi4.getSelectedItem().toString(), "Pagi"));
+											dos_malam4.setText(popupSpinnerDosisMalam4.getSelectedItem().toString());arv_model4.SetARVDoseID1(db.getIdDosisARV(popupSpinnerDosisMalam4.getSelectedItem().toString(), "Malam"));
+											dos_pagi5.setText(popupSpinnerDosisPagi5.getSelectedItem().toString());arv_model5.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisPagi5.getSelectedItem().toString(), "Pagi"));
+											dos_malam5.setText(popupSpinnerDosisMalam5.getSelectedItem().toString());arv_model5.SetARVDoseID(db.getIdDosisARV(popupSpinnerDosisMalam5.getSelectedItem().toString(), "Malam"));
+											
+											arv_anak.add(arv_model1);arv_anak.add(arv_model2);arv_anak.add(arv_model3);arv_anak.add(arv_model4);arv_anak.add(arv_model5);
 										}
 									}
 								});
@@ -1570,11 +1402,9 @@ public class ProfilAnakActivity extends Activity implements
 
 		Button bq_pos = alert.getButton(DialogInterface.BUTTON_POSITIVE);
 		Button bq_neg = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
-		bq_pos.setBackgroundDrawable(getResources().getDrawable(
-				R.drawable.button));
+		bq_pos.setBackgroundDrawable(getResources().getDrawable(R.drawable.button));
 		bq_pos.setTextColor(Color.WHITE);
-		bq_neg.setBackgroundDrawable(getResources().getDrawable(
-				R.drawable.button));
+		bq_neg.setBackgroundDrawable(getResources().getDrawable(R.drawable.button));
 		bq_neg.setTextColor(Color.WHITE);
 
 	}
@@ -1585,49 +1415,45 @@ public class ProfilAnakActivity extends Activity implements
 		getMenuInflater().inflate(R.menu.profil_anak, menu);
 		return true;
 	}
-
-	// this function is to inserting values into local database this is still
-	// static :)
-	public void InsertDataToLocalDatabase() {
-		tabel_caregiver = new TM_Caregiver(getApplicationContext());
-		tabel_kelas = new TM_Class(getApplicationContext());
-		tabel_dosis = new TM_Drug_Dose(getApplicationContext());
-		tabel_status_arv = new TM_Drug_Status(getApplicationContext());
-		tabel_type_arv = new TM_Drug_Type(getApplicationContext());
-		tabel_kotamadya = new TM_District(getApplicationContext());
-		tabel_subdistrict = new TM_Subdistrict(getApplicationContext());
-		tabel_child_facility = new TM_Child_Facility(getApplicationContext());
-		tabel_cost_facility = new TM_Cost_Facility(getApplicationContext());
+	
+	//Get Device ID
+	public String getUniqueID(){    
+	    String AndroidDeviceId = "";
+	    TelephonyManager mTelephony = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+	    if (mTelephony.getDeviceId() != null){
+	        AndroidDeviceId = mTelephony.getDeviceId(); 
+	    }else{
+	         AndroidDeviceId = Secure.getString(getApplicationContext().getContentResolver(), Secure.ANDROID_ID); 
+	    }
+	    return AndroidDeviceId;
+	}
+	
+	public String GetChildID()
+	{
+		String child_id;
+		Integer current_id = db.GetSeq();
+		child_id = getUniqueID() + "_"+(current_id+1);
+		//update tabel seq
+		db.UpdateSeq(""+current_id, ""+(current_id+1));
+		return child_id;
+		
 	}
 
 	// spinner
 	// dosis pagi
 	public void setSpin(String[] item, Spinner spin) {
-		// Spinner popupSpinnerDosisPagi = (Spinner) popupView
-		// .findViewById(R.id.spinDosisPagi);
-
-		ArrayAdapter<String> adapter_dosis = new ArrayAdapter<String>(this,
-				R.layout.spin, item);
-		adapter_dosis
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		ArrayAdapter<String> adapter_dosis = new ArrayAdapter<String>(this,R.layout.spin, item);
+		adapter_dosis.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spin.setAdapter(adapter_dosis);
 
 	}
 
-	public void textViewSetText(String value) {
-
-		tvSusu.setText(value);
-	}
-
 	int countSelectedItem;
 
-	private void SimpanFasilitasArray(final String flag,
-			final CharSequence[] fasilitas, final TextView tv) {
+	private void SimpanFasilitasArray(final String flag,final CharSequence[] fasilitas, final TextView tv) {
 		// instance od table to get id facility
-		tabel_facility = new TM_Facility(getApplicationContext());
-
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle("Select Milk");
+		builder.setTitle("Pilih Fasilitas");
 
 		builder.setMultiChoiceItems(fasilitas, null,
 				new DialogInterface.OnMultiChoiceClickListener() {
@@ -1645,11 +1471,8 @@ public class ProfilAnakActivity extends Activity implements
 							selList.remove(Integer.valueOf(arg1));
 						}
 						if (countSelectedItem >= 3) {
-							Toast.makeText(context,
-									"Anda Tidak Dapat Fasilitas Lebih Dari 2 ",
-									Toast.LENGTH_LONG).show();
-							((AlertDialog) arg0).getListView().setItemChecked(
-									arg1, false);
+							Toast.makeText(context,"Anda Tidak Dapat Fasilitas Lebih Dari 2 ",Toast.LENGTH_LONG).show();
+							((AlertDialog) arg0).getListView().setItemChecked(arg1, false);
 							selList.remove(Integer.valueOf(arg1));
 							countSelectedItem--;
 							// ((AlertDialog)arg0).getButton(DialogInterface.BUTTON_POSITIVE).setVisibility(View.INVISIBLE);
@@ -1721,7 +1544,7 @@ public class ProfilAnakActivity extends Activity implements
 
 		case R.id.button_susu:
 			selList.clear();
-			final CharSequence[] susu = tabel_cost_facility
+			final CharSequence[] susu = db
 					.getAllBrandName("FA001");
 			final String flag = "susu";
 			SimpanFasilitasArray(flag, susu, tvSusu);
@@ -1730,7 +1553,7 @@ public class ProfilAnakActivity extends Activity implements
 
 		case R.id.button_vitamin:
 			selList.clear();
-			final CharSequence[] vitamin = tabel_cost_facility
+			final CharSequence[] vitamin = db
 					.getAllBrandName("FA002");
 			final String flag_vitamin = "vitamin";
 			SimpanFasilitasArray(flag_vitamin, vitamin, tvVitamin);
@@ -1739,7 +1562,7 @@ public class ProfilAnakActivity extends Activity implements
 
 		case R.id.button_popok:
 			selList.clear();
-			final CharSequence[] popok = tabel_cost_facility
+			final CharSequence[] popok = db
 					.getAllBrandName("FA003");
 			final String flag_popok = "popok";
 			SimpanFasilitasArray(flag_popok, popok, tvPopok);

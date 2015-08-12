@@ -170,7 +170,7 @@ public class TM_Child_Facility {
 				.getColumnIndex(ROW_FACILITY_ID)));
 		curData.setFacility_cost_id(cursor.getString(cursor
 				.getColumnIndex(ROW_FACILITY_COST_ID)));
-		curData.SetFacilityQty(cursor.getString(cursor.getColumnIndex(ROW_FACILITY_QTY)));
+//		curData.SetFacilityQty(cursor.getString(cursor.getColumnIndex(ROW_FACILITY_QTY)));
 
 		return curData;
 	}
