@@ -1,11 +1,14 @@
 package com.example.databaselap;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.example.modellap.ChildARV_Model;
 import com.example.modellap.ChildFacility_Model;
 import com.example.modellap.Child_Model;
 import com.example.modellap.Complaint_Model;
+import com.example.modellap.Environment_Model;
+import com.example.modellap.Image_Model;
 import com.example.modellap.Visit_Facility;
 import com.example.modellap.Visit_Model;
 
@@ -3595,6 +3598,77 @@ public class Database extends SQLiteOpenHelper {
 				return name;
 			}
 			
+			public String getIdComp(String name) {
+			    String id="";
+			    SQLiteDatabase db = this.getReadableDatabase();
+			    try{
+			     Cursor mCursor = db.rawQuery(
+			       "SELECT  COMPLAINT_id  FROM  TM_COMPLAINT  where COMPLAINT_description like '%"+name+"%'" , null);
+			     if (mCursor != null) {
+			      mCursor.moveToFirst();
+			      id=mCursor.getString(0);
+			     }
+			     mCursor.close();
+			    }catch (SQLiteException se) {
+			      Log.v(" getIdImageType Exception",Log.getStackTraceString(se));
+			    } catch (Exception e) {
+			     Log.v(" getIdImageType Exception",Log.getStackTraceString(e));
+			    } finally {
+			     db.close();
+			    }
+
+
+			    return id;
+			   }
+			/to search complaint and action
+			   public ArrayList<Visit_Model> searchComplaintAction(String id_comp, String id_anak, String tindakan) {
+			    ArrayList<Complaint_Model> prseDataComplaint = new ArrayList<Complaint_Model>();
+			    
+			    ArrayList<Visit_Model> data = new ArrayList<Visit_Model>();
+			    ArrayList<String> CreatTime = new ArrayList<String>();
+			    ArrayList<String> vis_typ_id = new ArrayList<String>();
+			    Visit_Model model = new Visit_Model();
+			    SQLiteDatabase db = this.getReadableDatabase();
+			    
+			    String tvStat = null;
+			    int j;
+			    
+			    ArrayList<String> all_date = new ArrayList<String>();
+			    try{
+			     
+			     Cursor mCursor = db
+			       .rawQuery(
+			         "SELECT * FROM  TR_VISIT  where VISIT_complaint_id = '"+id_comp+"' and VISIT_child_id = '"+id_anak+"' or VISIT_action like '%"+tindakan+"%'" , null);
+			     mCursor.moveToFirst();
+			     while (!mCursor.isAfterLast()) {
+			      prseDataComplaint.add(parseDataComplaintModel(mCursor));
+			      CreatTime.add(mCursor.getString(mCursor.getColumnIndex(VISIT_CREATE_TIME )));
+			      vis_typ_id.add(mCursor.getString(mCursor.getColumnIndex(VISIT_VISIT_TYPE_ID )));
+			      model.setComplaints(prseDataComplaint);
+			      model.setCreatTime(CreatTime);
+			      model.setVisTypId(vis_typ_id);
+			      model.setChildID(mCursor.getString(mCursor.getColumnIndex(VISIT_CHILD_ID )));
+			      model.setVisitTypeID(mCursor.getString(mCursor.getColumnIndex(VISIT_VISIT_TYPE_ID)));
+			      model.setVisitDate(mCursor.getString(mCursor.getColumnIndex(VISIT_DATE)));
+			      data.add(model);
+			      
+			      mCursor.moveToNext();
+			     }
+			 
+			     mCursor.close();
+			     
+			    }catch (SQLiteException se) {
+			      Log.v(" getNameComplaint Exception",Log.getStackTraceString(se));
+			    
+			    } catch (Exception e) {
+			     Log.v(" getNameComplaint Exception",Log.getStackTraceString(e));
+			    } finally {
+			     db.close();
+			    }
+			    return data;
+			    
+			   }
+			
 	//--------------------------------------------COMPLAINT -----------------------------------------------------//
 			public ArrayList<String> getDataComplaint() {
 				ArrayList<String> allData = new ArrayList<String>();
@@ -3808,53 +3882,187 @@ public class Database extends SQLiteOpenHelper {
 				  }
 			  }
 			
-			//belum menangani update
-			public String GetPathFotoKunjunganAnak(String image_date, String image_id)
+			public void DeletePhoto(ArrayList<Image_Model> foto)
 			{
-				String name = "";
+				SQLiteDatabase db=this.getWritableDatabase();
+				try {
+					for(Image_Model mdl : foto)
+					{
+						db.delete(TR_IMAGE, IMAGE_NAME + " =? and IMAGE_date='"+ mdl.GetImage_date() + "' and IMAGE_id='"+ mdl.GetImage_id() + "' and IMAGE_image_type_id='"+ mdl.GetImage_type_id()+ "'", new String[] {mdl.GetImage_name()});
+					}
+					// insert the new
+				} catch (Exception e) {
+					Log.e("Eror delete fasilitas anak", e.toString());
+				}finally
+				{
+					db.close();
+				}
+			}
+			
+			public void UpdatePhoto(
+					String image_name,
+					String image_date, 
+					String image_id, 
+					String image_path, 
+					String image_server_path, 
+					String image_type_id, 
+					String image_longitude,
+					String image_latitude,
+					String ub, String ut, String cb, String ct)
+			{
+				 SQLiteDatabase db = this.getWritableDatabase();
+				  try {
+						ContentValues values = new ContentValues();
+						values.put(IMAGE_NAME  , image_name);
+						values.put(IMAGE_DATE  , image_date);
+						values.put(IMAGE_ID  , image_id);
+						values.put(IMAGE_PATH , image_path);
+						values.put(IMAGE_SERVER_PATH , image_server_path);
+						values.put(IMAGE_IMAGE_TYPE_ID   , image_type_id);
+						values.put(IMAGE_LONGITUDE   , image_longitude);
+						values.put(IMAGE_LATITUDE   , image_latitude);
+						values.put(IMAGE_UPDATE_BY  , ub);
+						values.put(IMAGE_UPDATE_TIME , ut);
+						values.put(IMAGE_CREATED_BY, cb);
+						values.put(IMAGE_CREATED_TIME, ct);
+						db.insert(TR_IMAGE , null, values);
+						
+						Log.e("Update ke tabel", "image name "+image_name+" date "+image_date+" image_id "+image_id+" image_path "+image_path+" server_path "+image_server_path+" image_type_id "+image_type_id+" image_longitude "+image_longitude+" image_latitude "+image_latitude+" ub "+ub+" ut "+ut);
+						
+						
+				  }
+				  catch (SQLiteException se) {
+						 Log.v("InsertPhoto",Log.getStackTraceString(se));
+				  } catch (Exception e) {
+						Log.v("InsertPhoto",Log.getStackTraceString(e));
+				  } finally {
+						db.close();
+				  }
+			  }
+			
+			
+			//belum menangani update
+			public ArrayList<Image_Model> GetAllPathFotoKunjunganAnak(String image_date, String image_id)
+			{
+				ArrayList<Image_Model> photo = new ArrayList<Image_Model>();
+				
+				SQLiteDatabase db = this.getReadableDatabase();
+				try{
+					Cursor mCursor = db.rawQuery("SELECT  *  FROM  TR_IMAGE  WHERE IMAGE_date= '"+ image_date + "' and IMAGE_id= '"+image_id+ "' and IMAGE_image_type_id= '1'", null);
+					if (mCursor != null) {
+						mCursor.moveToFirst();
+						while (!mCursor.isAfterLast()) {
+							photo.add(parseDataImageModel(mCursor));
+							mCursor.moveToNext();
+						}
+					}
+					mCursor.close();
+				}catch (SQLiteException se) {
+					 Log.v(" GetAllPathFotoKunjunganAnak Exception",Log.getStackTraceString(se));
+				} catch (Exception e) {
+					Log.v(" GetAllPathFotoKunjunganAnak Exception",Log.getStackTraceString(e));
+				} finally {
+					db.close();
+				}
+				return photo;
+			}
+			
+						
+			public ArrayList<Image_Model> GetAllPathFotoRumahAnak(String image_date, String image_id)
+			{
+				ArrayList<Image_Model> photo = new ArrayList<Image_Model>();
+				
 				SQLiteDatabase db = this.getReadableDatabase();
 				try{
 					Cursor mCursor = db.rawQuery(
-									"SELECT  IMAGE_path  FROM  TR_IMAGE  WHERE IMAGE_DATE= '"+ image_date + "' and IMAGE_id= '"+image_id+ "' and IMAGE_image_type_id= '1'", null);
+									"SELECT  *  FROM  TR_IMAGE  WHERE IMAGE_date= '"+ image_date + "' and IMAGE_id= '"+image_id+ "' and IMAGE_image_type_id= '2'", null);
+					mCursor.moveToFirst();
 					if (mCursor != null) {
-						mCursor.moveToFirst();
-						name = mCursor.getString(mCursor.getColumnIndex(IMAGE_PATH));
+						while (!mCursor.isAfterLast()) {
+							photo.add(parseDataImageModel(mCursor));
+							mCursor.moveToNext();
+						}
 					}
 					mCursor.close();
 				}catch (SQLiteException se) {
-					 Log.v(" GetPathFotoKunjunganAnak Exception",Log.getStackTraceString(se));
+					 Log.v(" GetAllPathFotoKunjunganAnak Exception",Log.getStackTraceString(se));
 				} catch (Exception e) {
-					Log.v(" GetPathFotoKunjunganAnak Exception",Log.getStackTraceString(e));
+					Log.v(" GetAllPathFotoKunjunganAnak Exception",Log.getStackTraceString(e));
 				} finally {
 					db.close();
 				}
-				return name;
+				return photo;
 			}
 			
-			public String GetPathFotoRumahAnak(String image_date, String image_id)
+			public ArrayList<Image_Model> GetAllPathFoto(String image_date, String image_id)
 			{
-				String name = "";
+				ArrayList<Image_Model> photo = new ArrayList<Image_Model>();
+				
 				SQLiteDatabase db = this.getReadableDatabase();
 				try{
-					Cursor mCursor = db
-							.rawQuery(
-									"SELECT  IMAGE_path  FROM  TR_IMAGE  WHERE IMAGE_DATE= '"
-											+ image_date + "' and IMAGE_id= '"+image_id+ "' and IMAGE_image_type_id= '2'", null);
-					if (mCursor != null) {
-						mCursor.moveToFirst();
-						name = mCursor.getString(mCursor.getColumnIndex(IMAGE_PATH ));
+					Cursor mCursor = db.rawQuery("SELECT IMAGE_name,IMAGE_date,IMAGE_id,IMAGE_path,IMAGE_server_path,IMAGE_image_type_id,IMAGE_longitude,IMAGE_latitude   FROM  TR_IMAGE  WHERE IMAGE_date= '"+ image_date + "' and IMAGE_id= '"+image_id+ "'", null);
+					
+					if (mCursor != null ) {
+						 mCursor.moveToFirst() ;
+						while (!mCursor.isAfterLast()) {
+							photo.add(parseDataImageModel(mCursor));
+							mCursor.moveToNext();
+						}
 					}
 					mCursor.close();
-					
 				}catch (SQLiteException se) {
-					 Log.v(" GetPathFotoRumahAnak Exception",Log.getStackTraceString(se));
+					 Log.v(" GetAllPathFoto Exception",Log.getStackTraceString(se));
 				} catch (Exception e) {
-					Log.v(" GetPathFotoRumahAnak Exception",Log.getStackTraceString(e));
+					Log.v(" GetAllPathFoto Exception",Log.getStackTraceString(e));
 				} finally {
 					db.close();
 				}
-				return name;
+				return photo;
+				
 			}
+			
+			public Image_Model GetPathFoto(String image_date, String image_id)
+			{
+				Image_Model photo = new Image_Model();
+				
+				SQLiteDatabase db = this.getReadableDatabase();
+				try{
+					Cursor mCursor = db.rawQuery("SELECT  *  FROM  TR_IMAGE  WHERE IMAGE_date= '"+ image_date + "' and IMAGE_id= '"+image_id+ "'", null);
+					
+					if (mCursor != null ) {
+						 mCursor.moveToFirst() ;
+						 photo.SetImagePath(mCursor.getString(mCursor.getColumnIndex(IMAGE_PATH)));
+						 //photo = mCursor.getString(mCursor.getColumnIndex(IMAGE_PATH));
+						
+					}
+					mCursor.close();
+				}catch (SQLiteException se) {
+					 Log.v(" GetPathFoto Exception",Log.getStackTraceString(se));
+				} catch (Exception e) {
+					Log.v(" GetPathFoto Exception",Log.getStackTraceString(e));
+				} finally {
+					db.close();
+				}
+				return photo;
+				
+			}
+			
+			public Image_Model parseDataImageModel(Cursor cur)
+			{
+				Image_Model data  = new Image_Model();
+				data.SetImageDate(cur.getString(1));
+				data.SetImageId(cur.getString(2));
+				data.SetImageLatitude(cur.getString(7));
+				data.SetImageLongitude(cur.getString(6));
+				data.SetImageName(cur.getString(0));
+				data.SetImagePath(cur.getString(3));
+				data.SetImageServerPath(cur.getString(4));
+				data.SetImageTypeId(cur.getString(5));
+				return data;
+			} 
+
+			
+			
 
 		
 		
@@ -3893,58 +4101,103 @@ public class Database extends SQLiteOpenHelper {
 					db.close();
 				}
 			}
-			
-			//update kunjungan anak
-			public void UpdateToTableVisit(String id_child, String complaint_id, String complaint_status_id, String visit_date, String visit_type_id, String drug_taken, String height,
-					String lila, String weight, String action, String note, String reminder_id, String cb, String ct, String bmi_score)
+			public int CountAllVisit(String id_child)
 			{
+				int i = 0;
 				SQLiteDatabase db = this.getWritableDatabase();
 				
-				try{	
-					ContentValues val = new ContentValues();
-					val.put(VISIT_COMPLAINT_ID , complaint_id);
-					val.put(VISIT_COMPLAINT_STATUS_ID, complaint_status_id);
-					val.put(VISIT_VISIT_TYPE_ID , visit_type_id);
-					val.put(VISIT_DRUG_TAKEN , drug_taken);
-					val.put(VISIT_HEIGHT , height);
-					val.put(VISIT_LILA , lila);
-					val.put(VISIT_WEIGHT, weight);
-					val.put(VISIT_ACTION , action);
-					val.put(VISIT_NOTE , note);
-					val.put(VISIT_REMINDER_ID, reminder_id);
-					val.put(VISIT_CREATE_BY ,  cb);
-					val.put(VISIT_CREATE_TIME , ct);
-					val.put(VISIT_BMI_SCORE , bmi_score);
-					
-					db.update(TR_VISIT, val, ("VISIT_child_id = ? AND VISIT_date = "+ visit_date),new String[] { id_child });
-					
+				try{
+					Cursor mCursor = db.rawQuery(
+							"SELECT *  FROM  TR_VISIT WHERE VISIT_child_id= '"+ id_child + "' ", null);
+					if (mCursor != null ) {
+						mCursor.moveToFirst();
+						while (!mCursor.isAfterLast()) {
+							i++;
+							mCursor.moveToNext();
+						}
+					}
+				
 				}catch (SQLiteException se) {
-					 Log.v(" UpdateToTableVisit Exception",Log.getStackTraceString(se));
+					 Log.v(" SimpanKunjunganAnak Exception",Log.getStackTraceString(se));
 				}catch (Exception e) {
-					Log.v(" UpdateToTableVisit Exception",Log.getStackTraceString(e));
+					Log.v(" SimpanKunjunganAnak Exception",Log.getStackTraceString(e));
 				}finally {
 					db.close();
 				}
+				return i;
 			}
 			
-			//getkunjungan anak terakhir
-			public Visit_Model GetLatestVisit(String id_child)
+			public ArrayList<String> getAllVisitDate(String id_child) {
+			     ArrayList<String> data = new ArrayList<String>();
+			     SQLiteDatabase db = this.getReadableDatabase();
+			     try{
+			        Cursor mCursor = db.rawQuery("SELECT VISIT_date  FROM  TR_VISIT WHERE VISIT_child_id= '"+id_child+ "'", null);
+			         if (mCursor != null) {
+			           mCursor.moveToFirst();
+			           while (!mCursor.isAfterLast()) {
+			            data.add(mCursor.getString(mCursor.getColumnIndex(VISIT_DATE)));
+			           
+			            
+			            mCursor.moveToNext();
+			           }
+			         }
+			          mCursor.close();
+			        }catch (SQLiteException se) {
+			          Log.v(" get8VisitDate Exception",Log.getStackTraceString(se));
+			        } catch (Exception e) {
+			         Log.v(" get8VisitDate Exception",Log.getStackTraceString(e));
+			        } finally {
+			         db.close();
+			        }
+			     Collections.reverse(data);
+			     if(data.size()>8)
+			          {
+			           int lastIndex = data.size() - 1;
+			         data.remove(lastIndex);
+			          }
+			        return data;
+			   }
+			
+			//delete kunjungan anak
+			public void DeleteKunjunganAnak(String id_child, String visit_date, ArrayList<Complaint_Model> complaints)
+			{
+				SQLiteDatabase db=this.getWritableDatabase();
+				try {
+					for(Complaint_Model mdl : complaints)
+					{
+						db.delete(TR_VISIT, VISIT_CHILD_ID + " = ? AND VISIT_date= '"+ visit_date + "' AND  VISIT_complaint_id='"+ mdl.GetKeluhan() + "'",
+								new String[] { id_child });
+						Log.e("Deleting Kunjungan Lama","");
+					}
+					
+					db.close();
+					// insert the new
+				} catch (Exception e) {
+					Log.e("Eror DeleteKunjunganAnak", e.toString());
+				}
+			}
+			
+			public Visit_Model GetSpesificVisit(String id_child, String visit_date)
 			{
 				Log.e("Get Latest Visit", "true");
 				ArrayList<Complaint_Model> arr_complaint_model = new ArrayList<Complaint_Model>();
 				ArrayList<Visit_Facility> arr_fasilitas_anak = new ArrayList<Visit_Facility>();
+				ArrayList<Image_Model> arr_foto = new ArrayList<Image_Model>();
+				ArrayList<Environment_Model> arr_env = new ArrayList<Environment_Model>();
+				Image_Model img = new Image_Model();
 				Visit_Model model = new Visit_Model();
 				SQLiteDatabase db = this.getReadableDatabase();
 				try{
 					
 					Cursor mCursor = db.rawQuery(
-							"SELECT *  FROM  TR_VISIT WHERE VISIT_child_id= '"+ id_child + "' ", null);
-					if (mCursor != null && mCursor.moveToFirst()) {
-						mCursor.moveToLast();
+							"SELECT *  FROM  TR_VISIT WHERE VISIT_child_id= '"+ id_child + "' AND VISIT_date= '"+ visit_date + "'", null);
+					if (mCursor != null ) {
+						mCursor.moveToFirst();
 						
 						//parse data
 						model.setVisitDate(mCursor.getString(mCursor.getColumnIndex(VISIT_DATE )));
 						model.setChildID(mCursor.getString(mCursor.getColumnIndex(VISIT_CHILD_ID )));
+						model.setVisitTypeID(mCursor.getString(mCursor.getColumnIndex(VISIT_VISIT_TYPE_ID)));
 						model.setNote(mCursor.getString(mCursor.getColumnIndex(VISIT_NOTE )));
 						model.setHeight(mCursor.getString(mCursor.getColumnIndex(VISIT_HEIGHT )));
 						model.setWeight(mCursor.getString(mCursor.getColumnIndex(VISIT_WEIGHT )));
@@ -3959,6 +4212,13 @@ public class Database extends SQLiteOpenHelper {
 						//get all fasilitas
 						arr_fasilitas_anak = GetAllFasilitasAnak(model.GetVisitDate(), model.GetChildID());
 						model.setFasilitasKunjungan(arr_fasilitas_anak);
+						//get all foto anak
+						arr_foto = GetAllPathFoto(model.GetVisitDate(), model.GetChildID());
+						model.setPhotos(arr_foto);
+						//get environment model
+						arr_env = GetEnvironmentVisitChild(model.GetVisitDate(), model.GetChildID());
+						model.setEnvironments(arr_env);
+						
 					}
 					else
 					{
@@ -3980,7 +4240,132 @@ public class Database extends SQLiteOpenHelper {
 						b.SetKeluhan("kosong");b.SetStatusKeluhan("kosong");b.SetTindakan("kosong");arr_complaint_model.add(b);
 						Complaint_Model c = new Complaint_Model();
 						c.SetKeluhan("kosong");c.SetStatusKeluhan("kosong");c.SetTindakan("kosong");arr_complaint_model.add(c);
+						//foto
+						img.SetImagePath("");arr_foto.add(img);
+						model.setPhotos(arr_foto);
 						
+						
+					}
+				}catch (SQLiteException se) {
+					 Log.v(" GetLatestVisit Exception",Log.getStackTraceString(se));
+				} catch (Exception e) {
+					Log.v(" GetLatestVisit Exception",Log.getStackTraceString(e));
+				} finally {
+					db.close();
+				}
+				return model;
+			}
+			
+			
+			
+			
+			//update kunjungan anak
+			public void UpdateToTableVisit(String id_child, String complaint_id, String complaint_status_id, String visit_date, String visit_type_id, String drug_taken, String height,
+					String lila, String weight, String action, String note, String reminder_id, String cb, String ct, String bmi_score, String ub, String ut)
+			{
+				SQLiteDatabase db = this.getWritableDatabase();
+				
+				try{	
+					ContentValues val = new ContentValues();
+					val.put(VISIT_COMPLAINT_ID , complaint_id);
+					val.put(VISIT_COMPLAINT_STATUS_ID, complaint_status_id);
+					val.put(VISIT_VISIT_TYPE_ID , visit_type_id);
+					val.put(VISIT_DRUG_TAKEN , drug_taken);
+					val.put(VISIT_HEIGHT , height);
+					val.put(VISIT_LILA , lila);
+					val.put(VISIT_WEIGHT, weight);
+					val.put(VISIT_ACTION , action);
+					val.put(VISIT_NOTE , note);
+					val.put(VISIT_REMINDER_ID, reminder_id);
+					val.put(VISIT_CREATE_BY ,  cb);
+					val.put(VISIT_CREATE_TIME , ct);
+					val.put(VISIT_BMI_SCORE , bmi_score);
+					val.put(VISIT_UPDATE_BY, ub);
+					val.put(VISIT_UPDATE_TIME, ut);
+					val.put(VISIT_CREATE_BY, cb);
+					val.put(VISIT_CREATE_TIME, ct);
+					db.insert(TR_VISIT , null, val);
+					
+					
+					
+					//db.update(TR_VISIT, val, ("VISIT_child_id = ? AND VISIT_date = "+ visit_date),new String[] { id_child });
+					
+				}catch (SQLiteException se) {
+					 Log.v(" UpdateToTableVisit Exception",Log.getStackTraceString(se));
+				}catch (Exception e) {
+					Log.v(" UpdateToTableVisit Exception",Log.getStackTraceString(e));
+				}finally {
+					db.close();
+				}
+			}
+			
+			//getkunjungan anak terakhir
+			public Visit_Model GetLatestVisit(String id_child)
+			{
+				Log.e("Get Latest Visit", "true");
+				ArrayList<Complaint_Model> arr_complaint_model = new ArrayList<Complaint_Model>();
+				ArrayList<Visit_Facility> arr_fasilitas_anak = new ArrayList<Visit_Facility>();
+				ArrayList<Image_Model> arr_foto = new ArrayList<Image_Model>();
+				ArrayList<Environment_Model> arr_env = new ArrayList<Environment_Model>();
+				Image_Model img = new Image_Model();
+				Visit_Model model = new Visit_Model();
+				SQLiteDatabase db = this.getReadableDatabase();
+				try{
+					
+					Cursor mCursor = db.rawQuery(
+							"SELECT *  FROM  TR_VISIT WHERE VISIT_child_id= '"+ id_child + "' ", null);
+					if (mCursor != null && mCursor.moveToFirst()) {
+						mCursor.moveToLast();
+						
+						//parse data
+						model.setVisitDate(mCursor.getString(mCursor.getColumnIndex(VISIT_DATE )));
+						model.setChildID(mCursor.getString(mCursor.getColumnIndex(VISIT_CHILD_ID )));
+						model.setVisitTypeID(mCursor.getString(mCursor.getColumnIndex(VISIT_VISIT_TYPE_ID)));
+						model.setNote(mCursor.getString(mCursor.getColumnIndex(VISIT_NOTE )));
+						model.setHeight(mCursor.getString(mCursor.getColumnIndex(VISIT_HEIGHT )));
+						model.setWeight(mCursor.getString(mCursor.getColumnIndex(VISIT_WEIGHT )));
+						model.setLILA(mCursor.getString(mCursor.getColumnIndex(VISIT_LILA )));
+						model.setBMIScore(mCursor.getString(mCursor.getColumnIndex(VISIT_BMI_SCORE )));
+						model.setARVTaken(mCursor.getString(mCursor.getColumnIndex(VISIT_DRUG_TAKEN )));
+						model.setReminder_ID(mCursor.getString(mCursor.getColumnIndex(VISIT_REMINDER_ID )));
+						mCursor.close();
+						//get all keluhan
+						arr_complaint_model = GetAllComplaintAnak(model.GetChildID(),model.GetVisitDate());
+						model.setComplaints(arr_complaint_model);
+						//get all fasilitas
+						arr_fasilitas_anak = GetAllFasilitasAnak(model.GetVisitDate(), model.GetChildID());
+						model.setFasilitasKunjungan(arr_fasilitas_anak);
+						//get all foto anak
+						arr_foto = GetAllPathFoto(model.GetVisitDate(), model.GetChildID());
+						model.setPhotos(arr_foto);
+						//get environment model
+						arr_env = GetEnvironmentVisitChild(model.GetVisitDate(), model.GetChildID());
+						model.setEnvironments(arr_env);
+						
+					}
+					else
+					{
+						model.setVisitDate("00-00-00");
+						model.setChildID(id_child);
+						model.setNote("-");
+						model.setHeight("-");
+						model.setWeight("-");
+						model.setLILA("-");
+						model.setBMIScore("-");
+						model.setARVTaken("-");
+						model.setReminder_ID("-");
+						model.setBMIScore("Kosong");
+						
+						//keluhan
+						Complaint_Model a = new Complaint_Model();
+						a.SetKeluhan("kosong");a.SetStatusKeluhan("kosong");a.SetTindakan("kosong");arr_complaint_model.add(a);
+						Complaint_Model b = new Complaint_Model();
+						b.SetKeluhan("kosong");b.SetStatusKeluhan("kosong");b.SetTindakan("kosong");arr_complaint_model.add(b);
+						Complaint_Model c = new Complaint_Model();
+						c.SetKeluhan("kosong");c.SetStatusKeluhan("kosong");c.SetTindakan("kosong");arr_complaint_model.add(c);
+						//foto
+						img.SetImagePath("");arr_foto.add(img);
+						model.setPhotos(arr_foto);
 						
 						
 					}
@@ -4056,27 +4441,27 @@ public class Database extends SQLiteOpenHelper {
 			   }
 			
 			 public ArrayList<Visit_Model> get8VisitDate(String id_child) {
-				 ArrayList<Visit_Model> data = new ArrayList<Visit_Model>();
-				 SQLiteDatabase db = this.getReadableDatabase();
-				 try{
-				    Cursor mCursor = db.rawQuery("SELECT *  FROM  TR_VISIT WHERE VISIT_child_id= '"+id_child+ "'", null);
-				     if (mCursor != null) {
-					      mCursor.moveToFirst();
-					      while (!mCursor.isAfterLast()) {
-					       data.add(parseDataVisit(mCursor));
-					       mCursor.moveToNext();
-					      }
-				     }
-				      mCursor.close();
-				    }catch (SQLiteException se) {
-				      Log.v(" get8VisitDate Exception",Log.getStackTraceString(se));
-				    } catch (Exception e) {
-				     Log.v(" get8VisitDate Exception",Log.getStackTraceString(e));
-				    } finally {
-				     db.close();
-				    }
-				    return data;
-			}
+			     ArrayList<Visit_Model> data = new ArrayList<Visit_Model>();
+			     SQLiteDatabase db = this.getReadableDatabase();
+			     try{
+			        Cursor mCursor = db.rawQuery("SELECT DISTINCT VISIT_date, VISIT_child_id, VISIT_visit_type_id  FROM  TR_VISIT WHERE VISIT_child_id= '"+id_child+ "'", null);
+			         if (mCursor != null) {
+			           mCursor.moveToFirst();
+			           while (!mCursor.isAfterLast()) {
+			            data.add(parseDataVisit(mCursor));
+			            mCursor.moveToNext();
+			           }
+			         }
+			          mCursor.close();
+			        }catch (SQLiteException se) {
+			          Log.v(" get8VisitDate Exception",Log.getStackTraceString(se));
+			        } catch (Exception e) {
+			         Log.v(" get8VisitDate Exception",Log.getStackTraceString(e));
+			        } finally {
+			         db.close();
+			        }
+			        return data;
+			   }
 			 
 			public Visit_Model parseDataVisit(Cursor c)
 			{
@@ -4136,12 +4521,8 @@ public class Database extends SQLiteOpenHelper {
 				        if (mCursor!=null) {
 					         mCursor.moveToLast();
 					         mCursor.moveToPrevious();
-//					         do {
 					        	 curData1.setVisitDate(mCursor.getString(mCursor.getColumnIndex(VISIT_DATE)));
 					        	 curData1.setBMIScore(mCursor.getString(mCursor.getColumnIndex(VISIT_BMI_SCORE)));
-					            
-//					         }
-//					         while(mCursor.moveToPrevious());
 				         }
 				        else
 				        {
@@ -4149,9 +4530,9 @@ public class Database extends SQLiteOpenHelper {
 				        	 curData1.setBMIScore("Kosong");
 				        }
 				       }catch (SQLiteException se) {
-				         Log.v(" getAllDataCareGiver Exception",Log.getStackTraceString(se));
+				         Log.v(" getBMITwoLatestVisit Exception",Log.getStackTraceString(se));
 				       } catch (Exception e) {
-				        Log.v(" getAllDataCareGiver Exception",Log.getStackTraceString(e));
+				        Log.v(" getBMITwoLatestVisit Exception",Log.getStackTraceString(e));
 				       } finally {
 				        db.close();
 				       }
@@ -4162,8 +4543,7 @@ public class Database extends SQLiteOpenHelper {
 
 		
 		//---------------------------------------VISIT ENV----------------------------------------------------------//
-			// insert to tabel tr visit environment
-			   
+			// insert to tabel tr visit environment   
 			   public void InsertEnvironmentScore(String visit_date, String child_id,String environment_id,String enviroment_score)
 			   {
 				     SQLiteDatabase db = this.getWritableDatabase();
@@ -4183,8 +4563,7 @@ public class Database extends SQLiteOpenHelper {
 				      } finally {
 				    	  db.close();
 				      }
-			      }
-			   
+			     }
 			   
 			   public int CountALLEnvironmentScore(String id_child, String visit_date) {
 				   int score = 0;
@@ -4255,13 +4634,51 @@ public class Database extends SQLiteOpenHelper {
 				     ContentValues values = new ContentValues();
 				     values.put(VE_ENVIRONMENT_SCORE, score);
 				     
-				     db.update(TR_VISIT_ENVIRONMENT, values, ("VE_visit_date = ? AND VE_child_id = "
-				       + id_child + "VE_environment_id = " + environment_id),
+				     db.update(TR_VISIT_ENVIRONMENT, values, ("VE_visit_date = ? AND VE_child_id = '"
+				       + id_child + "' AND VE_environment_id = '" + environment_id+"'"),
 				       new String[] { visit_date });
+				     Log.e("Update Environment Score", "");
 			     }catch (Exception e) {
 			      Log.e("Update Env Score gagal", ""+e.toString());
 			     }
 			    }
+			   
+			   public ArrayList<Environment_Model> GetEnvironmentVisitChild(String date, String child_id)
+			   {
+				   ArrayList<Environment_Model> data = new ArrayList<Environment_Model>();
+				   SQLiteDatabase db = this.getReadableDatabase();
+					try{
+						Cursor mCursor = db.rawQuery(
+										"SELECT VE_environment_id,VE_environment_score  FROM  TR_VISIT_ENVIRONMENT WHERE VE_visit_date= '"
+												+ date + "' and VE_child_id= '"+child_id+ "'", null);
+						if (mCursor != null) {
+							mCursor.moveToFirst();
+							while (!mCursor.isAfterLast()) {
+								// parse data into model
+//								Log.e("fasilitas kunjungan anak", " id anak ");
+								data.add(parseDataVisitEnv(mCursor));
+								mCursor.moveToNext();
+							}
+						}
+							mCursor.close();
+					}catch (SQLiteException se) {
+						 Log.v(" GetEnvironmentVisitChild Exception",Log.getStackTraceString(se));
+					} catch (Exception e) {
+						Log.v(" GetEnvironmentVisitChild Exception",Log.getStackTraceString(e));
+					} finally {
+						db.close();
+					}
+					return data;
+			   }
+			   
+			   public Environment_Model parseDataVisitEnv(Cursor c)
+				{
+				   Environment_Model cur = new Environment_Model();
+					cur.SetEnvironment_ID(c.getString(c.getColumnIndex(VE_ENVIRONMENT_ID)));
+					cur.SetEnvironment_Score(c.getString(c.getColumnIndex(VE_ENVIRONMENT_SCORE)));
+
+					return cur;
+				}
 			   
 			   
 			   

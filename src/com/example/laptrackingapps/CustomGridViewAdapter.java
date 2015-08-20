@@ -1,3 +1,5 @@
+//this class is used as adapter to put data by item class
+
 package com.example.laptrackingapps;
 
 import java.util.ArrayList;

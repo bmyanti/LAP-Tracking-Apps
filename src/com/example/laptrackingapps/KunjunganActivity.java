@@ -11,22 +11,11 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import com.example.databaselap.Database;
-import com.example.databaselap.TM_Caregiver;
-import com.example.databaselap.TM_Child;
-import com.example.databaselap.TM_Child_Facility;
-import com.example.databaselap.TM_Class;
-import com.example.databaselap.TM_Cost_Facility;
-import com.example.databaselap.TM_Drug_Dose;
-import com.example.databaselap.TM_Drug_Status;
-import com.example.databaselap.TM_Drug_Type;
-import com.example.databaselap.TM_Facility;
-import com.example.databaselap.TM_Parent_Status;
-import com.example.databaselap.TR_Visit;
-import com.example.databaselap.TR_Visit_Environment;
 import com.example.modellap.ChildARV_Model;
 import com.example.modellap.ChildFacility_Model;
 import com.example.modellap.Child_Model;
 import com.example.modellap.Complaint_Model;
+import com.example.modellap.Image_Model;
 import com.example.modellap.Visit_Facility;
 import com.example.modellap.Visit_Model;
 
@@ -57,11 +46,8 @@ public class KunjunganActivity extends Activity {
 	LinearLayout tambah_kunjungan;
 	TextView lihat_selengkapnya;
 	LinearLayout lihatselengkapnya;
-	TextView txt_Nama_Anak, txt_BOD_Anak, txt_Umur_Anak, txt_JK_Anak,
-			txt_GOLDA_Anak, txt_ALAMAT_Anak, txt_StatusARV, txt_JenisARV,
-			txt_DosisARV, txt_NamaAyah, txt_StatusAyah, txt_NamaIbu,
-			txt_StatusIbu, txt_NamaPengasuh, Pengasuh, txt_NomorTelepon,
-			txt_Sekolah, txt_Kelas, txt_Fasilitas,txt_ARV;
+	TextView txt_Nama_Anak, txt_BOD_Anak, txt_Umur_Anak, txt_JK_Anak,txt_GOLDA_Anak, txt_ALAMAT_Anak, txt_StatusARV, txt_JenisARV,
+			txt_DosisARV, txt_NamaAyah, txt_StatusAyah, txt_NamaIbu,txt_StatusIbu, txt_NamaPengasuh, Pengasuh, txt_NomorTelepon,txt_Sekolah, txt_Kelas, txt_Fasilitas,txt_ARV;
 	
 	TextView tb, bb, lila,visit_date1a, visit_date1b, bmi_sekarang,grade, bmi_lalu, visit_date_lalu,keluhan1, keluhan2, keluhan3,status1, status2, status3, tindakan1, tindakan2, tindakan3, catatan, antar_susu, antar_vitamin, antar_popok, arv_taken, skor_rumah;
 	ImageView foto_anak, foto_rumah;
@@ -74,16 +60,15 @@ public class KunjunganActivity extends Activity {
 	
 	Visit_Model visit_model;
 	Child_Model model_anak;
-	TextView ivTgl1, ivTgl2, ivTgl3, ivTgl4, ivTgl5, ivTgl6, ivTgl7, ivTgl8,
-			ivTgl1a, ivTgl2a, ivTgl3a, ivTgl4a, ivTgl5a, ivTgl6a, ivTgl7a,
-			ivTgl8a;
-	RelativeLayout RLtgl1, RLtgl2, RLtgl3, RLtgl4, RLtgl5, RLtgl6, RLtgl7,
-			RLtgl8;
+	TextView ivTgl1, ivTgl2, ivTgl3, ivTgl4, ivTgl5, ivTgl6, ivTgl7, ivTgl8,ivTgl1a, ivTgl2a, ivTgl3a, ivTgl4a, ivTgl5a, ivTgl6a, ivTgl7a,ivTgl8a;
+	RelativeLayout RLtgl1, RLtgl2, RLtgl3, RLtgl4, RLtgl5, RLtgl6, RLtgl7,RLtgl8;
 
 	final Context context = this;
 	ImageView image_anak;
 	SearchView searchView1;
 	Database db;
+	Intent FKA;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -133,49 +118,49 @@ public class KunjunganActivity extends Activity {
 		setDelapanKunjugan();
 		
 		/************************SEARCH KELUHAN **************************************/
-		searchView1.setOnQueryTextListener(new OnQueryTextListener() {
+		  searchView1.setOnQueryTextListener(new OnQueryTextListener() {
 
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				// TODO Auto-generated method stub
+		   @Override
+		   public boolean onQueryTextSubmit(String query) {
+		    // TODO Auto-generated method stub
 
-				Toast.makeText(getBaseContext(), "query: " + query,
-						Toast.LENGTH_SHORT).show();
+		    // setContentView(R.layout.pencarian);
 
-				// setContentView(R.layout.pencarian);
+		    // String input = etCari.getText().toString();
 
-				// String input = svKunjungan.getQuery().toString();
+		    Intent intent = new Intent(KunjunganActivity.this,
+		      Pencarian.class);
+		    intent.putExtra("id_anak", "" + id_child);
+		    intent.putExtra("input", "" + query);
+		    startActivity(intent);
+		    return false;
+		   }
 
-				Intent intent = new Intent(KunjunganActivity.this,
-						Pencarian.class);
-				intent.putExtra("id_anak", ""+id_child);
-				intent.putExtra("input", "" + query);
-				startActivity(intent);
-				// Toast.makeText(getBaseContext(), svKunjungan.getQuery(),
-				// Toast.LENGTH_SHORT).show();
-				return false;
-			}
+		   @Override
+		   public boolean onQueryTextChange(String newText) {
+		    // TODO Auto-generated method stub
 
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				// TODO Auto-generated method stub
-
-				// Toast.makeText(getBaseContext(), newText,
-				// Toast.LENGTH_SHORT).show();
-				return false;
-			}
-		});
-
+		    // Toast.makeText(getBaseContext(), newText,
+		    // Toast.LENGTH_SHORT).show();
+		    return false;
+		   }
+		  });
 		/************************LIHAT SELENGKAPNYA ******************************/
+		
 		lihat_selengkapnya.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if (lihat_selengkapnya.getVisibility() == View.VISIBLE) {
+				if(lihat_selengkapnya.getText().toString().equals("lihat selengkapnya"))
+				{
 					lihatselengkapnya.setVisibility(View.VISIBLE);
-				} else {
-					lihatselengkapnya.setVisibility(View.INVISIBLE);
+					lihat_selengkapnya.setText("lihat sedikit");
+				}
+				else
+				{
+					lihatselengkapnya.setVisibility(View.GONE);
+					lihat_selengkapnya.setText("lihat selengkapnya");
 				}
 			}
 		});
@@ -276,6 +261,7 @@ public class KunjunganActivity extends Activity {
 		skor_rumah = (TextView) findViewById(R.id.skor);	
 		foto_anak = (ImageView) findViewById(R.id.ij3);
 		foto_rumah = (ImageView) findViewById(R.id.imageRumah);
+		FKA = new Intent(KunjunganActivity.this,FormulirKunjunganAnakActivity.class);
 		
 	}
 	
@@ -283,7 +269,6 @@ public class KunjunganActivity extends Activity {
 	{
 		
 		model_anak = db.getChildIdentityById(id_child);
-
 		txt_Nama_Anak.setText(model_anak.getChild_name());
 		txt_BOD_Anak.setText(model_anak.getChild_bod());
 		if (model_anak.getChild_bod().equals("")) {
@@ -351,19 +336,47 @@ public class KunjunganActivity extends Activity {
 	
 	public void setTampilanKunjunganAnak()
 	{
-		String as = "kosong";
-		if (model_anak.getImage_path().equals(as)) {
+		//---->test
+		Log.e("Size kunjunganAnak", ""+db.CountAllVisit(id_child));
+		
+		//----->masi kunj terakhir, untuk case kunjungan 2/3 atau lebih masih belum ditangani :)
+		visit_model = db.GetLatestVisit(id_child);
+		
+		//set photo anak
+		if(visit_model.GetVisitDate().equals("00-00-00"))
+		{
 			Bitmap bitmap1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon);
 			image_anak.setImageBitmap(bitmap1);
-		} else {
-			File image = new File(model_anak.getImage_path());
+			foto_rumah.setImageBitmap(bitmap1);
+		}
+		else
+		{
+			ArrayList<Image_Model> fotos = new ArrayList<Image_Model>();
+			fotos = visit_model.GetPhotos();
+			
+			File image = new File(visit_model.GetPhotos().get(0).GetImage_path());
 			BitmapFactory.Options bmOptions = new BitmapFactory.Options();
 			Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
 			bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
 			image_anak.setImageBitmap(bitmap);
-		}
 			
-		visit_model = db.GetLatestVisit(id_child);
+			//foto rumah
+			for(Image_Model mdl : fotos)
+			{
+				if(mdl.GetImage_type_id().equals("2"))
+				{
+					File image_r = new File(mdl.GetImage_path());
+					BitmapFactory.Options bmOptions_r = new BitmapFactory.Options();
+					Bitmap bitmap_r = BitmapFactory.decodeFile(image_r.getAbsolutePath(),bmOptions_r);
+					bitmap_r = Bitmap.createScaledBitmap(bitmap_r, 120, 120, true);
+					foto_rumah.setImageBitmap(bitmap_r);
+					break;
+				}
+				continue;
+			}
+		}
+		
+		
 		tb.setText(visit_model.GetHeight());
 		bb.setText(visit_model.GetWeight());
 		lila.setText(visit_model.GetLILA());
@@ -405,8 +418,6 @@ public class KunjunganActivity extends Activity {
 		catatan.setText(visit_model.GetNote());
 		arv_taken.setText(visit_model.GetARVTaken());
 		//score rumah
-//		Toast.makeText(getBaseContext(), "Skor rumah " + db.CountALLEnvironmentScore(visit_model.GetChildID(), visit_model.GetVisitDate())+"/25",
-//				Toast.LENGTH_SHORT).show();
 		skor_rumah.setText(""+db.CountALLEnvironmentScore(visit_model.GetChildID(), visit_model.GetVisitDate())+"/25");
 			
 		//ambil fasilitas
@@ -428,7 +439,6 @@ public class KunjunganActivity extends Activity {
 					antar_popok_ = "("+i.GetFacilityQty()+") "+db.getNameCostFacility(i.getFacility_cost_id())+", \n";
 				}
 			}
-			
 			//set nama fasilitas
 			antar_susu.setText(antar_susu_);
 			antar_vitamin.setText(antar_vitamin_);
@@ -450,7 +460,7 @@ public class KunjunganActivity extends Activity {
 	
 	ArrayList<Visit_Model> aLIst = new ArrayList<Visit_Model>(); 
 	
-	 public void setDelapanKunjugan() {
+	public void setDelapanKunjugan() {
 		  final int[] tvBulan = { R.id.ivTgl1, R.id.ivTgl2, R.id.ivTgl3,
 		    R.id.ivTgl4, R.id.ivTgl5, R.id.ivTgl6, R.id.ivTgl7, R.id.ivTgl8 };
 
@@ -458,6 +468,9 @@ public class KunjunganActivity extends Activity {
 		    R.id.ivTgl4a, R.id.ivTgl5a, R.id.ivTgl6a, R.id.ivTgl7a,
 		    R.id.ivTgl8a };
 
+		  final int[] tvRl = { R.id.rl1, R.id.rl2, R.id.rl3, R.id.rl4, R.id.rl5,
+		    R.id.rl6, R.id.rl7, R.id.rl8 };
+		  
 		  ArrayList<Visit_Model> aList = new ArrayList<Visit_Model>();
 		  aList = db.get8VisitDate(id_child);
 
@@ -465,9 +478,8 @@ public class KunjunganActivity extends Activity {
 
 		  Collections.reverse(aList);
 
-		  String a = db.GetLatestVisit(id_child).GetVisitTypeID();
-
 		  for (int j = 0; j < aList.size(); j++) {
+		   RelativeLayout rl = (RelativeLayout) findViewById(tvRl[j]);
 		   String[] splitedValue = aList.get(j).GetVisitDate().split("-");
 		   String gabung = aList.get(j).GetVisitDate();
 		   if (aList.size() > 8) {
@@ -475,6 +487,9 @@ public class KunjunganActivity extends Activity {
 		    aList.remove(lastIndex);
 		   }
 		   TextView tv = (TextView) findViewById(tvBulan[j]);
+
+		   rl.setVisibility(View.VISIBLE);
+
 		   if (aList.get(j).GetVisitTypeID().equals("VT002")) {
 		    tv.setBackgroundDrawable(getResources().getDrawable(
 		      R.drawable.lila));
@@ -488,26 +503,22 @@ public class KunjunganActivity extends Activity {
 
 		   TextView tvYear = (TextView) findViewById(tvTahun[j]);
 		   int df = Integer.parseInt(splitedValue[2]);
-		   TextView tvMonthYear = (TextView) findViewById(tvTahun[j]);
 		   tvYear.setText(splitedValue[1] + "." + set2Digit(df));
 		   tvYear.setGravity(View.TEXT_ALIGNMENT_CENTER);
-		   gabung = splitedValue[1] + "-" + set2Digit(df);
-		 }
+
+		  }
+
 		  
-		  RLtgl1.setVisibility(View.VISIBLE);
-	 }
-	
+		 }
 	public String[] CustomizeTanggal(String tanggal)
 	{
 		String[] result;
 		result = tanggal.split("-");
 		return result;
-		
 	}
 	
 	public String GetTimeNow() {
 		Calendar c = Calendar.getInstance();
-
 		SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 		return df.format(c.getTime());
 	}
@@ -598,30 +609,43 @@ public class KunjunganActivity extends Activity {
 			if(date_visit.equals(date_now))
 			{
 				Toast.makeText(getApplicationContext(), "Anda sudah melakukan kunjungan anak pada tanggal "+date_now, Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "Klik edit Kunjungan untuk mengedit data ", Toast.LENGTH_SHORT).show();
 				
 			}
 			else
 			{
-				intent2.putExtra("id_anak_fk", id_child);
+				intent2.putExtra("id_anak_fka", id_child);
 				startActivity(intent2);
-				Log.i("id anak pda kunj", " " + id_child);
+				finish();
+				Log.i("[sending to FKA]", " " + id_child);
 			}
 			
 			break;
 
 		case R.id.edit_infoanak:
-			Intent intent_ = getIntent();
-			String id_child = intent_.getStringExtra("id_child");
-			Intent intent3 = new Intent(KunjunganActivity.this,
-					ProfilAnakActivity.class);
+			//String id_child = intent_.getStringExtra("id_child");
+			Intent intent3 = new Intent(KunjunganActivity.this,ProfilAnakActivity.class);
 			intent3.putExtra("id_anak", id_child);
 			startActivity(intent3);
 			break;
 
 		case R.id.edit_kunjungan:
-			Intent intent4 = new Intent(KunjunganActivity.this,
-					FormulirKunjunganAnakActivity.class);
-			startActivity(intent4);
+			
+			//check apakah udah melakukan kunjugan utk pertma kali
+			if(visit_model.GetVisitDate().equals("00-00-00"))
+			{
+				Toast.makeText(getApplicationContext(), "Edit kunjungan dapat dilakukan jika sudah melakukan kunjungan", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "Klik menu Tambah Kunjungan", Toast.LENGTH_SHORT).show();
+			}
+			else
+			{
+				Intent intent4 = new Intent(KunjunganActivity.this,FormulirKunjunganAnakActivity.class);
+				intent4.putExtra("id_anak_fka1", ""+visit_model.GetChildID());
+				intent4.putExtra("Visit_Model_Update", visit_model);
+				startActivity(intent4);
+				Log.e("[Sending] FKA", "id anak "+visit_model.GetChildID()+" visit type "+visit_model.GetVisitTypeID()+" tb "+visit_model.GetHeight()+" bb "+visit_model.GetWeight()+" lila "+visit_model.GetLILA());
+			}
+			
 			break;
 
 		default:

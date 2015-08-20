@@ -1,11 +1,13 @@
+//this class is used as model in class listanak and customgridviewAdapter to put the model into gridarray to display image and name of children
+
 package com.example.laptrackingapps;
 
 import android.graphics.Bitmap;
 
 public class Item {
-	Bitmap image;
-	String title;
-	String id;
+	Bitmap image; //bitmap image child
+	String title; //name of child
+	String id; //id of child
 	
 	
 	public Item(String id, String title, Bitmap image) {

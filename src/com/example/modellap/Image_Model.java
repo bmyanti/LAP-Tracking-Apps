@@ -28,6 +28,7 @@ public class Image_Model implements Parcelable{
 		this.image_id = image_id;
 		this.image_path = image_path;
 		this.image_server_path  = image_server_path;
+		this.image_type_id = image_type_id;
 		this.image_longitude = longitude;
 		this.image_latitude = latitude;
 	}

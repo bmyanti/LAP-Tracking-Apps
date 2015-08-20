@@ -29,6 +29,8 @@ public class Visit_Model implements Parcelable {
 //	private ArrayList<String> Environment_Photos;
 	//foto
 	private ArrayList<Image_Model> Photos;
+	private ArrayList<String> creat_time;
+	private ArrayList<String> vis_type_id;
 
 
 	public String GetVisitDate() {
@@ -62,6 +64,11 @@ public class Visit_Model implements Parcelable {
 	public String GetBMIScore() {
 		return this.BMI_Score;
 	}
+	public ArrayList<String> GetCreatTime()
+	{
+		return this.creat_time;
+	}
+	
 
 	public String GetARVTaken() {
 		return this.ARV_Taken;
@@ -86,6 +93,10 @@ public class Visit_Model implements Parcelable {
 	public ArrayList<Image_Model> GetPhotos()
 	{
 		return this.Photos;
+	}
+	public ArrayList<String> GetVisitTypId()
+	{
+		return this.vis_type_id;
 	}
 
 	// setter
@@ -117,6 +128,10 @@ public class Visit_Model implements Parcelable {
 	public void setLILA(String LILA) {
 		this.LILA = LILA;
 	}
+	public void setCreatTime(ArrayList<String> creat_time)
+	{
+		this.creat_time = creat_time;
+	}
 
 	public void setBMIScore(String BMI_Score) {
 		this.BMI_Score = BMI_Score;
@@ -142,9 +157,13 @@ public class Visit_Model implements Parcelable {
 		this.Environments = Environments;
 	}
 	
-	public void setChildPhotos(ArrayList<Image_Model> Photos)
+	public void setPhotos(ArrayList<Image_Model> Photos)
 	{
 		this.Photos = Photos;
+	}
+	public void setVisTypId(ArrayList<String> vis_typ_id)
+	{
+		this.vis_type_id = vis_typ_id;
 	}
 
 	

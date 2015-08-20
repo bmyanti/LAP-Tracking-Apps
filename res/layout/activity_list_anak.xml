@@ -6,7 +6,7 @@
     tools:context=".ListAnakActivity" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/button_uploadkunjungan"
         android:layout_alignParentTop="true"
@@ -15,7 +15,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2" >
+           >
 
             <ImageView
                 android:id="@+id/btn_back"
@@ -27,7 +27,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="50dp"
                 android:layout_weight="4.5"
                 android:background="@color/blue"
                 android:orientation="horizontal" >
@@ -135,17 +135,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <ScrollView
-            android:id="@+id/scrollView1"
-            style="@style/scrollbar_bitmap_style"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="9"
-            android:fillViewport="true" >
+        
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -169,19 +159,21 @@
                     android:paddingLeft="45dp"
                     android:visibility="invisible" >
                 </ListView>
+                </LinearLayout>
+                
+				<GridView
+				    android:id="@+id/gridView1"
+				    android:layout_width="match_parent"
+				    android:layout_height="match_parent"
+				    android:layout_margin="4dp"
+				    android:columnWidth="80dp"
+				    android:gravity="center"
+				    android:numColumns="auto_fit"
+				    android:stretchMode="columnWidth" >
 
-                <GridView
-                    android:id="@+id/gridView1"
-                    android:layout_width="277dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:columnWidth="80dp"
-                    android:gravity="center"
-                    android:numColumns="auto_fit"
-                    android:stretchMode="columnWidth" >
                 </GridView>
-            </LinearLayout>
-        </ScrollView>
+            
+        
     </LinearLayout>
 
     <LinearLayout

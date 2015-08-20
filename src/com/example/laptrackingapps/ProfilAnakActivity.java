@@ -84,7 +84,7 @@ public class ProfilAnakActivity extends Activity implements
 	Button susu, vitamin, popok;
 	TextView tvSusu, tvVitamin, tvPopok, tvarv1, tvarv2, tvarv3, tvarv4,
 			tvarv5;
-	
+	RadioButton rb_gender;
 
 	// spinner
 	Spinner spin;
@@ -359,7 +359,7 @@ public class ProfilAnakActivity extends Activity implements
 		radio_gender_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(RadioGroup group, int checkedId) {
-						RadioButton rb_gender = (RadioButton) group.findViewById(checkedId);
+						rb_gender = (RadioButton) group.findViewById(checkedId);
 						if (null != rb_gender && checkedId > -1) {
 							gender = rb_gender.getText().toString();
 						}
@@ -381,110 +381,117 @@ public class ProfilAnakActivity extends Activity implements
 		});
 
 		// menyimpan data anak
-		simpan_profil.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				GetCaregiverPhone();
-				// check whether it is create or update -> krn me-refer ke
-				// activity yang sama
-				String path_gambar = "";
-				Intent i = getIntent();
-				PathNull = "kosong";
-				if (picturePath != null) {
-				     path_gambar = picturePath;
-				}else if (filePath != null) {
-				     path_gambar = filePath;
-				} else if (PathNull != null) {
-					path_gambar = PathNull;
-				    }
-				if (i.getStringExtra("id_anak") == null) {
-					/**************************INSERT DATA ANAK ******************************/
-					db.InsertDataAnak(GetChildID(), 
-							txtName.getText().toString(),
-							txtDate.getText().toString(), 
-							gender, 
-							golongan_darah.getSelectedItem().toString(), 
-							txtFatherName.getText().toString(), 
-							txtMotherName.getText().toString(), 
-							txtCareGiverName.getText().toString(), 
-							txtAddress.getText().toString(), 
-							GetCaregiverPhone(), 
-							txtSchool.getText().toString(), 
-							path_gambar, 
-							db.getIdStatusARV(status_obat.getSelectedItem().toString()), 
-							type_, 
-							dosis_, 
-							db.getIdKelas(kelas.getSelectedItem().toString()),
-							db.getIdCaregiver(care_giver.getSelectedItem().toString()), 
-							"-", 
-							findStatusParent(radio_status_ayah_group,radio_status_ayah), 
-							findStatusParent(radio_status_ibu_group,radio_status_ibu), 
-							db.getIdSubDistrict(spinner_kecamatan.getSelectedItem().toString()), 
-							db.getIdSubDistrict(spinner_kecamatansekolah.getSelectedItem().toString()), 
-							"",
-							"", 
-							"",
-							"",
-							"", 
-							"", 
-							"", 
-							"");
-					Log.e("Insert Data Anak", "ID "+GetChildID() +" path "+path_gambar);
-					/***************************INSERT FASILITAS ANAK **********************************/
-					InsertFasilitasAnak(db.getLastInsertedChild());
-					/**************************INSERT ARV ANAK******************************************/
-					for(ChildARV_Model mod_arv : arv_anak)
-					{
-						//insert untuk data dosis pagi & malam
-						db.InsertARVAnak(db.getLastInsertedChild(), mod_arv.GetDrugTypeID(), mod_arv.GetDrugDoseID(), "Sartika", GetTimeNow());
-						db.InsertARVAnak(db.getLastInsertedChild(), mod_arv.GetDrugTypeID(), mod_arv.GetDrugDoseID1(), "Sartika", GetTimeNow());
-					}
-					
-					
-				} else {
-					/***************************UPDATE DATA ANAK******************************************/
-					String id = i.getStringExtra("id_anak");
-					db.updateChildIdentityById(
-							id,
-							txtName.getText().toString(),
-							txtDate.getText().toString(),
-							gender,
-							golongan_darah.getSelectedItem().toString(),
-							txtFatherName.getText().toString(),
-							txtMotherName.getText().toString(),
-							txtCareGiverName.getText().toString(),
-							txtAddress.getText().toString(),
-							GetCaregiverPhone(),
-							txtSchool.getText().toString(),
-							findStatusParent(radio_status_ayah_group,radio_status_ayah),
-							findStatusParent(radio_status_ibu_group,radio_status_ibu), 
-							db.getIdCaregiver(care_giver.getSelectedItem().toString()),
-							db.getIdSubDistrict(spinner_kecamatan.getSelectedItem().toString()),
-							db.getIdSubDistrict(spinner_kecamatansekolah.getSelectedItem().toString()),
-							db.getIdKelas(kelas.getSelectedItem().toString()), path_gambar,"-","-");
+		 simpan_profil.setOnClickListener(new OnClickListener() {
+			  @Override
+			  public void onClick(View arg0) {
+			    GetCaregiverPhone();
+			    // check whether it is create or update -> krn me-refer ke
+			    // activity yang sama
+			    String path_gambar = "";
+			    Intent i = getIntent();
+			    PathNull = "kosong";
+			    if (picturePath != null) {
+			         path_gambar = picturePath;
+			    }else if (filePath != null) {
+			         path_gambar = filePath;
+			    } else if (PathNull != null) {
+			     path_gambar = PathNull;
+			        }
+			    if (i.getStringExtra("id_anak") == null) {
+			     /**************************INSERT DATA ANAK ******************************/
+			     if(validasi()==true)
+			     {
+			     db.InsertDataAnak(GetChildID(), 
+			       txtName.getText().toString(),
+			       txtDate.getText().toString(), 
+			       gender, 
+			       golongan_darah.getSelectedItem().toString(), 
+			       txtFatherName.getText().toString(), 
+			       txtMotherName.getText().toString(), 
+			       txtCareGiverName.getText().toString(), 
+			       txtAddress.getText().toString(), 
+			       GetCaregiverPhone(), 
+			       txtSchool.getText().toString(), 
+			       path_gambar, 
+			       db.getIdStatusARV(status_obat.getSelectedItem().toString()), 
+			       type_, 
+			       dosis_, 
+			       db.getIdKelas(kelas.getSelectedItem().toString()),
+			       db.getIdCaregiver(care_giver.getSelectedItem().toString()), 
+			       "-", 
+			       findStatusParent(radio_status_ayah_group,radio_status_ayah), 
+			       findStatusParent(radio_status_ibu_group,radio_status_ibu), 
+			       db.getIdSubDistrict(spinner_kecamatan.getSelectedItem().toString()), 
+			       db.getIdSubDistrict(spinner_kecamatansekolah.getSelectedItem().toString()), 
+			       "",
+			       "", 
+			       "",
+			       "",
+			       "", 
+			       "", 
+			       "", 
+			       "");
+			     }
+			     Log.e("Insert Data Anak", "ID "+GetChildID() +" path "+path_gambar);
+			     /***************************INSERT FASILITAS ANAK **********************************/
+			     InsertFasilitasAnak(db.getLastInsertedChild());
+			     /**************************INSERT ARV ANAK******************************************/
+			     for(ChildARV_Model mod_arv : arv_anak)
+			     {
+			      //insert untuk data dosis pagi & malam
+			      db.InsertARVAnak(db.getLastInsertedChild(), mod_arv.GetDrugTypeID(), mod_arv.GetDrugDoseID(), "Sartika", GetTimeNow());
+			      db.InsertARVAnak(db.getLastInsertedChild(), mod_arv.GetDrugTypeID(), mod_arv.GetDrugDoseID1(), "Sartika", GetTimeNow());
+			     }
+			     
+			     
+			    } else {
+			     /***************************UPDATE DATA ANAK******************************************/
+			     String id = i.getStringExtra("id_anak");
+			     db.updateChildIdentityById(
+			       id,
+			       txtName.getText().toString(),
+			       txtDate.getText().toString(),
+			       gender,
+			       golongan_darah.getSelectedItem().toString(),
+			       txtFatherName.getText().toString(),
+			       txtMotherName.getText().toString(),
+			       txtCareGiverName.getText().toString(),
+			       txtAddress.getText().toString(),
+			       GetCaregiverPhone(),
+			       txtSchool.getText().toString(),
+			       findStatusParent(radio_status_ayah_group,radio_status_ayah),
+			       findStatusParent(radio_status_ibu_group,radio_status_ibu), 
+			       db.getIdCaregiver(care_giver.getSelectedItem().toString()),
+			       db.getIdSubDistrict(spinner_kecamatan.getSelectedItem().toString()),
+			       db.getIdSubDistrict(spinner_kecamatansekolah.getSelectedItem().toString()),
+			       db.getIdKelas(kelas.getSelectedItem().toString()), path_gambar,"-","-");
 
-					/**************************UPDATE FASILITAS ANAK **********************************/
-					DeleteFasilitasAnak(i.getStringExtra("id_anak"));
-					InsertFasilitasAnak(i.getStringExtra("id_anak"));
-					
-					/************************ UPDATE ARV *********************************************/
-					db.DeleteARVAnak(i.getStringExtra("id_anak"));
-					for(ChildARV_Model mod_arv : arv_anak)
-					{
-						//insert untuk data dosis pagi & malam
-						db.InsertARVAnak(i.getStringExtra("id_anak"), mod_arv.GetDrugTypeID(), mod_arv.GetDrugDoseID(), "Sartika", GetTimeNow());
-						db.InsertARVAnak(i.getStringExtra("id_anak"), mod_arv.GetDrugTypeID(), mod_arv.GetDrugDoseID1(), "Sartika", GetTimeNow());
-					}
+			     /**************************UPDATE FASILITAS ANAK **********************************/
+			     DeleteFasilitasAnak(i.getStringExtra("id_anak"));
+			     InsertFasilitasAnak(i.getStringExtra("id_anak"));
+			     
+			     /************************* UPDATE ARV *********************/
+			     db.DeleteARVAnak(i.getStringExtra("id_anak"));
+			     for(ChildARV_Model mod_arv : arv_anak)
+			     {
+			      //insert untuk data dosis pagi & malam
+			      db.InsertARVAnak(i.getStringExtra("id_anak"), mod_arv.GetDrugTypeID(), mod_arv.GetDrugDoseID(), "Sartika", GetTimeNow());
+			      db.InsertARVAnak(i.getStringExtra("id_anak"), mod_arv.GetDrugTypeID(), mod_arv.GetDrugDoseID1(), "Sartika", GetTimeNow());
+			     }
 
-				}
+			    }
 
-				// go to test activity
-				Intent test = new Intent(getApplication(),ListAnakActivity.class);
-				startActivity(test);
+			    // go to test activity
+			    if(validasi()==true)
+			    {
+			    Intent test = new Intent(getApplication(),ListAnakActivity.class);
+			    startActivity(test);
+			    }
+			    
+			    
 
-			}
-		});
-
+			   }
+			  });
 		tambah_foto.setOnClickListener(new View.OnClickListener() {
 			   // button tambah foto
 			   @Override
@@ -570,13 +577,11 @@ public class ProfilAnakActivity extends Activity implements
 			if (!model_anak.getImage_path().equals("kosong")) {
 				File image = new File(model_anak.getImage_path());
 				BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-				Bitmap bitmap = BitmapFactory.decodeFile(
-						image.getAbsolutePath(), bmOptions);
+				Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(), bmOptions);
 				bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
 				tambah_foto.setImageBitmap(bitmap);
 			} else {
-				Bitmap bitmap1 = BitmapFactory.decodeResource(
-						context.getResources(), R.drawable.icon);
+				Bitmap bitmap1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon);
 				tambah_foto.setImageBitmap(bitmap1);
 			}
 
@@ -939,8 +944,7 @@ public class ProfilAnakActivity extends Activity implements
 				.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(RadioGroup group, int checkedId) {
-						RadioButton rb = (RadioButton) group
-								.findViewById(checkedId);
+						RadioButton rb = (RadioButton) group.findViewById(checkedId);
 						if (null != rb && checkedId > -1) {
 							if (rb.getText().toString().equals("HIDUP")) {
 								status_parent_temp = true;
@@ -1141,9 +1145,7 @@ public class ProfilAnakActivity extends Activity implements
 					}
 				});
 
-		builder.setNegativeButton("CANCEL",
-				new DialogInterface.OnClickListener() {
-
+		builder.setNegativeButton("CANCEL",new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 					}
@@ -1531,8 +1533,7 @@ public class ProfilAnakActivity extends Activity implements
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.btn_back:
-			Intent intent = new Intent(ProfilAnakActivity.this,
-					ListAnakActivity.class);
+			Intent intent = new Intent(ProfilAnakActivity.this,ListAnakActivity.class);
 			startActivity(intent);
 			break;
 
@@ -1609,6 +1610,36 @@ public class ProfilAnakActivity extends Activity implements
 		}
 	};
 
+	public Boolean validasi()
+	 {
+	  Boolean a = false;
+	  if(txtName.getText().toString().equals(""))
+	  {
+	   Toast.makeText(getApplicationContext(),"Nama Anak Tidak Boleh Kosong"+txtName.getText(),Toast.LENGTH_SHORT).show();
+	   a=false;
+	  }
+	  else if(txtDate.getText().toString().equals(""))
+	  {
+	   Toast.makeText(getApplicationContext(),"Tanggal Lahir Anak Tidak Boleh Kosong",Toast.LENGTH_SHORT).show();
+	   a=false;
+	  }
+	  else if(rb_gender==null)
+	  {
+	   Toast.makeText(getApplicationContext(),"Jenis Kelamin Tidak Boleh Kosong",Toast.LENGTH_SHORT).show();
+	   a=false;
+	  }
+	  else if(golongan_darah.getSelectedItem().toString().equals("-"))
+	  {
+	   Toast.makeText(getApplicationContext(),"Golongan Darah Tidak Boleh Kosong",Toast.LENGTH_SHORT).show();
+	   a=false;
+	  }
+	  else
+	  {
+	   a= true;
+	  }
+	  return a;
+	  
+	 }
 	// untuk tanggal lahir
 	private static String LPad(String schar, String spad, int len) {
 		String sret = schar;

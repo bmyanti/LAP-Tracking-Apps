@@ -47,20 +47,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class FormulirKunjunganAnakActivity extends Activity implements
-		OnItemSelectedListener {
-
+public class FormulirKunjunganAnakActivity extends Activity implements OnItemSelectedListener {
 	// untuk foto anak (kamera)
 	private static final int Image_take = 1;
 	
 	Database db;
-	ImageView back, foto_anak1, foto_anak2, foto_anak3, foto_anak4, foto_anak5,
-			foto_anak6;
+	ImageView back, foto_anak1, foto_anak2, foto_anak3, foto_anak4, foto_anak5,foto_anak6;
 	Button tambah_keluhan;
 	LinearLayout tambahKeluhan, tambahKeluhan2;
 	Button btn_foto1, btn_foto2, btn_foto3, btn_foto4, btn_foto5, btn_foto6;
-	LinearLayout layout_tambahkeluhan, layout_keluhan, layout_status,
-			layout_tindakan;
+	LinearLayout layout_tambahkeluhan, layout_keluhan, layout_status,layout_tindakan;
 	LinearLayout button_lanjut;
 
 	// GPSTracker class
@@ -72,9 +68,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 	static final int DATE_DIALOG_ID = 1;
 	private EditText txtDate;
 	Bitmap bitmap1, bitmap56;
-	private String[] arrMonth = { "Januari", "Februari", "Maret", "April",
-			"Mei", "Juni", "Juli", "Agustus", "September", "Oktober",
-			"November", "Desember" };
+	private String[] arrMonth = { "Januari", "Februari", "Maret", "April","Mei", "Juni", "Juli", "Agustus", "September", "Oktober","November", "Desember" };
 	Bitmap thumbnail1, thumbnail;
 	LinearLayout btn_kembali;
 	String child_id;
@@ -91,18 +85,15 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 
 	// arraylist data keluhan dan status
 	ArrayList<String> arr_keluhan, arr_status;
-	
-	//arr fasilias
+	//arr fasilitas
 	ArrayList<ChildFacility_Model> arr_fasilitas = new ArrayList<ChildFacility_Model>();
-
 	Visit_Model model_visit;
-
-	ArrayAdapter<String> adptr_visit_type, adptr_keluhan1, adptr_keluhan2,
-			adptr_keluhan3, adptr_status1, adptr_status2, adptr_status3;
+	ArrayAdapter<String> adptr_visit_type, adptr_keluhan1, adptr_keluhan2,adptr_keluhan3, adptr_status1, adptr_status2, adptr_status3;
 
 	int spinner_position;
 	ArrayList<Complaint_Model> complaints = new ArrayList<Complaint_Model>();
 	ArrayList<Visit_Facility> facilities = new ArrayList<Visit_Facility>();
+	ArrayList<Image_Model> photos = new ArrayList<Image_Model>();
 	Visit_Facility facility1 = new Visit_Facility();
 	Visit_Facility facility2 = new Visit_Facility();
 	Visit_Facility facility3 = new Visit_Facility();
@@ -125,53 +116,40 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_formulir_kunjungan_anak);
-
-		// this object is store information all visit data
-		db = new Database(this);
 		
-		//inisialisasi properti fasilitas
-		subfas1 = (TextView) findViewById(R.id.tvSusu1);
-		subfas2 = (TextView) findViewById(R.id.tvSusub);
-		subfas3 = (TextView) findViewById(R.id.tvVitamin1);
-		subfas4 = (TextView) findViewById(R.id.tvVitaminb);
-		subfas5 = (TextView) findViewById(R.id.tvPopok1);
-		subfas6 = (TextView) findViewById(R.id.tvPopokb);
+		/***************************INSTANSIASI PROPERTI ***********************************/
+		InstansiasiProperties();
+
+		/********************************LISTENING INTENT ********************************/
+		// get id child
+		Intent i = getIntent();
+		//Bundle extras = i.getExtras();
+		Bundle extras = getIntent().getExtras();
+		if(extras != null )
+		{
+			Log.e("Intent", "not null");
+			if(extras.getString("id_anak_fka") != null)
+			{
+				child_id = i.getStringExtra("id_anak_fka");
+				Log.e("[received from KA] ", " " + child_id);
+			}
+			else if(extras.getString("id_anak_fka1") != null)
+			{
+				child_id = i.getStringExtra("id_anak_fka1");
+				Log.e("[received from KA] ", " " + child_id);
+			}
+		}
+		else
+		{
+			Log.e("Intent","null");
+		}
+
+		/*********************SET FASILITAS ANAK************************************/
+		SetFasilitasAnak();
 		
-		et_subfas1 = (EditText) findViewById(R.id.etSusu1);
-		et_subfas2 = (EditText) findViewById(R.id.etSusub);
-		et_subfas3 = (EditText) findViewById(R.id.etVitamin1);
-		et_subfas4 = (EditText) findViewById(R.id.etVitaminb);
-		et_subfas5 = (EditText) findViewById(R.id.etPopok1);
-		et_subfas6 = (EditText) findViewById(R.id.etPopokb);
-			
-		txtDate = (EditText) findViewById(R.id.edittext_ttl);
-		button_lanjut = (LinearLayout) findViewById(R.id.button_lanjut);
-		back = (ImageView) findViewById(R.id.btn_back);
-		// spinner
-		jenis_kunjungan = (Spinner) findViewById(R.id.spinner_jeniskunjungan);
-		// tinggi badan, berat badan, lingkar lengan
-		tb = (EditText) findViewById(R.id.editText_tinggibadan);
-		bb = (EditText) findViewById(R.id.editText_beratbadan);
-		ll = (EditText) findViewById(R.id.editText_lingkarlengan);
-
-		keluhan1 = (Spinner) findViewById(R.id.spinner_keluhan);
-		keluhan2 = (Spinner) findViewById(R.id.spinner_keluhan1);
-		keluhan3 = (Spinner) findViewById(R.id.spinner_keluhan2);
-
-		status1 = (Spinner) findViewById(R.id.spinner_status);
-		status2 = (Spinner) findViewById(R.id.spinner_status1);
-		status3 = (Spinner) findViewById(R.id.spinner_status2);
-
-		tindakan1 = (EditText) findViewById(R.id.etTindakan);
-		tindakan2 = (EditText) findViewById(R.id.etTindakan1);
-		tindakan3 = (EditText) findViewById(R.id.etTindakan2);
 		
-		btn_kembali = (LinearLayout) findViewById(R.id.button_kembali);
-
-		layout_tambahkeluhan = (LinearLayout) findViewById(R.id.linearlayout_tambahkeluhan);
-		tambah_keluhan = (Button) findViewById(R.id.button_tambahkeluhan);
-		tambahKeluhan = (LinearLayout) findViewById(R.id.tambahKeluhan);
-		tambahKeluhan2 = (LinearLayout) findViewById(R.id.tambahKeluhan2);
+		
+		//------> tambah keluhan
 		tambah_keluhan.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -189,131 +167,8 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 				}
 			}
 		});
-
-		/********************************LISTENING INTENT ********************************/
-		model_visit = new Visit_Model();
-		// get id child
-		Intent i = getIntent();
-		Bundle extras = i.getExtras();
-		if (i.getStringExtra("id_anak_fk") != null) {
-			// model_visit = null;
-			child_id = i.getStringExtra("id_anak_fk");
-			Log.i("id anak pda form", " " + child_id);
-			
-		} 
 		
-		/*********************************************************************************/
-		// spinner visit type
-		ArrayList<String> data_visit = db.getDataVisitType();
-		// item_kelas = data_kelas.toArray(new String[data_kelas.size()]);
-		jenis_kunjungan.setOnItemSelectedListener(this);
-		adptr_visit_type = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, data_visit);
-		adptr_visit_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		jenis_kunjungan.setAdapter(adptr_visit_type);
-		// InitiateSpinner(data_visit, jenis_kunjungan);
-
-		// keluhan, status, tindakan
-		/*************************************/
-		arr_keluhan = db.getDataComplaint();
-		arr_status = db.getDataComplaintStatus();
-
-		// 1
-		adptr_keluhan1 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_keluhan);
-		adptr_keluhan1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		keluhan1.setAdapter(adptr_keluhan1);
-		// 2
-		adptr_keluhan2 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_keluhan);
-		adptr_keluhan2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		keluhan2.setAdapter(adptr_keluhan2);
-		// 3
-		adptr_keluhan3 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_keluhan);
-		adptr_keluhan3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		keluhan3.setAdapter(adptr_keluhan3);
-
-		// sts 1
-		adptr_status1 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_status);
-		adptr_status1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		status1.setAdapter(adptr_status1);
-		// sts 2
-		adptr_status2 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_status);
-		adptr_status2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		status2.setAdapter(adptr_status2);
-
-		// sts 3
-		adptr_status3 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_status);
-		adptr_status3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		status3.setAdapter(adptr_status3);
-
-		// note
-		note = (EditText) findViewById(R.id.editText_catatan);
-		
-		//fasilitas anak
-		
-		arr_fasilitas = db.getSemuaFasilitasAnak(child_id);
-		Log.e("arr", ""+arr_fasilitas.size());
-		
-		for(ChildFacility_Model model : arr_fasilitas)
-		{
-			if(model.getFacility_id().equals("FA001"))
-			{
-				if(!subfas1.getText().toString().equals("-"))
-				{
-					subfas2.setText(db.getNameCostFacility(model.getFacility_cost_id()));
-				}
-				else
-				{
-					subfas1.setText(db.getNameCostFacility(model.getFacility_cost_id()));
-				}
-				
-			}
-			if(model.getFacility_id().equals("FA002"))
-			{
-				if(!subfas3.getText().toString().equals("-"))
-				{
-					subfas4.setText(db.getNameCostFacility(model.getFacility_cost_id()));
-				}
-				else
-				{
-					subfas3.setText(db.getNameCostFacility(model.getFacility_cost_id()));
-				}
-			}
-			if(model.getFacility_id().equals("FA003"))
-			{
-				if(!subfas5.getText().toString().equals("-"))
-				{
-					subfas6.setText(db.getNameCostFacility(model.getFacility_cost_id()));
-				}
-				else
-				{
-					subfas5.setText(db.getNameCostFacility(model.getFacility_cost_id()));
-				}
-			}
-			Log.e("Displaying facility",""+"id anak "+model.getChild_id()+" fasilitas id "+model.getFacility_id()+" fasilitas cost id "+model.getFacility_cost_id());
-		}
-		
-		// bagian foto anak
-		foto_anak1 = (ImageView) findViewById(R.id.foto_anak1);
-		foto_anak2 = (ImageView) findViewById(R.id.foto_anak2);
-		foto_anak3 = (ImageView) findViewById(R.id.foto_anak3);
-		foto_anak4 = (ImageView) findViewById(R.id.foto_anak4);
-		foto_anak5 = (ImageView) findViewById(R.id.foto_anak5);
-		foto_anak6 = (ImageView) findViewById(R.id.foto_anak6);
-
-		bitmap1 = BitmapFactory.decodeResource(context.getResources(),R.drawable.new_button_camera);
-		foto_anak1.setImageBitmap(bitmap1);
-		foto_anak2.setImageBitmap(bitmap1);
-		foto_anak3.setImageBitmap(bitmap1);
-		foto_anak4.setImageBitmap(bitmap1);
-		foto_anak5.setImageBitmap(bitmap1);
-		foto_anak6.setImageBitmap(bitmap1);
-
-		btn_foto1 = (Button) findViewById(R.id.btn_foto1);
-		btn_foto2 = (Button) findViewById(R.id.btn_foto2);
-		btn_foto3 = (Button) findViewById(R.id.btn_foto3);
-		btn_foto4 = (Button) findViewById(R.id.btn_foto4);
-		btn_foto5 = (Button) findViewById(R.id.btn_foto5);
-		btn_foto6 = (Button) findViewById(R.id.btn_foto6);
-
+		//----------> foto anak
 		btn_foto1.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -322,7 +177,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 					foto1 = true;
 					image();
 				} else {
-					alertImage(foto_anak1);
+					alertImage(foto_anak1,"1");
 				}
 			}
 		});
@@ -334,7 +189,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 					foto2 = true;
 					image();
 				} else {
-					alertImage(foto_anak2);
+					alertImage(foto_anak2,"2");
 				}
 			}
 		});
@@ -346,7 +201,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 					foto3 = true;
 					image();
 				} else {
-					alertImage(foto_anak3);
+					alertImage(foto_anak3,"3");
 				}
 			}
 		});
@@ -358,7 +213,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 					foto4 = true;
 					image();
 				} else {
-					alertImage(foto_anak4);
+					alertImage(foto_anak4,"4");
 				}
 			}
 		});
@@ -370,7 +225,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 					foto5 = true;
 					image();
 				} else {
-					alertImage(foto_anak5);
+					alertImage(foto_anak5,"5");
 				}
 			}
 		});
@@ -382,7 +237,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 					foto6 = true;
 					image();
 				} else {
-					alertImage(foto_anak6);
+					alertImage(foto_anak6,"6");
 				}
 			}
 		});
@@ -403,30 +258,13 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			}
 		});
 		
-		// model
-
-		
-		if (extras.containsKey("id_child_ka")) {
-			// Do stuff because extra has been added
-			child_id = extras.getString("id_child_ka");
-			model_visit = (Visit_Model) extras.getParcelable("Object_VisitModel");
-			Log.e("Intent Received from Kunj Rumah", "true" + extras.getString("id_child_ka"));
-		} else {
-			// imposibble hehehe
-			/**************************/
-		}
-		//
-		
-		if (i.getStringExtra("id_child_ka") != null) {
-			// model visit id di set kembali
-			// semua field pada form diisi sesuai objek kiriman
-			/*********************************************/
+		/********************************UPDATING KUNJUNGAN*****************************************/
+		if (i.getStringExtra("id_anak_fka1") != null) {
 			
-			child_id = i.getStringExtra("id_child_ka");
-			Log.e("Child id received", "" + child_id);
-			if (i.getParcelableExtra("Object_VisitModel1") != null) {
-				model_visit = (Visit_Model) i.getParcelableExtra("Object_VisitModel1");
-				Log.e("Object Kiriman Visit Type",""+ db.getNameVisitType(model_visit.GetVisitTypeID()));
+			child_id = i.getStringExtra("id_anak_fka1");
+			Log.e("Child id from KA", "" + child_id);
+			if (i.getParcelableExtra("Visit_Model_Update") != null) {
+				model_visit = (Visit_Model) i.getParcelableExtra("Visit_Model_Update");
 				spinner_position = adptr_visit_type.getPosition(db.getNameVisitType(model_visit.GetVisitTypeID()));
 				jenis_kunjungan.setSelection(spinner_position);
 				// tb
@@ -439,10 +277,8 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 				note.setText(model_visit.GetNote());
 				// ambil obat
 				txtDate.setText(model_visit.GetARVTaken());
-
 				// keluhan dsb
 				complaints = model_visit.GetComplaints();
-
 				if (complaints.size() == 3) {
 					tambahKeluhan2.setVisibility(View.VISIBLE);
 					tambahKeluhan.setVisibility(View.VISIBLE);
@@ -478,7 +314,6 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 					tindakan3.setText(complaint3.GetTindakan());
 				} else if (complaints.size() == 2) {
 					tambahKeluhan.setVisibility(View.VISIBLE);
-
 					complaint1 = complaints.get(0);
 					// keluhan
 					spinner_position = adptr_keluhan1.getPosition(db.getNameComplaint(complaint1.GetKeluhan()));
@@ -545,24 +380,249 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 						tindakan3.setText(complaint3.GetTindakan());
 					}
 				}
-
 			}
 
 			// remove the array list complaint model
 			complaints.clear();
-			
-
+//			//set photo
+			photos = db.GetAllPathFoto(model_visit.GetVisitDate(), model_visit.GetChildID());
+			Log.e("size photo", ""+photos.size());
+			photos = model_visit.GetPhotos();
+			for(Image_Model img : photos)
+			{
+				if(img.GetImage_type_id().equals("2"))
+				{
+					continue;
+				}
+				else
+				{
+					File image = new File(img.GetImage_path());
+					BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+					Bitmap bitmap = BitmapFactory.decodeFile(image.getAbsolutePath(),bmOptions);
+					bitmap = Bitmap.createScaledBitmap(bitmap, 132, 105, true);
+					
+					if(getDrawableImage(foto_anak1) == bitmap1)
+					{
+						foto_anak1.setImageBitmap(bitmap);
+						img_1 = new Image_Model(img.GetImage_name(),img.GetImage_date(),img.GetImage_id(),img.GetImage_path(),img.GetImage_server_path(),img.GetImage_type_id(),img.GetImage_longitude(),img.GetImage_latitude());
+					}
+					else if(getDrawableImage(foto_anak2) == bitmap1)
+					{
+						foto_anak2.setImageBitmap(bitmap); 
+						img_2 = new Image_Model(img.GetImage_name(),img.GetImage_date(),img.GetImage_id(),img.GetImage_path(),img.GetImage_server_path(),img.GetImage_type_id(),img.GetImage_longitude(),img.GetImage_latitude());
+					}
+					else if(getDrawableImage(foto_anak3) == bitmap1)
+					{
+						foto_anak3.setImageBitmap(bitmap);
+						img_3 = new Image_Model(img.GetImage_name(),img.GetImage_date(),img.GetImage_id(),img.GetImage_path(),img.GetImage_server_path(),img.GetImage_type_id(),img.GetImage_longitude(),img.GetImage_latitude());
+					}
+					else if(getDrawableImage(foto_anak4) == bitmap1)
+					{
+						foto_anak4.setImageBitmap(bitmap);
+						img_4 = new Image_Model(img.GetImage_name(),img.GetImage_date(),img.GetImage_id(),img.GetImage_path(),img.GetImage_server_path(),img.GetImage_type_id(),img.GetImage_longitude(),img.GetImage_latitude());
+					}
+					else if(getDrawableImage(foto_anak5) == bitmap1)
+					{
+						foto_anak5.setImageBitmap(bitmap);
+						img_5 = new Image_Model(img.GetImage_name(),img.GetImage_date(),img.GetImage_id(),img.GetImage_path(),img.GetImage_server_path(),img.GetImage_type_id(),img.GetImage_longitude(),img.GetImage_latitude());
+					}
+					else if(getDrawableImage(foto_anak6) == bitmap1)
+					{
+						foto_anak6.setImageBitmap(bitmap);
+						img_6 = new Image_Model(img.GetImage_name(),img.GetImage_date(),img.GetImage_id(),img.GetImage_path(),img.GetImage_server_path(),img.GetImage_type_id(),img.GetImage_longitude(),img.GetImage_latitude());
+					}
+				}
+			}
 		}
+		/************************************************************************************************************************/
 
 	}
 	
+	public void InstansiasiProperties()
+	{
+		//database
+		db = new Database(this);
+		//model
+		model_visit = new Visit_Model();
+		//inisialisasi properti fasilitas
+		subfas1 = (TextView) findViewById(R.id.tvSusu1);
+		subfas2 = (TextView) findViewById(R.id.tvSusub);
+		subfas3 = (TextView) findViewById(R.id.tvVitamin1);
+		subfas4 = (TextView) findViewById(R.id.tvVitaminb);
+		subfas5 = (TextView) findViewById(R.id.tvPopok1);
+		subfas6 = (TextView) findViewById(R.id.tvPopokb);
+		
+		et_subfas1 = (EditText) findViewById(R.id.etSusu1);
+		et_subfas2 = (EditText) findViewById(R.id.etSusub);
+		et_subfas3 = (EditText) findViewById(R.id.etVitamin1);
+		et_subfas4 = (EditText) findViewById(R.id.etVitaminb);
+		et_subfas5 = (EditText) findViewById(R.id.etPopok1);
+		et_subfas6 = (EditText) findViewById(R.id.etPopokb);
+			
+		txtDate = (EditText) findViewById(R.id.edittext_ttl);
+		button_lanjut = (LinearLayout) findViewById(R.id.button_lanjut);
+		back = (ImageView) findViewById(R.id.btn_back);
+		// spinner
+		jenis_kunjungan = (Spinner) findViewById(R.id.spinner_jeniskunjungan);
+		// tinggi badan, berat badan, lingkar lengan
+		tb = (EditText) findViewById(R.id.editText_tinggibadan);
+		bb = (EditText) findViewById(R.id.editText_beratbadan);
+		ll = (EditText) findViewById(R.id.editText_lingkarlengan);
+
+		keluhan1 = (Spinner) findViewById(R.id.spinner_keluhan);
+		keluhan2 = (Spinner) findViewById(R.id.spinner_keluhan1);
+		keluhan3 = (Spinner) findViewById(R.id.spinner_keluhan2);
+
+		status1 = (Spinner) findViewById(R.id.spinner_status);
+		status2 = (Spinner) findViewById(R.id.spinner_status1);
+		status3 = (Spinner) findViewById(R.id.spinner_status2);
+
+		tindakan1 = (EditText) findViewById(R.id.etTindakan);
+		tindakan2 = (EditText) findViewById(R.id.etTindakan1);
+		tindakan3 = (EditText) findViewById(R.id.etTindakan2);
+		
+		// note
+		note = (EditText) findViewById(R.id.editText_catatan);
+		btn_kembali = (LinearLayout) findViewById(R.id.button_kembali);
+		layout_tambahkeluhan = (LinearLayout) findViewById(R.id.linearlayout_tambahkeluhan);
+		tambah_keluhan = (Button) findViewById(R.id.button_tambahkeluhan);
+		
+		tambahKeluhan = (LinearLayout) findViewById(R.id.tambahKeluhan);
+		tambahKeluhan2 = (LinearLayout) findViewById(R.id.tambahKeluhan2);
+		
+		foto_anak1 = (ImageView) findViewById(R.id.foto_anak1);
+		foto_anak2 = (ImageView) findViewById(R.id.foto_anak2);
+		foto_anak3 = (ImageView) findViewById(R.id.foto_anak3);
+		foto_anak4 = (ImageView) findViewById(R.id.foto_anak4);
+		foto_anak5 = (ImageView) findViewById(R.id.foto_anak5);
+		foto_anak6 = (ImageView) findViewById(R.id.foto_anak6);
+
+		bitmap1 = BitmapFactory.decodeResource(context.getResources(),R.drawable.new_button_camera);
+		foto_anak1.setImageBitmap(bitmap1);
+		foto_anak2.setImageBitmap(bitmap1);
+		foto_anak3.setImageBitmap(bitmap1);
+		foto_anak4.setImageBitmap(bitmap1);
+		foto_anak5.setImageBitmap(bitmap1);
+		foto_anak6.setImageBitmap(bitmap1);
+
+		btn_foto1 = (Button) findViewById(R.id.btn_foto1);
+		btn_foto2 = (Button) findViewById(R.id.btn_foto2);
+		btn_foto3 = (Button) findViewById(R.id.btn_foto3);
+		btn_foto4 = (Button) findViewById(R.id.btn_foto4);
+		btn_foto5 = (Button) findViewById(R.id.btn_foto5);
+		btn_foto6 = (Button) findViewById(R.id.btn_foto6);
+		
+		// spinner visit type
+				ArrayList<String> data_visit = db.getDataVisitType();
+				jenis_kunjungan.setOnItemSelectedListener(this);
+				adptr_visit_type = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, data_visit);
+				adptr_visit_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				jenis_kunjungan.setAdapter(adptr_visit_type);
+				// InitiateSpinner(data_visit, jenis_kunjungan);
+
+				// keluhan, status, tindakan
+				/*************************************/
+				arr_keluhan = db.getDataComplaint();
+				arr_status = db.getDataComplaintStatus();
+
+				// 1
+				adptr_keluhan1 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_keluhan);
+				adptr_keluhan1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				keluhan1.setAdapter(adptr_keluhan1);
+				// 2
+				adptr_keluhan2 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_keluhan);
+				adptr_keluhan2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				keluhan2.setAdapter(adptr_keluhan2);
+				// 3
+				adptr_keluhan3 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_keluhan);
+				adptr_keluhan3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				keluhan3.setAdapter(adptr_keluhan3);
+
+				// sts 1
+				adptr_status1 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_status);
+				adptr_status1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				status1.setAdapter(adptr_status1);
+				// sts 2
+				adptr_status2 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_status);
+				adptr_status2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				status2.setAdapter(adptr_status2);
+
+				// sts 3
+				adptr_status3 = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, arr_status);
+				adptr_status3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				status3.setAdapter(adptr_status3);
+				
+	}
+	
+	public void SetFasilitasAnak()
+	{
+		//fasilitas anak
+		
+		arr_fasilitas = db.getSemuaFasilitasAnak(child_id);
+		Log.e("Jumlah Fasilitas Anak", ""+arr_fasilitas.size());
+		
+		for(ChildFacility_Model model : arr_fasilitas)
+		{
+			if(model.getFacility_id().equals("FA001"))
+			{
+				if(!subfas1.getText().toString().equals("-"))
+				{
+					subfas2.setText(db.getNameCostFacility(model.getFacility_cost_id()));
+				}
+				else
+				{
+					subfas1.setText(db.getNameCostFacility(model.getFacility_cost_id()));
+				}
+				
+			}
+			if(model.getFacility_id().equals("FA002"))
+			{
+				if(!subfas3.getText().toString().equals("-"))
+				{
+					subfas4.setText(db.getNameCostFacility(model.getFacility_cost_id()));
+				}
+				else
+				{
+					subfas3.setText(db.getNameCostFacility(model.getFacility_cost_id()));
+				}
+			}
+			if(model.getFacility_id().equals("FA003"))
+			{
+				if(!subfas5.getText().toString().equals("-"))
+				{
+					subfas6.setText(db.getNameCostFacility(model.getFacility_cost_id()));
+				}
+				else
+				{
+					subfas5.setText(db.getNameCostFacility(model.getFacility_cost_id()));
+				}
+			}
+			Log.e("Displaying facility",""+"id anak "+model.getChild_id()+" fasilitas id "+model.getFacility_id()+" fasilitas cost id "+model.getFacility_cost_id());
+		}
+	}
+	//to validate when filling the form
 	public Boolean validate()
 	{
-		Boolean result = false;
+		
 		if(jenis_kunjungan.getSelectedItem().toString().equals("-"))
 		{
 			
 			Toast.makeText(getApplicationContext(), "Anda harus memilih tipe kunjungan ", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		if(tb.getText().toString().equals(""))
+		{
+			Toast.makeText(getApplicationContext(), "Silahkan isi tinggi badan Anak", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		if(bb.getText().toString().equals(""))
+		{
+			Toast.makeText(getApplicationContext(), "Silahkan isi berat badan Anak", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		if(ll.getText().toString().equals(""))
+		{
+			Toast.makeText(getApplicationContext(), "Silahkan isi lingkar lengan Anak", Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		if(!keluhan1.getSelectedItem().toString().equals("-") && !keluhan2.getSelectedItem().toString().equals("-") && keluhan1.getSelectedItem().toString().equals(keluhan2.getSelectedItem().toString()))
@@ -587,31 +647,19 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			Toast.makeText(getApplicationContext(), "Anda harus memilih minimal satu keluhan", Toast.LENGTH_SHORT).show();
 			return false;
 		}
+		if(count_foto < 3)
+		{
+			Toast.makeText(getApplicationContext(), "Foto Anak minimal 3", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Silahkan ambil gambar anak kembali", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		
 		else 
 		{
 			return true;
 		}
 			
 	}
-
-	// foto anak
-
-	/*
-	 * private void layout_tambahkeluhan(Button tambah_keluhan) { // TODO
-	 * Auto-generated method stub layout_keluhan = (LinearLayout)
-	 * findViewById(R.id.layout_keluhan); layout_status = (LinearLayout)
-	 * findViewById(R.id.layout_status); layout_tindakan = (LinearLayout)
-	 * findViewById(R.id.layout_tindakan); ImageView image = new
-	 * ImageView(null); image.setImageResource(R.drawable.lap_logo);
-	 * layout_tambahkeluhan.setLayoutParams(new
-	 * LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-	 * LayoutParams.WRAP_CONTENT));
-	 * layout_tambahkeluhan.addView(layout_tambahkeluhan);
-	 * 
-	 * }
-	 */
-
-	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -620,20 +668,19 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 		return true;
 	}
 
+	int count_foto = 0;
+	
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.btn_back:
-			Intent intent3 = new Intent(FormulirKunjunganAnakActivity.this,
-					KunjunganActivity.class);
+			Intent intent3 = new Intent(FormulirKunjunganAnakActivity.this,KunjunganActivity.class);
+			Log.e("[back to KA] ",""+child_id);
 			intent3.putExtra("id_anak_k", child_id);
 			startActivity(intent3);
 			break;
 
 		case R.id.button_lanjut:
-			
-			//inisialisasi kembali arr keluhan
-			complaints.clear();
-			
+			/**********************LOG********************************/
 			Log.i("visit type id",""+ db.getIdVisitType(jenis_kunjungan.getSelectedItem().toString()));
 			Log.i("tb bb ll", "" + tb.getText().toString() + "- "+ bb.getText().toString() + "- " + ll.getText().toString());
 			Log.i("note", "" + note.getText().toString());
@@ -651,6 +698,9 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			Log.i("tindakan2", "" + tindakan2.getText().toString());
 			Log.i("tindakan3", "" + tindakan3.getText().toString());
 			Log.e("Sending intent into fk_env", "" + child_id);
+			
+			//inisialisasi kembali arr keluhan
+			complaints.clear();
 			
 			// save into object first then send intent
 			model_visit.setChildID(child_id);
@@ -763,34 +813,79 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			
 			/*************************************************/
 			// save images
-			image_anak.add(img_1);
-			image_anak.add(img_2);
-			image_anak.add(img_3);
-			image_anak.add(img_4);
-			image_anak.add(img_5);
-			image_anak.add(img_6);
-			//tracing
-			for(Image_Model a : image_anak)
+			
+			if(img_1 != null)
 			{
-				if(a == null)
+				if(img_1.GetImage_name() != null)
 				{
-					continue;
-				}
-				else
-				{
-					Log.e("Foto Anak", "Nama foto : "+a.GetImage_name()+" nama path : "+a.GetImage_path()+" latitude : "+a.GetImage_latitude()+" longitude : "+a.GetImage_longitude());
+					image_anak.add(img_1);
 				}
 			}
-			model_visit.setChildPhotos(image_anak);
+			if(img_2 != null)
+			{
+				if(img_2.GetImage_name() != null)
+				{
+					image_anak.add(img_2);
+				}
+			}
+			if(img_3 != null)
+			{
+				if(img_3.GetImage_name() != null)
+				{
+					image_anak.add(img_3);
+				}
+			}
+			if(img_4 != null)
+			{
+				if(img_4.GetImage_name() != null)
+				{
+					image_anak.add(img_4);
+				}
+			}
+			if(img_5 != null)
+			{
+				if(img_5.GetImage_name() != null)
+				{
+					image_anak.add(img_5);
+				}
+			}
+			if(img_6 != null)
+			{
+				if(img_6.GetImage_name() != null)
+				{
+					image_anak.add(img_6);
+				}
+			}
+			count_foto = image_anak.size();
+			
+			model_visit.setPhotos(image_anak);
+			Log.e("Size photo anak sent",""+image_anak.size());
 			
 			//----------------------> validate
 			Boolean valid = validate();
 			if(valid == true)
 			{
 				Intent intent_kunjungan_env = new Intent(this,FormulirKunjunganRumahActivity.class);
-				intent_kunjungan_env.putExtra("id", ""+child_id);
-				intent_kunjungan_env.putExtra("Object_VisitModel", model_visit);
-				startActivity(intent_kunjungan_env);
+				
+				//-----> send the activity 
+				Intent i = getIntent();
+				if(i.getStringExtra("id_anak_fka1") != null)
+				{
+					Log.e("[Sending to FKRA] Updating Kjgn","id anak "+i.getStringExtra("id_anak_fka1"));
+					intent_kunjungan_env.putExtra("id_update", ""+child_id);
+					intent_kunjungan_env.putExtra("Object_VisitModel", model_visit);
+					startActivity(intent_kunjungan_env);
+					finish();
+					
+				}
+				else
+				{
+					Log.e("[Sending to FKR] Creating Kjgn", ""+child_id);
+					intent_kunjungan_env.putExtra("id", ""+child_id);
+					intent_kunjungan_env.putExtra("Object_VisitModel", model_visit);
+					startActivity(intent_kunjungan_env);
+					finish();
+				}
 			}
 			else
 			{
@@ -804,6 +899,77 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 			break;
 		}
 	}
+	
+//	public void Keluhan(Spinner Keluhan)
+//	{
+//		Keluhan.setOnItemSelectedListener(new OnItemSelectedListener() {
+//			@Override
+//			public void onItemSelected(AdapterView<?> arg0, View view,int position, long id) {
+//				String sKotaMadya = db.getIdDistrict(item_kotamadya[position]);
+//				if (position == 0) {
+//				} 
+//				else {
+//				}
+//				StatusKeluhan
+//			}
+//			
+//			@Override
+//			public void onNothingSelected(AdapterView<?> arg0) {
+//			}});
+//	}
+//	public void StatusKeluhan(String StatusKeluhan)
+//	{
+//		
+//	}
+	
+//	public void Kecamatan(String id_kotamadya, int flag) {
+//		// flag => to check kecamatan is child address or school address
+//		// 1 = child address
+//		arr_kecamatan = db.getAllNameSubDistrict(id_kotamadya);
+//
+//		kecAdapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.spin, arr_kecamatan);
+//
+//		if (flag == 1) {
+//
+//			spinner_kecamatan.setOnItemSelectedListener(this);
+//			spinner_kecamatan.setAdapter(kecAdapter);
+//			Log.e("kecamatan", "" + spinner_kecamatan.getSelectedItem());
+//		} else {
+//
+//			spinner_kecamatansekolah.setOnItemSelectedListener(this);
+//			spinner_kecamatansekolah.setAdapter(kecAdapter);
+//			Log.e("kecamatan", "" + spinner_kecamatansekolah.getSelectedItem());
+//		}
+//
+//	}
+	
+//	public void Kotamadya(Spinner wilayah, final int flag) {
+//		wilayah.setOnItemSelectedListener(new OnItemSelectedListener() {
+//
+//			@Override
+//			public void onItemSelected(AdapterView<?> arg0, View view,
+//					int position, long id) {
+//				String sKotaMadya = db.getIdDistrict(item_kotamadya[position]);
+//				if (position == 0) {
+//
+//				} else {
+//
+//				}
+//				// // check for the spinner of childs address or school adress
+//				if (flag == 1) {
+//					Kecamatan(sKotaMadya, 1);
+//				} else {
+//					Kecamatan(sKotaMadya, 2);
+//				}
+//
+//			}
+//
+//			@Override
+//			public void onNothingSelected(AdapterView<?> arg0) {
+//
+//			}
+//		});
+//	}
 
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
@@ -971,8 +1137,9 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 		   }
 		  }
 		 }
-
-		 public void alertImage(final ImageView input)
+		 
+		//parameter nomor foto di maksudkan agar dapat mengambil path photo
+		 public void alertImage(final ImageView input,final String nomor_foto)
 		 {
 		   final Dialog dialog = new Dialog(context); 
 		   dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -993,13 +1160,32 @@ public class FormulirKunjunganAnakActivity extends Activity implements
 				linYakin.setOnClickListener(new OnClickListener() {
 				      public void onClick(View v) {
 				       // TODO Auto-generated method stub
+				    	  if(nomor_foto.equals("1"))
+				    	  {
+				    		  img_1 = null;
+				    	  }
+				    	  else if(nomor_foto.equals("2"))
+				    	  {
+				    		  img_2 = null;
+				    	  }
+				    	  else if(nomor_foto.equals("3"))
+				    	  {
+				    		  img_3 = null;
+				    	  }
+				    	  else if(nomor_foto.equals("4"))
+				    	  {
+				    		  img_4 = null;
+				    	  }
+				    	  else if(nomor_foto.equals("5"))
+				    	  {
+				    		  img_5 = null;
+				    	  }
+				    	  else if(nomor_foto.equals("6"))
+				    	  {
+				    		  img_6 = null;
+				    	  }
 				       input.setImageBitmap(bitmap1);
-//				       foto1 = false;
-//				       foto2 = false;
-//				       foto3 = false;
-//				       foto4 = false;
-//				       foto5 = false;
-//				       foto6 = false;
+				      
 				       dialogConfirm.dismiss();
 				       dialog.dismiss();
 				      }

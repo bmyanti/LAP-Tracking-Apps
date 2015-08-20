@@ -64,7 +64,6 @@
                             android:layout_height="match_parent"
                             android:layout_weight="6"
                             android:paddingTop="5dp"
-                            android:text="'DIARE'"
                             android:textColor="@color/blue" 
                             android:textStyle="bold"
                             android:textAllCaps="true"/>
@@ -73,7 +72,7 @@
                     <ScrollView
             android:id="@+id/scrollView1"
             style="@style/scrollbar_bitmap_style"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
@@ -89,27 +88,28 @@
 
         
         <LinearLayout
+             android:id="@+id/linPenc1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp" >
+                    android:paddingTop="5dp" 
+                    android:visibility="invisible">
                     
                     <RelativeLayout
-                        android:id="@+id/rl1"
+                        android:id="@+id/rlPenc1"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:orientation="vertical"
                         android:paddingBottom="5dp"
-                        >
+                         >
 
                         <TextView
-                            android:id="@+id/ivTgl1"
+                            android:id="@+id/ivTgl_penc1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@drawable/kotak_tanggal"
                             android:paddingLeft="15dp"
                             android:paddingRight="1dp"
-                            android:text="30"
                             android:textColor="#ffffff"
                             android:textSize="32dp" />
 
@@ -126,15 +126,15 @@
                     
                     <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="60dp"
                     android:orientation="vertical"
-                    android:paddingTop="5dp" >
+                    >
 
                         <TextView
-                            android:id="@+id/tvKeluhan1"
+                            android:id="@+id/tvKeluhanSearch1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="6"
+                            android:layout_weight="7"
                             android:paddingLeft="5dp"
                             android:text="KELUHAN"
                             android:textColor="#000000" />
@@ -143,7 +143,7 @@
                             android:id="@+id/tvStatus1"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="6"
+                            android:layout_weight="7"
                             android:paddingLeft="5dp"
                             android:text="STATUS"
                             android:textColor="#000000" />
@@ -161,13 +161,15 @@
                     
 
                             <LinearLayout
+                                android:id="@+id/linPenc2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp" >
+                    android:visibility="invisible"
+                     >
                     
                     <RelativeLayout
-                        android:id="@+id/rl2"
+                        android:id="@+id/rlPenc2"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:orientation="vertical"
@@ -175,13 +177,12 @@
                         >
 
                         <TextView
-                            android:id="@+id/ivTgl2"
+                            android:id="@+id/ivTgl_penc2"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@drawable/kotak_tanggal"
                             android:paddingLeft="15dp"
                             android:paddingTop="1dp"
-                            android:text="30"
                             android:textColor="#ffffff"
                             android:textSize="32dp" />
 
@@ -198,15 +199,15 @@
                     
                     <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="60dp"
                     android:orientation="vertical"
-                    android:paddingTop="5dp" >
+                    >
 
                         <TextView
-                            android:id="@+id/tvKeluhan2"
+                            android:id="@+id/tvKeluhanSearch2"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="6"
+                            android:layout_weight="7"
                             android:paddingLeft="5dp"
                             android:text="KELUHAN"
                             android:textColor="#000000" />
@@ -215,7 +216,7 @@
                             android:id="@+id/tvStatus2"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="6"
+                            android:layout_weight="7"
                             android:paddingLeft="5dp"
                             android:text="STATUS"
                             android:textColor="#000000" />
@@ -232,13 +233,15 @@
                     </LinearLayout>
 
                             <LinearLayout
+                    android:id="@+id/linPenc3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp" >
+                    android:visibility="invisible"
+                   >
                     
                     <RelativeLayout
-                        android:id="@+id/rl3"
+                        android:id="@+id/rlPenc3"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:orientation="vertical"
@@ -246,13 +249,12 @@
                         >
 
                         <TextView
-                            android:id="@+id/ivTgl3"
+                            android:id="@+id/ivTgl_penc3"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@drawable/kotak_tanggal"
                             android:paddingLeft="15dp"
                             android:paddingTop="1dp"
-                            android:text="30"
                             android:textColor="#ffffff"
                             android:textSize="32dp" />
 
@@ -269,15 +271,15 @@
                     
                     <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="60dp"
                     android:orientation="vertical"
-                    android:paddingTop="5dp" >
+                    >
 
                         <TextView
-                            android:id="@+id/tvKeluhan3"
+                            android:id="@+id/tvKeluhanSearch3"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="6"
+                            android:layout_weight="7"
                             android:paddingLeft="5dp"
                             android:text="KELUHAN"
                             android:textColor="#000000" />
@@ -286,7 +288,7 @@
                             android:id="@+id/tvStatus3"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="6"
+                            android:layout_weight="7"
                             android:paddingLeft="5dp"
                             android:text="STATUS"
                             android:textColor="#000000" />
@@ -303,13 +305,15 @@
                     </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/linPenc4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingTop="5dp" >
+                    android:visibility="invisible"
+                    >
                     
                     <RelativeLayout
-                        android:id="@+id/rl4"
+                        android:id="@+id/rlPenc4"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:orientation="vertical"
@@ -317,13 +321,12 @@
                         >
 
                         <TextView
-                            android:id="@+id/ivTgl4"
+                            android:id="@+id/ivTgl_penc4"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@drawable/kotak_tanggal"
                             android:paddingLeft="15dp"
                             android:paddingTop="1dp"
-                            android:text="30"
                             android:textColor="#ffffff"
                             android:textSize="32dp" />
 
@@ -340,15 +343,15 @@
                     
                     <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="60dp"
                     android:orientation="vertical"
-                    android:paddingTop="5dp" >
+                     >
 
                         <TextView
-                            android:id="@+id/tvKeluhan4"
+                            android:id="@+id/tvKeluhanSearch4"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="6"
+                            android:layout_weight="7"
                             android:paddingLeft="5dp"
                             android:text="KELUHAN"
                             android:textColor="#000000" />
@@ -357,12 +360,300 @@
                             android:id="@+id/tvStatus4"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_weight="6"
+                            android:layout_weight="7"
                             android:paddingLeft="5dp"
                             android:text="STATUS"
                             android:textColor="#000000" />
                            <TextView
                             android:id="@+id/tvTindakan4"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:paddingLeft="5dp"
+                            android:text="TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN"
+                            android:textColor="#000000" />
+                        </LinearLayout>
+                   
+                    </LinearLayout>
+                    <LinearLayout
+             android:id="@+id/linPenc5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp" 
+                    android:visibility="invisible">
+                    
+                    <RelativeLayout
+                        android:id="@+id/rlPenc5"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:orientation="vertical"
+                        android:paddingBottom="5dp"
+                         >
+
+                        <TextView
+                            android:id="@+id/ivTgl_penc5"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/kotak_tanggal"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="1dp"
+                            android:textColor="#ffffff"
+                            android:textSize="32dp" />
+
+                        <TextView
+                            android:id="@+id/ivTgl5a"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="37dp"
+                            android:textColor="#ffffff"
+                            android:textSize="20dp" />
+                    </RelativeLayout>
+                    
+                    <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="vertical"
+                    >
+
+                        <TextView
+                            android:id="@+id/tvKeluhanSearch5"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:paddingLeft="5dp"
+                            android:text="KELUHAN"
+                            android:textColor="#000000" />
+
+                          <TextView
+                            android:id="@+id/tvStatus5"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:paddingLeft="5dp"
+                            android:text="STATUS"
+                            android:textColor="#000000" />
+                           <TextView
+                            android:id="@+id/tvTindakan5"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:paddingLeft="5dp"
+                            android:text="TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN"
+                            android:textColor="#000000" />
+                        </LinearLayout>
+                   
+                    </LinearLayout>
+                    
+
+                            <LinearLayout
+                                android:id="@+id/linPenc6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="invisible"
+                     >
+                    
+                    <RelativeLayout
+                        android:id="@+id/rlPenc6"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:orientation="vertical"
+                        android:paddingBottom="5dp"
+                        >
+
+                        <TextView
+                            android:id="@+id/ivTgl_penc6"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/kotak_tanggal"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="1dp"
+                            android:textColor="#ffffff"
+                            android:textSize="32dp" />
+
+                        <TextView
+                            android:id="@+id/ivTgl6a"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="37dp"
+                            android:textColor="#ffffff"
+                            android:textSize="20dp" />
+                    </RelativeLayout>
+                    
+                    <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="vertical"
+                    >
+
+                        <TextView
+                            android:id="@+id/tvKeluhanSearch6"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:paddingLeft="5dp"
+                            android:text="KELUHAN"
+                            android:textColor="#000000" />
+
+                          <TextView
+                            android:id="@+id/tvStatus6"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:paddingLeft="5dp"
+                            android:text="STATUS"
+                            android:textColor="#000000" />
+                           <TextView
+                            android:id="@+id/tvTindakan6"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:paddingLeft="5dp"
+                            android:text="TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN"
+                            android:textColor="#000000" />
+                        </LinearLayout>
+                   
+                    </LinearLayout>
+
+                            <LinearLayout
+                    android:id="@+id/linPenc7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="invisible"
+                   >
+                    
+                    <RelativeLayout
+                        android:id="@+id/rlPenc7"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:orientation="vertical"
+                        android:paddingBottom="5dp"
+                        >
+
+                        <TextView
+                            android:id="@+id/ivTgl_penc7"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/kotak_tanggal"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="1dp"
+                            android:textColor="#ffffff"
+                            android:textSize="32dp" />
+
+                        <TextView
+                            android:id="@+id/ivTgl7a"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="37dp"
+                            android:textColor="#ffffff"
+                            android:textSize="20dp" />
+                    </RelativeLayout>
+                    
+                    <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="vertical"
+                    >
+
+                        <TextView
+                            android:id="@+id/tvKeluhanSearch7"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:paddingLeft="5dp"
+                            android:text="KELUHAN"
+                            android:textColor="#000000" />
+
+                          <TextView
+                            android:id="@+id/tvStatus7"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:paddingLeft="5dp"
+                            android:text="STATUS"
+                            android:textColor="#000000" />
+                           <TextView
+                            android:id="@+id/tvTindakan7"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:paddingLeft="5dp"
+                            android:text="TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN TINDAKAN"
+                            android:textColor="#000000" />
+                        </LinearLayout>
+                   
+                    </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/linPenc8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="invisible"
+                    >
+                    
+                    <RelativeLayout
+                        android:id="@+id/rlPenc8"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:orientation="vertical"
+                        android:paddingBottom="5dp"
+                        >
+
+                        <TextView
+                            android:id="@+id/ivTgl_penc8"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/kotak_tanggal"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="1dp"
+                            android:textColor="#ffffff"
+                            android:textSize="32dp" />
+
+                        <TextView
+                            android:id="@+id/ivTgl8a"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="37dp"
+                            android:textColor="#ffffff"
+                            android:textSize="20dp" />
+                    </RelativeLayout>
+                    
+                    <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="vertical"
+                     >
+
+                        <TextView
+                            android:id="@+id/tvKeluhanSearch8"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:paddingLeft="5dp"
+                            android:text="KELUHAN"
+                            android:textColor="#000000" />
+
+                          <TextView
+                            android:id="@+id/tvStatus8"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="7"
+                            android:paddingLeft="5dp"
+                            android:text="STATUS"
+                            android:textColor="#000000" />
+                           <TextView
+                            android:id="@+id/tvTindakan8"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_weight="7"

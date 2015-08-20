@@ -69,6 +69,10 @@
             android:name=".Checkbox"
             android:label="@string/title_activity_checkbox" >
         </activity>
+        <activity
+            android:name=".Pencarian"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>
