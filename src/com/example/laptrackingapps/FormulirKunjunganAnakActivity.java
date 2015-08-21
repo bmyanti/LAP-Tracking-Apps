@@ -647,9 +647,9 @@ public class FormulirKunjunganAnakActivity extends Activity implements OnItemSel
 			Toast.makeText(getApplicationContext(), "Anda harus memilih minimal satu keluhan", Toast.LENGTH_SHORT).show();
 			return false;
 		}
-		if(count_foto < 3)
+		if(count_foto < 2)
 		{
-			Toast.makeText(getApplicationContext(), "Foto Anak minimal 3", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), "Foto Anak minimal 2", Toast.LENGTH_SHORT).show();
 			Toast.makeText(getApplicationContext(), "Silahkan ambil gambar anak kembali", Toast.LENGTH_SHORT).show();
 			return false;
 		}
@@ -1044,7 +1044,7 @@ public class FormulirKunjunganAnakActivity extends Activity implements OnItemSel
 			   latitude = gps.getLatitude();
 			   longitude = gps.getLongitude();
 			   
-			   Toast.makeText(getApplicationContext(),"Lokasi Anda - \nLatitude : " + latitude + "\nLongitude : "+ longitude, Toast.LENGTH_LONG).show();
+			  // Toast.makeText(getApplicationContext(),"Lokasi Anda - \nLatitude : " + latitude + "\nLongitude : "+ longitude, Toast.LENGTH_LONG).show();
 			   
 		  }else {
 				gps.showSettingsAlert();

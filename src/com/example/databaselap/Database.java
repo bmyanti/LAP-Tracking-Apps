@@ -3620,7 +3620,7 @@ public class Database extends SQLiteOpenHelper {
 
 			    return id;
 			   }
-			/to search complaint and action
+			//to search complaint and action
 			   public ArrayList<Visit_Model> searchComplaintAction(String id_comp, String id_anak, String tindakan) {
 			    ArrayList<Complaint_Model> prseDataComplaint = new ArrayList<Complaint_Model>();
 			    
