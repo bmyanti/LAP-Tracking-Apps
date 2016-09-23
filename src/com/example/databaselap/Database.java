@@ -4085,7 +4085,7 @@ public class Database extends SQLiteOpenHelper {
 					val.put(VISIT_HEIGHT , height);
 					val.put(VISIT_LILA , lila);
 					val.put(VISIT_WEIGHT, weight);
-					val.put(VISIT_ACTION , action);
+					val.put(VISIT_ACTION , action);	
 					val.put(VISIT_NOTE , note);
 					val.put(VISIT_REMINDER_ID, reminder_id);
 					val.put(VISIT_CREATE_BY ,  cb);
